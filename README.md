@@ -1,1 +1,5 @@
-# Team 19 Group Project for COMP20 Web Programming with @mchow01 @ Tufts University
+# NAME_OF_APP (Team 19, COMP20: Web Programming @ Tufts University)
+
+## Project Proposal
+
+
