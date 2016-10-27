@@ -8,11 +8,11 @@ WikiLinks
 
 ### Problem Statement
 
-The "Wiki Game," where two or more players attempt to get from one Wikipedia page to another, requires each player to manually look through each Wikipedia page.
+The "Wiki Game," where two or more players attempt to get from one Wikipedia page to another by following the links embedded in the article, currently requires each player to manually look through each Wikipedia page.
 
 ### Solving the Problem
 
-We can solve this problem by asking a user to choose a page as their starting point. From there, we can utilize the Wikipedia API to collect the pages linked within the start page. As the user continues to click on the titles of the Wikipedia pages we return, we can continue utilizing the Wikipedia API to get new pages until they reach their defined end page. We will count the number of pages they visited and store it. The user can then compete against as many friends as they want by sending them a competition link.
+We can solve this problem by asking a user to choose a page as their starting point. From there, we can utilize the Wikipedia API to collect the pages linked within the start page. As the user continues to click on the titles of the Wikipedia pages we return, we can continue utilizing the Wikipedia API to get new pages until they reach their defined end page. We will count the number of pages they visited and store it. The user can then compete against as many friends as they want by sending them a competition link. We can also choose random start and end points if the user wishes.
 
 ### Features that will be implemented
 
