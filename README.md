@@ -16,7 +16,7 @@ We can solve this problem by asking a user to choose a page as their starting po
 
 ### Features that will be implemented
 
-* Server-side data persistence to store a user's best score between two pages and allow other users to compete against them.
+* Server-side data persistence to store a user's best score between two pages and allow them to challenge other users and view each others' scores.
 * Cookie on the client side storing an anonymous ID identifying the user (to avoid dealing with login)
 * React to easily build the front end
 * Reporting on how a user compares with their friends and their previous attempts using charts and graphs
