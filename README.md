@@ -32,5 +32,32 @@ We will potentially utilize depth and breadth first searching to determine the s
 
 ### Mockups
 
-![Mockups]
+#### Desktop
+Splash - Desktop
 ![Desktop](/Wireframes/Splash_Desktop_HD.jpg "Splash - Desktop")
+
+Start Game - Desktop
+![Desktop](/Wireframes/Start_Desktop_HD.jpg "Start Game - Desktop")
+
+In-Game - Desktop
+![Desktop](/Wireframes/Game_Desktop_HD.jpg "In-Game - Desktop")
+
+Game Over - Desktop
+![Desktop](/Wireframes/Finish_Desktop_HD.jpg "Game Over - Desktop")
+
+#### Mobile
+Splash - Mobile
+![Mobile](/Wireframes/Splash_Mobile.jpg "Splash - Mobile")
+
+Start Game - Mobile
+![Mobile](/Wireframes/Start_Mobile.jpg "Start Game - Mobile")
+
+In-Game - Mobile
+![Mobile](/Wireframes/Game_Mobile.jpg "In-Game - Mobile")
+
+Game Over - Mobile
+![Mobile](/Wireframes/Finish_Mobile.jpg "Game Over - Mobile")
+
+
+
+
