@@ -33,4 +33,4 @@ We will potentially utilize depth and breadth first searching to determine the s
 ### Mockups
 
 ![Mockups]
-(https://github.com/tuftsdev/comp20-f2016-team19/blob/master/wireframes.pdf)
+![Desktop](/Wireframes/Splash_Desktop_HD.jpg "Splash - Desktop")
