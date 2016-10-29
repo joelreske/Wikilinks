@@ -45,17 +45,30 @@ In-Game - Desktop
 Game Over - Desktop
 ![Desktop](/Wireframes/Finish_Desktop_HD.jpg "Game Over - Desktop")
 
+#### Tablet
+Splash - Tablet  
+![Tablet](/Wireframes/Splash_Tablet.jpg "Splash - Tablet")
+
+Start Game - Tablet  
+![Tablet](/Wireframes/Start_Tablet.jpg "Start Game - Tablet")
+
+In-Game - Tablet  
+![Tablet](/Wireframes/Game_Tablet.jpg "In-Game - Tablet")
+
+Game Over - Tablet  
+![Tablet](/Wireframes/Finish_Tablet.jpg "Game Over - Tablet")
+
 #### Mobile
-Splash - Mobile
+Splash - Mobile  
 ![Mobile](/Wireframes/Splash_Mobile.jpg "Splash - Mobile")
 
-Start Game - Mobile
+Start Game - Mobile  
 ![Mobile](/Wireframes/Start_Mobile.jpg "Start Game - Mobile")
 
-In-Game - Mobile
+In-Game - Mobile  
 ![Mobile](/Wireframes/Game_Mobile.jpg "In-Game - Mobile")
 
-Game Over - Mobile
+Game Over - Mobile  
 ![Mobile](/Wireframes/Finish_Mobile.jpg "Game Over - Mobile")
 
 
