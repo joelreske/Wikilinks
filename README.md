@@ -31,3 +31,6 @@ We will store the start and end pages of a particular game, as well as the users
 We will potentially utilize depth and breadth first searching to determine the shortest path between two Wikipedia pages so users can challenge themselves to find the best way. Otherwise, no significant algorithms will be used.
 
 ### Mockups
+
+![Mockups]
+(https://github.com/tuftsdev/comp20-f2016-team19/blob/master/wireframes.pdf)
