@@ -76,3 +76,4 @@ Game Over - Mobile
 * "From there, we can utilize the Wikipedia API to collect the pages linked within the start page." => really? Didn't know that even existed.
 * It's a good thing you aren't storing too much personal data persistently.
 * Seems like a weird idea yet novel.
+* Nice mockups!
