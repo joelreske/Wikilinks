@@ -22,7 +22,7 @@
 *.rar
 *.tar
 *.zip
-node_modeules/
+node_modules/
 
 # Logs and databases #
 ######################
