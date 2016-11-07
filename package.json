@@ -10,10 +10,11 @@
     "start": "node index.js"
   },
   "dependencies": {
+    "body-parser": "latest",
     "ejs": "latest",
     "express": "latest",
     "mongodb": "latest",
-    "body-parser": "latest"
+    "node-wikipedia": "latest"
   },
   "license": "MIT",
   "private": true
