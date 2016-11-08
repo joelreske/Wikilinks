@@ -35,6 +35,20 @@ app.get('/api/getLinksForPage', function(request, response) {
 	});
 });
 
+app.get('/api/getShortestPath', function(request, response) {
+	response.setHeader('Content-Type', 'application/json');
+
+	var start = "Fire";
+	var end = "Crotch";
+
+	// var start = request.query.start;
+	// var end = request.query.end;
+
+	wikilinks.getShortestPath(start, end, function(shortestPath) {
+		response.send(shortestPath);
+	});
+});
+
 app.listen(app.get('port'), function() {
  	console.log('Node app is running on port', app.get('port'));
 });
