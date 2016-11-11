@@ -5,9 +5,9 @@ body {
 #title {
         font-size: 18px;
         color: white;
-        border-bottom {
-                color: white;
-                font-weight: 1px;
-        };
-
+        border-bottom: 1px solid white;
 }
+
+#startButtonStyle {
+	margin: '10px 10px 10px 0'
+};

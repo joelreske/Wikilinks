@@ -12,7 +12,7 @@ app.use("/styles",express.static(__dirname + "/views/stylesheets"));
 // Taken from Ming's example code
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-var mongoUri = process.env.MONGODB_URI || 'mongodb://localhost/testdb';
+var mongoUri = process.env.MONGODB_URI || 'mongodb://localhost/wikilinktestdb';
 var MongoClient = require('mongodb').MongoClient;
 var db = MongoClient.connect(mongoUri, function(error, databaseConnection) {
 	db = databaseConnection;
@@ -54,6 +54,20 @@ app.get('/api/startGame', function(request, response) {
 	} else {
 		response.sendStatus(400);
 	}
+});
+
+app.get('/api/getRandomPage', function(request, response) {
+	response.setHeader('Content-Type', 'application/json');
+
+	var request = require('request');
+	var r = request.get('https://en.wikipedia.org/wiki/Special:Random', function (err, res, body) {
+		if (err) {
+			response.sendStatus(500);
+		} else {
+			var urlParts = res.request.uri.href.split("/");
+			response.send({pageTitle:decodeURIComponent(urlParts[urlParts.length - 1]).replace(/_/g, " ")});
+		}
+	});
 });
 
 app.get('/api/getLinksForPage', function(request, response) {
@@ -116,7 +130,7 @@ function generateRandomId() {
 	var httpSafeChars = ["A", "a", "B", "b", "C", "c", "D", "d", "E", "e", "F", "f", "G", "g", "H", "h", "I", "i", "J", "j", "K", "k", "L", "l", "M", "m", "N", "n", "O", "o", "P", "p", "Q", "q", "R", "r", "S", "s", "T", "t", "U", "u", "V", "v", "W", "w", "X", "x", "Y", "y", "Z", "z", "_", "-", "~"];
 	var id = "";
 
-	for (var i = 0; i < 8; i++) {
+	for (var i = 0; i < size; i++) {
 		var index = Math.floor((Math.random() * httpSafeChars.length));
 		id += httpSafeChars[index];
 	}
