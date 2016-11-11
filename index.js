@@ -65,7 +65,7 @@ app.get('/api/getRandomPage', function(request, response) {
 			response.sendStatus(500);
 		} else {
 			var urlParts = res.request.uri.href.split("/");
-			response.send({pageTitle:decodeURIComponent(urlParts[urlParts.length - 1])});
+			response.send({pageTitle:decodeURIComponent(urlParts[urlParts.length - 1]).replace(/_/g, " ")});
 		}
 	});
 });
