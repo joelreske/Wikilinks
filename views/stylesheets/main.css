@@ -2,3 +2,6 @@ body {
         background-color: #6600ff;
 }
 
+startButtonStyle = {
+  		margin: '10px 10px 10px 0'
+};
