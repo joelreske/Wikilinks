@@ -2,3 +2,12 @@ body {
         background-color: #6600ff;
 }
 
+#title {
+        font-size: 18px;
+        color: white;
+        border-bottom {
+                color: white;
+                font-weight: 1px;
+        };
+
+}
