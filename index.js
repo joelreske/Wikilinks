@@ -12,7 +12,7 @@ app.use("/styles",express.static(__dirname + "/views/stylesheets"));
 // Taken from Ming's example code
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-var mongoUri = process.env.MONGODB_URI || 'mongodb://localhost/testdb';
+var mongoUri = process.env.MONGODB_URI || 'mongodb://localhost/wikilinktestdb';
 var MongoClient = require('mongodb').MongoClient;
 var db = MongoClient.connect(mongoUri, function(error, databaseConnection) {
 	db = databaseConnection;
@@ -54,6 +54,20 @@ app.get('/api/startGame', function(request, response) {
 	} else {
 		response.sendStatus(400);
 	}
+});
+
+app.get('/api/getRandomPage', function(request, response) {
+	response.setHeader('Content-Type', 'application/json');
+
+	var request = require('request');
+	var r = request.get('https://en.wikipedia.org/wiki/Special:Random', function (err, res, body) {
+		if (err) {
+			response.sendStatus(500);
+		} else {
+			var urlParts = res.request.uri.href.split("/");
+			response.send({pageTitle:decodeURIComponent(urlParts[urlParts.length - 1])});
+		}
+	});
 });
 
 app.get('/api/getLinksForPage', function(request, response) {
