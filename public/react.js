@@ -22,8 +22,9 @@ var Button = React.createClass({
   }
 });
 
-React.render(<logo/>,document.getElementById('logo'));
-
+ $(document).ready(function() {
+    ReactDOM.render(<logo/>,document.getElementById('logo'));
+  });
 
 
 module.exports = Button;
