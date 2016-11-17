@@ -131,7 +131,7 @@ function generateRandomId() {
 	var id = "";
 
 	for (var i = 0; i < size; i++) {
-		var index = Math.floor((Math.random() * httpSafeChars.length));
+		var index = Math.floor((Math.random() * (httpSafeChars.length - 1)));
 		id += httpSafeChars[index];
 	}
 
