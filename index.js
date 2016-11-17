@@ -2,21 +2,15 @@ var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
 
+var db = require("./dbhelper.js");
 var wikilinks = require("./wikilinks.js");
 
 app.set('port', (process.env.PORT || 5000));
 
 app.use(express.static(__dirname + '/public'));
 app.use("/styles",express.static(__dirname + "/views/stylesheets"));
-
-// Taken from Ming's example code
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-var mongoUri = process.env.MONGODB_URI || 'mongodb://localhost/wikilinktestdb';
-var MongoClient = require('mongodb').MongoClient;
-var db = MongoClient.connect(mongoUri, function(error, databaseConnection) {
-	db = databaseConnection;
-});
 
 // views is directory for all template files
 app.set('views', __dirname + '/views');
@@ -31,25 +25,62 @@ app.get('/api/startGame', function(request, response) {
 
 	var start = request.query.start;
 	var end = request.query.end;
-	var gameId = generateUniqueRandomId('games');
 
 	if (start && end) {
-		var toInsert = {
-			"start": start,
-			"end": end,
-			"uniqueId": gameId
-		};
+		db.createGame(start, end, function(gameData) {
+			if (gameData) {
+				response.send(gameData);
+			} else {
+				response.sendStatus(500);
+			}
+		});
+	} else {
+		response.sendStatus(400);
+	}
+});
 
-		db.collection('games', function(error, coll) {
-			var id = coll.insert(toInsert, function(error, saved) {
-				if (error) {
-					response.sendStatus(500);
-				}
-				else {
-					delete toInsert["_id"];
-					response.send(toInsert);
-				}
-		    });
+app.post('/api/endGame', function(request, response) {
+	var gameId = request.body.gameId;
+	var username = request.body.username;
+	var path = request.body.path;
+
+	if (gameId && path && username) {
+		db.isValidGameId(gameId, function(valid) {
+			if (valid) {
+				db.addPathToGame(gameId, username, path, function(error) {
+					if (error) {
+						response.sendStatus(500);
+					} else {
+						response.sendStatus(200);
+					}
+				});
+			} else {
+				response.sendStatus(400);
+			}
+		});
+	} else {
+		response.sendStatus(400);
+	}
+});
+
+app.get('/api/getGameResults', function(request, response) {
+	response.setHeader('Content-Type', 'application/json');
+
+	var gameId = request.body.gameId;
+
+	if (gameId) {
+		db.isValidGameId(gameId, function(valid) {
+			if (valid) {
+				db.getGameResults(gameId, function(data) {
+					if (data) {
+						response.send(data);
+					} else {
+						response.sendStatus(500);
+					}
+				});
+			} else {
+				response.sendStatus(400);
+			}
 		});
 	} else {
 		response.sendStatus(400);
@@ -97,43 +128,3 @@ app.get('/api/getShortestPath', function(request, response) {
 app.listen(app.get('port'), function() {
  	console.log('Node app is running on port', app.get('port'));
 });
-
-function enableCORS(response) {
-	response.header("Access-Control-Allow-Origin", "*");
-  	response.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-}
-
-function generateUniqueRandomId(collection) {
-	var randomId = generateRandomId();
-
-	db.collection(collection, function(er, collection) {
-		if (er) {
-			return "";
-		} else {
-			collection.find({"uniqueId":randomId}).toArray(function(err, docs) {
-				if (err) {
-					return "";
-				} else {
-					if (docs.length > 0) {
-						randomId = generateUniqueRandomId(collection);
-					}
-				}
-			});
-		}
-	});
-
-	return randomId;
-}
-
-function generateRandomId() {
-	var size = 8;
-	var httpSafeChars = ["A", "a", "B", "b", "C", "c", "D", "d", "E", "e", "F", "f", "G", "g", "H", "h", "I", "i", "J", "j", "K", "k", "L", "l", "M", "m", "N", "n", "O", "o", "P", "p", "Q", "q", "R", "r", "S", "s", "T", "t", "U", "u", "V", "v", "W", "w", "X", "x", "Y", "y", "Z", "z", "_", "-", "~"];
-	var id = "";
-
-	for (var i = 0; i < size; i++) {
-		var index = Math.floor((Math.random() * (httpSafeChars.length - 1)));
-		id += httpSafeChars[index];
-	}
-
-	return id;
-}
