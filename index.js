@@ -66,7 +66,7 @@ app.post('/api/endGame', function(request, response) {
 app.get('/api/getGameResults', function(request, response) {
 	response.setHeader('Content-Type', 'application/json');
 
-	var gameId = request.body.gameId;
+	var gameId = request.query.gameId;
 
 	if (gameId) {
 		db.isValidGameId(gameId, function(valid) {
@@ -85,6 +85,14 @@ app.get('/api/getGameResults', function(request, response) {
 	} else {
 		response.sendStatus(400);
 	}
+});
+
+app.get('/api/isWikipediaPage', function(request, response) {
+	response.setHeader('Content-Type', 'application/json');
+
+	wikilinks.isWikipediaPage(request.query.page, function(valid){
+		response.send({"valid":valid});
+	});
 });
 
 app.get('/api/getRandomPage', function(request, response) {
