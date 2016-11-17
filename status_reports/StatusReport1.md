@@ -48,3 +48,10 @@ __None__
 
 #### Returns
 Array of Wikipedia titles linked to by that page, in alphabetical order.
+
+### isWikipediaPage - `GET`
+#### Params:
+* __page__ - title of wikipedia page to check
+
+#### Returns
+* __isValid__ - boolean
