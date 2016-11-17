@@ -2,8 +2,8 @@ var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
 
-var db = require("./dbhelper.js");
-var wikilinks = require("./wikilinks.js");
+var db = require("./internal_modules/dbhelper.js");
+var wikilinks = require("./internal_modules/wikilinks.js");
 
 app.set('port', (process.env.PORT || 5000));
 
