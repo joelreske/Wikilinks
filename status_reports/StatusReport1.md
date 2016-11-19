@@ -1,5 +1,16 @@
 # Status report 1
 
+1) This week we worked on the backend API which is outlined below.  On the frontend side,
+ we spent the majority of our time learning React.  We also worked on the welcome page and 
+ the foundation peices of the other pages. 
+
+2) The most challenging part of this week was learning to work with the intricacies of 
+react.  Now that we have a better idea of how it works, things should move a little faster.
+
+3) Next week we hope to have all of the different screen views done as shown in the 
+wireframs and have started connecting them to the backend.  
+
+
 ## API Development
 
 The API is relatively developed at this point. All paths are under `/api/`, and all data returned is in `JSON` format.
