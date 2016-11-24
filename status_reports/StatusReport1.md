@@ -66,3 +66,8 @@ Array of Wikipedia titles linked to by that page, in alphabetical order.
 
 #### Returns
 * __isValid__ - boolean
+
+#Comments by Ming
+* Cool.
+* Why React? Perhaps talk about this as a lightning talk on Thursday, December 1st.  I need to delve into React too for a project.
+
