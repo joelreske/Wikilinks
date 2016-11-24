@@ -68,6 +68,7 @@ Array of Wikipedia titles linked to by that page, in alphabetical order.
 * __isValid__ - boolean
 
 #Comments by Ming
-* Cool.
+* Cool. I like where this project is going.
+* Target having something to show for by the end of next week (December 2nd)
 * Why React? Perhaps talk about this as a lightning talk on Thursday, December 1st.  I need to delve into React too for a project.
 
