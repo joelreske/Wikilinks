@@ -1,6 +1,9 @@
 var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
+var React = require('react');
+var ReactDOM = require('react-dom');
+
 
 var db = require("./internal_modules/dbhelper.js");
 var wikilinks = require("./internal_modules/wikilinks.js");

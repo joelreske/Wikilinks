@@ -2,8 +2,9 @@ body {
         background-color: #6600ff;
 }
 
-#title {
-        font-size: 18px;
+#header {
+        font-size: 44px;
+        font-weight: bold;
         color: white;
         border-bottom: 1px solid white;
 }

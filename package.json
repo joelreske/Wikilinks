@@ -14,7 +14,9 @@
     "ejs": "latest",
     "express": "latest",
     "mongodb": "latest",
-    "node-wikipedia": "latest"
+    "node-wikipedia": "latest",
+    "react": "^15.4.1",
+    "react-dom": "^15.4.1"
   },
   "license": "MIT",
   "private": true

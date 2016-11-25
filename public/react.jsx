@@ -1,12 +1,10 @@
-<script type="text/jsx">
-var React = require('react');
-var ReactDOM = require('react-dom');
-
-var logo = React.createClass({
+var Logo = React.createClass({
     render : function(){
+        console.log("hello from inside react");
         return <div>WikiLinks</div>;
     } 
 });
+
 
 var Button = React.createClass({
   render: function () {
@@ -19,12 +17,10 @@ var Button = React.createClass({
   }
 });
 
- $(document).ready(function() {
-    ReactDOM.render(<logo/>,document.getElementById('logo'));
-  });
+console.log("hello2 from inside react");
 
-React.render(new Button(), document.getElementById('startgame'));
+ReactDOM.render(<Logo/>, document.getElementById('header'));
+
+ReactDOM.render(new Button(), document.getElementById('startgame'));
 
 module.exports = Button;
-
-</script>
