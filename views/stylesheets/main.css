@@ -9,10 +9,12 @@ body {
         border-bottom: 1px solid white;
 }
 
-.startButtonStyle {
-	margin: '10px 10px 10px 0'
-};
+#startText {
+        color: white;
+        font-size: 30px;
+        text-align: center;
+}
 
-#startgame {
-        margin: '10px 10px 10px 0'
-};
+#startButton {
+        text-align: center;
+}
