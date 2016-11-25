@@ -9,6 +9,11 @@ body {
         border-bottom: 1px solid white;
 }
 
+#startgame {
+        padding: 150px 0;
+        border-top: 200px;
+}
+
 #startText {
         color: white;
         font-size: 30px;

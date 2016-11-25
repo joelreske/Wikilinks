@@ -6,25 +6,17 @@ var Logo = React.createClass({
 
 ReactDOM.render(<Logo/>, document.getElementById('header'));
 
-
-var Stext = React.createClass ({
-  render : function(){
-      return <div>Go on a Wiki Adventure</div>
-  }
-});
-
-var Button = React.createClass({
+var StartGame = React.createClass({
   render: function () {
     return (
-      <button
-        // className="startbutton"
-        // style={startButtonStyle}
-        onClick={this.props.handleClick}>Start Game</button>
+      <div>
+      <div id="startText">Go on a Wiki Adventure</div>
+      <div id="startButton"><button
+        onClick={this.props.handleClick}>Start Game</button></div>
+        </div>
     );
   }
 });
 
-ReactDOM.render(<Stext/>, document.getElementById('startText'));
-ReactDOM.render(<Button/>, document.getElementById('startButton'));
+ReactDOM.render(<StartGame/>, document.getElementById('startgame'));
 
-// module.exports = Button;
