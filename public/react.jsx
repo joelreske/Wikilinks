@@ -6,14 +6,17 @@ var Logo = React.createClass({
 
 ReactDOM.render(<Logo/>, document.getElementById('header'));
 
+function handleClick() {
+  alert('click');
+}
+
 var StartGame = React.createClass({
   render: function () {
     return (
       <div className="new-game">
       <div id="startText">Go on a Wiki Adventure</div>
       <div id="startButton"><button
-        onClick={() => alert('click')}>Start Game</button></div>
-
+        onClick={() => handleClick()}>Start Game</button></div>
         </div>
     );
   }
