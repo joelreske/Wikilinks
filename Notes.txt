@@ -1,0 +1,6 @@
+I started this doc so that when people start working, they can look at this and understand where the person before them left off.  
+
+Right now, The first two pages are coded such that they look like the wire frame but don't do anything when you hit start game.  If you would like to see that, put the code from the react file you want to see into the header file, adjust the index.ejs file so that div tags match and it sould work.  
+
+I don't understand how to make the pages change or make them different urls so that is why it is not working right now.  In the header file currently, I got a count up timer running for the play game screen.  You can change what it counts to.  I think that the next step, maybe for someone who understands client/server intereaction better than me would be to get the seperate html pages working with seperate urls so that the start game button on the first page links to the second, set words page.  
+-- Raina
