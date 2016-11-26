@@ -32,7 +32,39 @@ var CountupTimer = React.createClass({
   }
 });
 
-ReactDOM.render(<CountupTimer total_time="0" />, document.getElementById('timer'));
+var Stops = React.createClass({
+    getInitialState: function() {
+        return {
+            total: 0
+        };
+    },
+    increment: function() {
+        this.setState({total_stops: this.state.total_stops + 1});
+    },
+    componentDidMount: function() {
+        this.setState({ total_time: this.props.total_time });
+    },
+    render: function() {
+        return (
+            <div>Stops: {this.state.total_stops}</div>
+        );
+    }
+});
+
+var TopBar= React.createClass({
+    render: function () {
+        return (
+            <div>
+                <p><u>Go Back</u></p>
+                <CountupTimer total_time="0" /> 
+                <Stops total_stops="0"/>
+            </div>
+            );
+    }
+});
+
+ReactDOM.render(<TopBar />, document.getElementById('top-bar'));
+
 
 
 ReactDOM.render(<Logo/>, document.getElementById('header'));
