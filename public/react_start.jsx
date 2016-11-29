@@ -1,7 +1,7 @@
 var StartGame = React.createClass({
   handleClick: function () {
-      alert('click');
-  }
+      window.location = "http://www.google.com/";
+  },
   render: function () {
     return (
       <div className="new-game">
@@ -13,6 +13,3 @@ var StartGame = React.createClass({
     );
   }
 });
-
-
-ReactDOM.render(<StartGame/>, document.getElementById('startgame'));
