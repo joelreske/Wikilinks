@@ -7,7 +7,7 @@ var StartGame = React.createClass({
       <div className="new-game">
       <div id="startText">Go on a Wiki Adventure</div>
       <div id="startButton"><button
-        onClick={() => handleClick()}>Start Game</button></div>
+        onClick={() => this.handleClick()}>Start Game</button></div>
 
         </div>
     );
