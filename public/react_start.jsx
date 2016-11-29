@@ -1,8 +1,7 @@
-function handleClick() {
-  alert('click');
-}
-
 var StartGame = React.createClass({
+  handleClick: function () {
+      alert('click');
+  }
   render: function () {
     return (
       <div className="new-game">
