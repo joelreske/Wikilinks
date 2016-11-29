@@ -1,4 +1,17 @@
 var GetWords = React.createClass({
+  handleClick: function () {
+    if (this.value = random) {
+      //get random words
+    }
+    var data = {firstWord:this.firstWord, secondWord:this.secondWord};
+        $.ajax({
+          type: "POST",
+          data :JSON.stringify(data),
+          url: "google.com",
+          contentType: "application/json"
+        });
+    window.location = "http://www.google.com/";
+  },
   render: function () {
     return (
         <div className ="form"> 
@@ -6,7 +19,7 @@ var GetWords = React.createClass({
         Enter Stating Article:   <input type="text" name="firstWord" value="" />
             <br />
             <br />
-        Enter Ending Article:   <input type="text" name="firstWord" value="" />
+        Enter Ending Article:   <input type="text" name="secondWord" value="" />
             <br />
             <br />
         Or 
@@ -16,7 +29,7 @@ var GetWords = React.createClass({
         <br />
         <br />
             <button
-                onClick={() => handleClick()}>Start Game</button>
+                onClick={() => this.handleClick()}>Start Game</button>
         </form>
         </div>
       );
