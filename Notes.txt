@@ -1,8 +1,8 @@
 I started this doc so that when people start working, they can look at this and understand where the person before them left off.  
 
-Right now, The first two pages are coded such that they look like the wire frame.  The first page links to google when you hit start game because I don't actually understand where that is supposed to go.... But that sould be a matter of just changing the URL.  
+Right now, The first two pages are coded such that they look like the wire frame. The first page links to google when you hit start game because I don't actually understand where that is supposed to go.... But that sould be a matter of just changing the URL.  
 
-If you would like to see the second page actually working, put the code from the react file react_newgame into the header file, adjust the index.ejs file so that div tags match, comment out the code for the first page, and it sould work.  
+If you would like to see the second page actually working, put the code from the react file react_newgame into the header file, adjust the index.ejs file so that div tags match, comment out the code for the first page, and it sould work.  I commented out the code from the post methods that I was starting to work on.  Someone could pick up there if they undertand posting and class objects.  
 
 In the header file currently, I got a count up timer running for the play game screen.  You can change what it counts to.  It is also commented out right now.  I think that the next step, maybe for someone who understands client/server intereaction better than me would be to get the seperate html pages working with seperate urls so that the start game button on the first page links to the second, set words page.  
 -- Raina

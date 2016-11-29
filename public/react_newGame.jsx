@@ -1,15 +1,15 @@
 var GetWords = React.createClass({
   handleClick: function () {
-    if (this.value = random) {
-      //get random words
-    }
-    var data = {firstWord:this.firstWord, secondWord:this.secondWord};
-        $.ajax({
-          type: "POST",
-          data :JSON.stringify(data),
-          url: "google.com",
-          contentType: "application/json"
-        });
+    // if (this.value = random) {
+    //   //get random words
+    // }
+    // var data = {firstWord:this.firstWord, secondWord:this.secondWord};
+    //     $.ajax({
+    //       type: "POST",
+    //       data :JSON.stringify(data),
+    //       url: "google.com",
+    //       contentType: "application/json"
+    //     });
     window.location = "http://www.google.com/";
   },
   render: function () {
