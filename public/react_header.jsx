@@ -6,7 +6,7 @@ var Logo = React.createClass({
 
 var StartGame = React.createClass({
   handleClick: function () {
-      alert('click');
+      window.location = "http://www.google.com/";
   },
   render: function () {
     return (
