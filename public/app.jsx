@@ -1,18 +1,98 @@
-class NewGame extends React.Component{
-    constructor(){
-        super();
+class NewGame extends React.Component {
+    constructor(props) {
+        super(props);
+        this.randomizeStartPage = this.randomizeStartPage.bind(this);
+        this.randomizeEndPage = this.randomizeEndPage.bind(this);
+        this.parseStartPageEntry = this.parseStartPageEntry.bind(this);
+        this.parseEndPageEntry = this.parseEndPageEntry.bind(this);
+        this.checkPages = this.checkPages.bind(this);
+        this.startGame = this.startGame.bind(this);
     }
 
-    render(){
+    render() {
         return (
-            <form action="" className ="form">
-            Enter Stating Article: <input type="text" ref="firstWord"/>
-            Enter Ending Article: <input type="text" ref="secondWord"/>
-            <button type="submit"></button>
-            </form>
+            <div className="container">
+                <div className="form-group">
+                    <label htmlFor="startPage">Start Page:</label>
+                    <input className="input-sm" id="startPage" placeholder="Enter Start Page" onChange={this.parseStartPageEntry}/>
+                    <button className="btn btn-default" onClick={this.randomizeStartPage}>Randomize</button>
+                </div>
+                <div className="form-group">
+                    <label htmlFor="endPage">End Page:</label>
+                    <input className="input-sm" id="endPage" placeholder="Enter End Page" onChange={this.parseEndPageEntry}/>
+                    <button className="btn btn-default" onClick={this.randomizeEndPage}>Randomize</button>
+                </div>
+                <button className="btn btn-default" onClick={this.startGame}>Start Game</button>
+            </div>
         );
+
     }
 
+    randomize(inputId) {
+        $.getJSON("/api/getRandomPage", function(data) {
+            $("#" + inputId).val(data.pageTitle);
+        });
+    }
+
+    randomizeStartPage(event) {
+        this.randomize("startPage");
+    }
+
+    randomizeEndPage() {
+        this.randomize("endPage");
+    }
+
+    parsePageEntry(inputId) {
+        var urlRegx = /(?:http:\/\/|https:\/\/)en.wikipedia.org\/wiki\/([^#<>[\]|{}]*)/i
+        var inputField = $("#" + inputId);
+        var match = urlRegx.exec(inputField.val());
+
+        if (match) {
+            var pagetitle = match[1].replace(/_/g, " ");
+            inputField.val(pagetitle);
+        }
+    }
+
+    parseEndPageEntry() {
+        this.parsePageEntry("endPage");
+    }
+
+    parseStartPageEntry() {
+        this.parsePageEntry("startPage");
+    }
+
+    checkPages(callback) {
+        var startPage = $("#startPage").val();
+        var endPage = $("#endPage").val();
+
+        if (startPage == "") {
+            window.alert("Start is empty");
+        } else if (endPage == "") {
+            window.alert("End is empty");
+        } else if (startPage == endPage) {
+            window.alert("Start and end cannot be the same");
+        } else {
+            $.getJSON("/api/isWikipediaPage?page=" + startPage, function(data) {
+                if (!data.valid) {
+                    window.alert("Start is not a valid Wikipedia Page");
+                } else {
+                    $.getJSON("/api/isWikipediaPage?page=" + endPage, function(data) {
+                        if (!data.valid) {
+                            window.alert("End is not a valid Wikipedia Page");
+                        } else {
+                            callback();
+                        }
+                    });
+                }
+            });
+        }
+    }
+
+    startGame() {
+        this.checkPages(function() {
+            console.log("ready");
+        });
+    }
 }
 
 class Time extends React.Component {
