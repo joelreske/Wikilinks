@@ -5,9 +5,11 @@ class NewGame extends React.Component {
         this.randomizeEndPage = this.randomizeEndPage.bind(this);
         this.parseStartPageEntry = this.parseStartPageEntry.bind(this);
         this.parseEndPageEntry = this.parseEndPageEntry.bind(this);
+        this.checkPages = this.checkPages.bind(this);
+        this.startGame = this.startGame.bind(this);
     }
 
-    render(){
+    render() {
         return (
             <div className="container">
                 <div className="form-group">
@@ -59,8 +61,37 @@ class NewGame extends React.Component {
         this.parsePageEntry("startPage");
     }
 
-    startGame() {
+    checkPages(callback) {
+        var startPage = $("#startPage").val();
+        var endPage = $("#endPage").val();
 
+        if (startPage == "") {
+            window.alert("Start is empty");
+        } else if (endPage == "") {
+            window.alert("End is empty");
+        } else if (startPage == endPage) {
+            window.alert("Start and end cannot be the same");
+        } else {
+            $.getJSON("/api/isWikipediaPage?page=" + startPage, function(data) {
+                if (!data.valid) {
+                    window.alert("Start is not a valid Wikipedia Page");
+                } else {
+                    $.getJSON("/api/isWikipediaPage?page=" + endPage, function(data) {
+                        if (!data.valid) {
+                            window.alert("End is not a valid Wikipedia Page");
+                        } else {
+                            callback();
+                        }
+                    });
+                }
+            });
+        }
+    }
+
+    startGame() {
+        this.checkPages(function() {
+            console.log("ready");
+        });
     }
 }
 
