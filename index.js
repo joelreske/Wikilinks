@@ -66,6 +66,30 @@ app.post('/api/endGame', function(request, response) {
 	}
 });
 
+app.get('api/getGameData', function(request, response) {
+	response.setHeader('Content-Type', 'application/json');
+
+	var gameId = request.query.gameId;
+
+	if (gameId) {
+		db.isValidGameId(gameId, function(valid) {
+			if (valid) {
+				db.getGameData(gameId, function(data) {
+					if (data) {
+						response.send(data);
+					} else {
+						response.sendStatus(500);
+					}
+				});
+			} else {
+				response.sendStatus(400);
+			}
+		});
+	} else {
+		response.sendStatus(400);
+	}
+});
+
 app.get('/api/getGameResults', function(request, response) {
 	response.setHeader('Content-Type', 'application/json');
 
@@ -122,19 +146,19 @@ app.get('/api/getLinksForPage', function(request, response) {
 	});
 });
 
-app.get('/api/getShortestPath', function(request, response) {
-	response.setHeader('Content-Type', 'application/json');
+// app.get('/api/getShortestPath', function(request, response) {
+// 	response.setHeader('Content-Type', 'application/json');
 
-	var start = "Fire";
-	var end = "Crotch";
+// 	var start = "Fire";
+// 	var end = "Crotch";
 
-	// var start = request.query.start;
-	// var end = request.query.end;
+// 	// var start = request.query.start;
+// 	// var end = request.query.end;
 
-	wikilinks.getShortestPath(start, end, function(shortestPath) {
-		response.send(shortestPath);
-	});
-});
+// 	wikilinks.getShortestPath(start, end, function(shortestPath) {
+// 		response.send(shortestPath);
+// 	});
+// });
 
 app.listen(app.get('port'), function() {
  	console.log('Node app is running on port', app.get('port'));

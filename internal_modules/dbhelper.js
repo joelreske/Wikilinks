@@ -42,6 +42,22 @@ function addPathToGame(gameId, username, path, callback) {
 	});
 }
 
+function getGameData(gameId, callback) {
+	db.collection('games', function(error, coll) {
+		if (error) {
+			callback(null);
+		} else {
+			coll.find({"gameId": escape(gameId)}).toArray(function(err, docs) {
+				if (err) {
+					callback(null);
+				} else {
+					callback(docs);
+				}
+			});
+		}
+	});
+}
+
 // assumes gameId is valid
 function getGameResults(gameId, callback) {
 	db.collection('completed_games', function(er, collection) {
@@ -80,6 +96,7 @@ function isValidGameId(gameId, callback) {
 module.exports.createGame = createGame;
 module.exports.isValidGameId = isValidGameId;
 module.exports.getGameResults = getGameResults;
+module.exports.getGameData = getGameData;
 module.exports.addPathToGame = addPathToGame;
 
 /* ---------------------------Helper Functions---------------------------- */
