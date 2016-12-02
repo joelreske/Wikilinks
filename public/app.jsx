@@ -214,11 +214,24 @@ class App extends React.Component {
     }
 
     render(){
-        if (false){
+        var pageURL = decodeURIComponent(window.location.search.substring(1)),
+            urlVariables = pageURL.split('&'),
+            gidRegx = /(?:(?:gid=)([a-zA-Z0-9~\-_]*))/,
+            gameId = null;
+
+        for (var i = 0; i < urlVariables.length; i++) {
+            gameId = gidRegx.exec(urlVariables[i]);
+            if (gameId != null) {
+                gameId = gameId[1];
+                break;
+            }
+        }
+
+        if (gameId){
             return (
-                <InGame gameId="1234"/>
+                <InGame gameId={gameId}/>
             );
-        }else{
+        } else {
             return (
                 <NewGame/>
             );
