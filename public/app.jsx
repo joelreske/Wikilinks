@@ -1,4 +1,3 @@
-
 class NewGame extends React.Component {
     constructor(props) {
         super(props);
@@ -7,7 +6,7 @@ class NewGame extends React.Component {
         this.parseStartPageEntry = this.parseStartPageEntry.bind(this);
         this.parseEndPageEntry = this.parseEndPageEntry.bind(this);
     }
-    
+
     render(){
         return (
             <div className="container">

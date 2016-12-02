@@ -4,7 +4,7 @@ var wikipedia = require("node-wikipedia");
 var getLinksForPage = function (pageTitle, callback) {
 	wikipedia.page.data(pageTitle, {}, function(response) {
 		pageTitle = pageTitle.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-		var excludePatterns = new RegExp("^(Portal:|Help:|Category:|Wikipedia:|Help:|Template:|File:|Portal:|Book:|Template talk:|" + pageTitle + ")");
+		var excludePatterns = new RegExp("^(Media:|User:|Wikipedia:|File:|MediaWiki:|Template:|Help:|Category:|Portal:|Book:|Draft:|Education Program:|TimedText:|Module:|Gadget:|Gadget definition:|Special:|Talk:|User talk:|Wikipedia talk:|File talk:|MediaWiki talk:|Template talk:|Help talk:|Category talk:|Portal talk:|Book talk:|Draft talk:|Education Program talk:|TimedText talk:|Module talk:|Gadget talk:|Gadget definition talk:|" + pageTitle + ")");
 		var links = [];
 
 		if (response) {
