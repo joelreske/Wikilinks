@@ -80,7 +80,7 @@ class NewGame extends React.Component {
                         if (!data.valid) {
                             window.alert("End is not a valid Wikipedia Page");
                         } else {
-                            callback();
+                            callback(startPage, endPage);
                         }
                     });
                 }
@@ -89,8 +89,11 @@ class NewGame extends React.Component {
     }
 
     startGame() {
-        this.checkPages(function() {
-            console.log("ready");
+        this.checkPages(function(start, end) {
+            $.getJSON("/api/startGame?start=" + start + "&end=" + end, function(data) {
+                window.history.pushState(data, 'WikiLinks', '/?gameId=' + data.gameId);
+                ReactDOM.render(<InGame gameId={data.gameId}/>, document.getElementById('app'));
+            });
         });
     }
 }
@@ -191,6 +194,10 @@ class InGame extends React.Component {
         super(props);
 
         console.log(props.gameId);
+        $.getJSON( "/api/getGameData?gid="+props.gameId, function(data){
+          console.log(data);
+        });
+
         this.startTime = new Date();
         this.timeElapsed;
         this.state = {gameWon : false, time: 0, path: []}
@@ -240,11 +247,24 @@ class App extends React.Component {
     }
 
     render(){
+        var pageURL = decodeURIComponent(window.location.search.substring(1)),
+            urlVariables = pageURL.split('&'),
+            gidRegx = /(?:(?:gid=)([a-zA-Z0-9~\-_]*))/,
+            gameId = null;
+
+        for (var i = 0; i < urlVariables.length; i++) {
+            gameId = gidRegx.exec(urlVariables[i]);
+            if (gameId != null) {
+                gameId = gameId[1];
+                break;
+            }
+        }
+
         if (true){
             return (
-                <InGame gameId="1234"/>
+                <InGame gameId={gameId}/>
             );
-        }else{
+        } else {
             return (
                 <NewGame/>
             );
