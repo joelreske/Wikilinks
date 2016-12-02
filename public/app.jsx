@@ -102,29 +102,33 @@ class Time extends React.Component {
     render() {
         return (
             <div>{this.props.time}</div>
-          );
+        );
     }
 }
 
 class Timer extends React.Component {
-    constructor(props){
+    constructor(props) {
         super(props);
 
         this.tick = this.tick.bind(this);
-        this.state = {elapsed: 0 };
+        this.state = {
+            elapsed: 0
+        };
     }
 
-    componentDidMount(){
+    componentDidMount() {
         this.timer = setInterval(this.tick, 100);
     }
 
-    componentWillUnmount(){
+    componentWillUnmount() {
         this.props.timeCallback(new Date() - this.props.start);
         clearInterval(this.timer);
     }
 
-    tick(){
-        this.setState({elapsed: new Date() - this.props.start});
+    tick() {
+        this.setState({
+            elapsed: new Date() - this.props.start
+        });
     }
 
     render() {
@@ -136,50 +140,55 @@ class Timer extends React.Component {
 }
 
 class ArticleSelect extends React.Component {
-    constructor(props){
+    constructor(props) {
         super(props);
 
-        this.state = { article: this.props.start, linksShown: [] };
+        this.state = {
+            article: this.props.start,
+            linksShown: []
+        };
 
         this.getLinksForPage = this.getLinksForPage.bind(this);
         this.showLinks = this.showLinks.bind(this);
     }
 
-    componentWillMount(){
+    componentWillMount() {
         this.nextPage(this.props.start);
     }
 
-    nextPage(page){
-      console.log("Going to: " + page);
-      this.props.addArticle(page);
-      if (page == this.props.end){
-        this.props.onWin();
-      }else{
-        this.getLinksForPage(page, this.showLinks);
-      }
+    nextPage(page) {
+        console.log("Going to: " + page);
+        this.props.addArticle(page);
+        if (page == this.props.end) {
+            this.props.onWin();
+        } else {
+            this.getLinksForPage(page, this.showLinks);
+        }
     }
 
-    getLinksForPage(page, callback){
-      if (page){
-          $.getJSON( "/api/getLinksForPage?page="+page, callback);
-      }else{
-          console.log("Shoot.");
-      }
+    getLinksForPage(page, callback) {
+        if (page) {
+            $.getJSON("/api/getLinksForPage?page=" + page, callback);
+        } else {
+            console.log("Shoot.");
+        }
     }
 
-    showLinks(data){
-        this.setState({linksShown: data});
+    showLinks(data) {
+        this.setState({
+            linksShown: data
+        });
     }
 
     render() {
         var data = this.state.linksShown;
         var output = [];
-        for (var i in data){
-          (function (i, obj) {
-            var articleName = data[i];
-            //console.log(articleName);
-            output.push(<a key={i} className="col-sm-2 articleName" onClick={() => obj.nextPage(articleName)}>{articleName}</a>);
-          })(i, this);
+        for (var i in data) {
+            (function(i, obj) {
+                var articleName = data[i];
+                //console.log(articleName);
+                output.push(<a key={i} className="col-sm-2 articleName" onClick={() => obj.nextPage(articleName)}>{articleName}</a>);
+            })(i, this);
         }
         return <div className="">{output}</div>;
     }
@@ -191,7 +200,11 @@ class InGame extends React.Component {
 
         this.startTime = new Date();
         this.timeElapsed;
-        this.state = {gameWon : false, time: 0, path: []}
+        this.state = {
+            gameWon: false,
+            time: 0,
+            path: []
+        }
 
         this.returnTimeElapsed = this.returnTimeElapsed.bind(this);
         this.addArticle = this.addArticle.bind(this);
@@ -200,51 +213,60 @@ class InGame extends React.Component {
 
     }
 
-    componentWillMount(){
-      $.getJSON( "/api/getGameData?gid="+this.props.gid, this.setEndpoints);
+    componentWillMount() {
+        $.getJSON("/api/getGameData?gid=" + this.props.gid, this.setEndpoints);
     }
 
-    setEndpoints(data){
-      data = data[0];
-      this.setState({start: data.start, end: data.end});
+    setEndpoints(data) {
+        data = data[0];
+        this.setState({
+            start: data.start,
+            end: data.end
+        });
     }
 
     returnTimeElapsed(time) {
-      this.setState({"time": time});
+        this.setState({
+            "time": time
+        });
     }
 
     addArticle(name) {
-      var newPath = this.state.path;
-      newPath.push(name);
-      this.setState({path: newPath});
+        var newPath = this.state.path;
+        newPath.push(name);
+        this.setState({
+            path: newPath
+        });
     }
 
     onWin() {
-      this.setState({gameWon:true});
+        this.setState({
+            gameWon: true
+        });
     }
 
     render() {
-        if (this.state.start && this.state.end){
-          if (!this.state.gameWon){
-            return (
-              <div>
+        if (this.state.start && this.state.end) {
+            if (!this.state.gameWon) {
+                return (
+                    <div>
                 <Timer start={Date.now()} timeCallback={this.returnTimeElapsed}/>
                 <ArticleSelect addArticle={this.addArticle} onWin={this.onWin} start={this.state.start} end={this.state.end}/>
               </div>
-            );
-          }else{
-            return (
-              <div>
+                );
+            } else {
+                return (
+                    <div>
                 <h1>YOU WON</h1>
                 <h2>And you did it in {this.state.time} seconds</h2>
                 <p>{JSON.stringify(this.state.path)}</p>
               </div>
+                );
+            }
+        } else {
+            return (
+                <h1>Loading...</h1>
             );
-          }
-        }else{
-          return (
-            <h1>Loading...</h1>
-          );
         }
     }
 }
@@ -254,12 +276,12 @@ class App extends React.Component {
         super();
     }
 
-    render(){
+    render() {
         var pageURL = decodeURIComponent(window.location.search.substring(1)),
             gidRegx = /(?:(?:gid=)([a-zA-Z0-9~\-_]*))/,
             gid = gidRegx.exec(pageURL);
 
-        if (gid){
+        if (gid) {
             return (
                 <InGame gid={gid[1]}/>
             );
