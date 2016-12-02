@@ -121,6 +121,7 @@ class Timer extends React.Component {
 
     componentWillUnmount(){
         this.props.timeCallback(new Date() - this.props.start);
+        clearInterval(this.timer);
     }
 
     tick(){
@@ -143,31 +144,45 @@ class ArticleSelect extends React.Component {
 
         this.getLinksForPage = this.getLinksForPage.bind(this);
         this.showLinks = this.showLinks.bind(this);
-
-        this.getLinksForPage(this.props.start, this.showLinks);
     }
 
-    getLinksForPage(page, callback, error){
+    componentWillMount(){
+        this.nextPage(this.props.start);
+    }
+
+    nextPage(page){
+      console.log("Going to: " + page);
+      this.props.addArticle(page);
+      if (page == this.props.end){
+        this.props.onWin();
+      }else{
+        this.getLinksForPage(page, this.showLinks);
+      }
+    }
+
+    getLinksForPage(page, callback){
       if (page){
           $.getJSON( "/api/getLinksForPage?page="+page, callback);
       }else{
-          console.log("Fuck");
+          console.log("Shoot.");
       }
     }
 
     showLinks(data){
-      console.log(data);
-      this.setState({linksShown: data});
+        this.setState({linksShown: data});
     }
 
     render() {
         var data = this.state.linksShown;
         var output = [];
         for (var i in data){
-          //console.log(data[i]);
-          output.push(<a key={i}>{data[i]}</a>);
+          (function (i, obj) {
+            var articleName = data[i];
+            //console.log(articleName);
+            output.push(<a key={i} className="col-sm-2 articleName" onClick={() => obj.nextPage(articleName)}>{articleName}</a>);
+          })(i, this);
         }
-        return <p>{output}</p>;
+        return <div className="">{output}</div>;
     }
 }
 
@@ -178,10 +193,11 @@ class InGame extends React.Component {
         console.log(props.gameId);
         this.startTime = new Date();
         this.timeElapsed;
-        this.state = {gameStarted : false, time: 0, path: []}
+        this.state = {gameWon : false, time: 0, path: []}
 
         this.returnTimeElapsed = this.returnTimeElapsed.bind(this);
         this.addArticle = this.addArticle.bind(this);
+        this.onWin = this.onWin.bind(this);
     }
 
     returnTimeElapsed(time) {
@@ -194,14 +210,27 @@ class InGame extends React.Component {
       this.setState({path: newPath});
     }
 
+    onWin() {
+      this.setState({gameWon:true});
+    }
+
     render() {
-        return (
-            //<Time time={this.state.time}/>
+        if (!this.state.gameWon){
+          return (
             <div>
-            <Timer start={Date.now()} timeCallback={this.returnTimeElapsed}/>
-            <ArticleSelect addAtricle={this.addAtricle} start="United States" end="United States"/>
+              <Timer start={Date.now()} timeCallback={this.returnTimeElapsed}/>
+              <ArticleSelect addArticle={this.addArticle} onWin={this.onWin} start="United States" end="Flag of the United States"/>
             </div>
           );
+        }else{
+          return (
+            <div>
+              <h1>YOU WON</h1>
+              <h2>And you did it in {this.state.time} seconds</h2>
+              <p>{JSON.stringify(this.state.path)}</p>
+            </div>
+          );
+        }
     }
 }
 
