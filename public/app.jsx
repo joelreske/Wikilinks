@@ -32,6 +32,10 @@ class NewGamePageForm extends React.Component {
             this.textInput.value = pagetitle;
         }
     }
+
+    val() {
+        return this.textInput.value;
+    }
 }
 
 class NewGame extends React.Component {
@@ -44,8 +48,8 @@ class NewGame extends React.Component {
     render() {
         return (
             <div className="container">
-                <NewGamePageForm id="startPage" label="Start Page:" placeholder="Enter Start Page"/>
-                <NewGamePageForm id="endPage" label="End Page:" placeholder="Enter End Page"/>
+                <NewGamePageForm id="startPage" label="Start Page:" placeholder="Enter Start Page" ref={(input) => {this.startInput = input;}}/>
+                <NewGamePageForm id="endPage" label="End Page:" placeholder="Enter End Page" ref={(input) => {this.endInput = input;}}/>
                 <button className="btn btn-default" onClick={this.startGame}>Start Game</button>
             </div>
         );
@@ -53,8 +57,8 @@ class NewGame extends React.Component {
     }
 
     checkPages(callback) {
-        var startPage = $("#startPage").val();
-        var endPage = $("#endPage").val();
+        var startPage = this.startInput.val();
+        var endPage = this.endInput.val();
 
         if (startPage == "") {
             window.alert("Start is empty");
