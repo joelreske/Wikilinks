@@ -118,7 +118,7 @@ class Timer extends React.Component {
     }
 
     componentDidMount(){
-        this.timer = setInterval(this.tick, 50);
+        this.timer = setInterval(this.tick, 100);
     }
 
     componentWillUnmount(){
@@ -137,6 +137,42 @@ class Timer extends React.Component {
     }
 }
 
+class ArticleSelect extends React.Component {
+    constructor(props){
+        super(props);
+
+        this.state = { article: this.props.start, linksShown: [] };
+
+        this.getLinksForPage = this.getLinksForPage.bind(this);
+        this.showLinks = this.showLinks.bind(this);
+
+        this.getLinksForPage(this.props.start, this.showLinks);
+    }
+
+    getLinksForPage(page, callback, error){
+      if (page){
+          $.getJSON( "/api/getLinksForPage?page="+page, callback);
+      }else{
+          console.log("Fuck");
+      }
+    }
+
+    showLinks(data){
+      console.log(data);
+      this.setState({linksShown: data});
+    }
+
+    render() {
+        var data = this.state.linksShown;
+        var output = [];
+        for (var i in data){
+          //console.log(data[i]);
+          output.push(<a key={i}>{data[i]}</a>);
+        }
+        return <p>{output}</p>;
+    }
+}
+
 class InGame extends React.Component {
     constructor(props) {
         super(props);
@@ -144,19 +180,29 @@ class InGame extends React.Component {
         console.log(props.gameId);
         this.startTime = new Date();
         this.timeElapsed;
-        this.state = {gameStarted : false, time: 0}
+        this.state = {gameStarted : false, time: 0, path: []}
 
         this.returnTimeElapsed = this.returnTimeElapsed.bind(this);
+        this.addArticle = this.addArticle.bind(this);
     }
 
     returnTimeElapsed(time) {
       this.setState({"time": time});
     }
 
+    addArticle(name) {
+      var newPath = this.state.path;
+      newPath.push(name);
+      this.setState({path: newPath});
+    }
+
     render() {
         return (
             //<Time time={this.state.time}/>
+            <div>
             <Timer start={Date.now()} timeCallback={this.returnTimeElapsed}/>
+            <ArticleSelect addAtricle={this.addAtricle} start="United States" end="United States"/>
+            </div>
           );
     }
 }
@@ -167,7 +213,7 @@ class App extends React.Component {
     }
 
     render(){
-        if (false){
+        if (true){
             return (
                 <InGame gameId="1234"/>
             );
