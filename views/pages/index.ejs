@@ -4,32 +4,28 @@
 
   <meta charset="utf-8">
   <title>WikiLinks</title>
-  <link rel="stylesheet" href="styles/main.css" type="text/css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.7/react.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.7/react-dom.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.6.15/browser.js"></script>
-<script src="http://www.w3schools.com/lib/w3data.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
-  
+  <!-- Latest compiled and minified bootstrap -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="styles/main.css" type="text/css" />
+
 </head>
 
 <body>
-        <p><div id="header"></div>
-        <!-- <p><div id="top-bar"></div> -->
+  <div class="container-fluid">
+    <div id="header">
+      <h1>WikiLinks</h1>
+    </div>
 
+    <br>
+    <!--- comment back in along with render to get button to display -->
+    <div id="app" class="col-xs-10 col-xs-offset-1"></div>
 
-        <!--- comment back in along with render to get button to display -->
-        <p><div id="startgame"></div></p>
-        <!-- <p><div id="getwords"></div> -->
-
-
-        <!-- <div w3-include-html="startingscreen.html"></div> -->
-        <!-- <div w3-include-html="setgamescreen.html"></div> -->
-        <!-- <div w3-include-html="playscreen.html"></div> -->
-        <!-- <div w3-include-html="finalscreen.html"></div> -->
-        <!-- // <script>w3IncludeHTML()</script> -->
-
-        <script type = "text/babel" src="react_header.jsx" ></script>
-
+    <script type="text/babel" src="app.jsx" ></script>
+  </div>
 </body>
-</html> 
+</html>

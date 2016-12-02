@@ -36,5 +36,3 @@ var GetWords = React.createClass({
   }
 
 });
-
-ReactDOM.render(<GetWords/>, document.getElementById('getwords'));

@@ -4,32 +4,13 @@ body {
         color: white;
 }
 
-#header {
+#header h1{
         font-size: 44px;
         font-weight: bold;
         color: white;
         border-bottom: 1px solid white;
 }
 
-#startgame {
-        padding: 150px 0;
-        border-top: 200px;
-}
+#app {
 
-#startText {
-        color: white;
-        font-size: 30px;
-        text-align: center;
-}
-
-#startButton {
-        text-align: center;
-}
-
-#getwords {
-        font-size: 20px;
-        padding: 150px 0;
-        border-top: 200px;
-        text-align: center;
-        color: white;
 }
