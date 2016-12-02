@@ -1,7 +1,10 @@
 body {
         background-color: #6600ff;
         font-size: 20px;
-        color: white;
+}
+
+label {
+	color: white;
 }
 
 #header h1{
