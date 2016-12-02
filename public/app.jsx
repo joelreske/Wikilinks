@@ -135,7 +135,7 @@ class Timer extends React.Component {
         var elapsed = Math.round(this.state.elapsed / 100);
         var seconds = (elapsed / 10).toFixed(1);
 
-        return <p>Time Since Start: <b>{seconds} seconds</b></p>;
+        return <p style={{color:"white"}}>Time Since Start: <b>{seconds} seconds</b></p>;
     }
 }
 
@@ -182,15 +182,30 @@ class ArticleSelect extends React.Component {
 
     render() {
         var data = this.state.linksShown;
-        var output = [];
+        var table = [];
+        var row = [];
         for (var i in data) {
             (function(i, obj) {
                 var articleName = data[i];
-                //console.log(articleName);
-                output.push(<a key={i} className="col-sm-2 articleName" onClick={() => obj.nextPage(articleName)}>{articleName}</a>);
+                // console.log(articleName);
+                if (i%3 == 0) {
+                    // console.log(row);
+                    table.push(<tr key={i}>{row}</tr>);
+                    row = [];
+                }
+                row.push(<td key={i} className="articleName" onClick={() => obj.nextPage(articleName)}>{articleName}</td>);
             })(i, this);
         }
-        return <div className="">{output}</div>;
+        table = <table className="table table-bordered"><tbody>{table}</tbody></table>;
+
+        var history = this.props.history;
+        var histDis = [];
+        for (var i in history) {
+            (function(i, obj) {
+                histDis.push(<div key={i} className="historyName"><a key={i} onClick={() => obj.nextPage(history[i])}>{history[i]}</a> -> </div>);
+            })(i, this);
+        }
+        return <div className=""><div>{histDis}</div><br/>{table}</div>;
     }
 }
 
@@ -250,15 +265,15 @@ class InGame extends React.Component {
             if (!this.state.gameWon) {
                 return (
                     <div>
-                <Timer start={Date.now()} timeCallback={this.returnTimeElapsed}/>
-                <ArticleSelect addArticle={this.addArticle} onWin={this.onWin} start={this.state.start} end={this.state.end}/>
+                <Timer start={this.startTime} timeCallback={this.returnTimeElapsed}/>
+                <ArticleSelect addArticle={this.addArticle} history={this.state.path} onWin={this.onWin} start={this.state.start} end={this.state.end}/>
               </div>
                 );
             } else {
                 return (
                     <div>
                 <h1>YOU WON</h1>
-                <h2>And you did it in {this.state.time} seconds</h2>
+                <h2>And you did it in {this.state.time/1000} seconds</h2>
                 <p>{JSON.stringify(this.state.path)}</p>
               </div>
                 );

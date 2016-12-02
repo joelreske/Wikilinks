@@ -21,3 +21,13 @@ label {
 #app .articleName{
   color: white;
 }
+#app .articleName:hover{
+  background-color: black;
+}
+
+#app .historyName{
+    display: inline-block;
+}
+#app a{
+    color: white;
+}
