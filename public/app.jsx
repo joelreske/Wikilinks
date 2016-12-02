@@ -1,10 +1,42 @@
+class NewGamePageForm extends React.Component {
+    constructor(props) {
+        super(props);
+        this.randomize = this.randomize.bind(this);
+        this.parsePageEntry = this.parsePageEntry.bind(this);
+    }
+
+    render() {
+        return (
+            <div className="form-group">
+                <label htmlFor={this.props.id}>{this.props.label}</label>
+                <input type="text" className="input-sm" id={this.props.id} placeholder={this.props.placeholder} onChange={this.parsePageEntry} ref={(input) => {this.textInput = input;}}/>
+                <button className="btn btn-default" onClick={this.randomize}>Randomize</button>
+            </div>
+        );
+    }
+
+    randomize() {
+        var textInput = this.textInput;
+
+        $.getJSON("/api/getRandomPage", function(data) {
+            textInput.value = data.pageTitle;
+        });
+    }
+
+    parsePageEntry() {
+        var urlRegx = /(?:http:\/\/|https:\/\/)en.wikipedia.org\/wiki\/([^#<>[\]|{}]*)/i;
+        var match = urlRegx.exec(this.textInput.value);
+
+        if (match) {
+            var pagetitle = match[1].replace(/_/g, " ");
+            this.textInput.value = pagetitle;
+        }
+    }
+}
+
 class NewGame extends React.Component {
     constructor(props) {
         super(props);
-        this.randomizeStartPage = this.randomizeStartPage.bind(this);
-        this.randomizeEndPage = this.randomizeEndPage.bind(this);
-        this.parseStartPageEntry = this.parseStartPageEntry.bind(this);
-        this.parseEndPageEntry = this.parseEndPageEntry.bind(this);
         this.checkPages = this.checkPages.bind(this);
         this.startGame = this.startGame.bind(this);
     }
@@ -12,53 +44,12 @@ class NewGame extends React.Component {
     render() {
         return (
             <div className="container">
-                <div className="form-group">
-                    <label htmlFor="startPage">Start Page:</label>
-                    <input className="input-sm" id="startPage" placeholder="Enter Start Page" onChange={this.parseStartPageEntry}/>
-                    <button className="btn btn-default" onClick={this.randomizeStartPage}>Randomize</button>
-                </div>
-                <div className="form-group">
-                    <label htmlFor="endPage">End Page:</label>
-                    <input className="input-sm" id="endPage" placeholder="Enter End Page" onChange={this.parseEndPageEntry}/>
-                    <button className="btn btn-default" onClick={this.randomizeEndPage}>Randomize</button>
-                </div>
+                <NewGamePageForm id="startPage" label="Start Page:" placeholder="Enter Start Page"/>
+                <NewGamePageForm id="endPage" label="End Page:" placeholder="Enter End Page"/>
                 <button className="btn btn-default" onClick={this.startGame}>Start Game</button>
             </div>
         );
 
-    }
-
-    randomize(inputId) {
-        $.getJSON("/api/getRandomPage", function(data) {
-            $("#" + inputId).val(data.pageTitle);
-        });
-    }
-
-    randomizeStartPage(event) {
-        this.randomize("startPage");
-    }
-
-    randomizeEndPage() {
-        this.randomize("endPage");
-    }
-
-    parsePageEntry(inputId) {
-        var urlRegx = /(?:http:\/\/|https:\/\/)en.wikipedia.org\/wiki\/([^#<>[\]|{}]*)/i
-        var inputField = $("#" + inputId);
-        var match = urlRegx.exec(inputField.val());
-
-        if (match) {
-            var pagetitle = match[1].replace(/_/g, " ");
-            inputField.val(pagetitle);
-        }
-    }
-
-    parseEndPageEntry() {
-        this.parsePageEntry("endPage");
-    }
-
-    parseStartPageEntry() {
-        this.parsePageEntry("startPage");
     }
 
     checkPages(callback) {
@@ -215,17 +206,8 @@ class App extends React.Component {
 
     render(){
         var pageURL = decodeURIComponent(window.location.search.substring(1)),
-            urlVariables = pageURL.split('&'),
             gidRegx = /(?:(?:gid=)([a-zA-Z0-9~\-_]*))/,
-            gameId = null;
-
-        for (var i = 0; i < urlVariables.length; i++) {
-            gameId = gidRegx.exec(urlVariables[i]);
-            if (gameId != null) {
-                gameId = gameId[1];
-                break;
-            }
-        }
+            gameId = gidRegx.exec(pageURL);
 
         if (gameId){
             return (
