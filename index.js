@@ -43,14 +43,14 @@ app.get('/api/startGame', function(request, response) {
 });
 
 app.post('/api/endGame', function(request, response) {
-	var gameId = request.body.gameId;
+	var gid = request.body.gid;
 	var username = request.body.username;
 	var path = request.body.path;
 
-	if (gameId && path && username) {
-		db.isValidGameId(gameId, function(valid) {
+	if (gid && path && username) {
+		db.isValidgid(gid, function(valid) {
 			if (valid) {
-				db.addPathToGame(gameId, username, path, function(error) {
+				db.addPathToGame(gid, username, path, function(error) {
 					if (error) {
 						response.sendStatus(500);
 					} else {
@@ -66,15 +66,15 @@ app.post('/api/endGame', function(request, response) {
 	}
 });
 
-app.get('api/getGameData', function(request, response) {
+app.get('/api/getGameData', function(request, response) {
 	response.setHeader('Content-Type', 'application/json');
 
-	var gameId = request.query.gameId;
+	var gid = request.query.gid;
 
-	if (gameId) {
-		db.isValidGameId(gameId, function(valid) {
+	if (gid) {
+		db.isValidgid(gid, function(valid) {
 			if (valid) {
-				db.getGameData(gameId, function(data) {
+				db.getGameData(gid, function(data) {
 					if (data) {
 						response.send(data);
 					} else {
@@ -93,12 +93,12 @@ app.get('api/getGameData', function(request, response) {
 app.get('/api/getGameResults', function(request, response) {
 	response.setHeader('Content-Type', 'application/json');
 
-	var gameId = request.query.gameId;
+	var gid = request.query.gid;
 
-	if (gameId) {
-		db.isValidGameId(gameId, function(valid) {
+	if (gid) {
+		db.isValidgid(gid, function(valid) {
 			if (valid) {
-				db.getGameResults(gameId, function(data) {
+				db.getGameResults(gid, function(data) {
 					if (data) {
 						response.send(data);
 					} else {

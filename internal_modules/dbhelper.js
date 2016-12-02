@@ -8,7 +8,7 @@ function createGame(startPage, endPage, callback) {
 	var toInsert = {
 		"start": escape(startPage),
 		"end": escape(endPage),
-		"gameId": generateUniqueRandomId('games')
+		"gid": generateUniqueRandomId('games')
 	};
 
 	db.collection('games', function(error, coll) {
@@ -23,9 +23,9 @@ function createGame(startPage, endPage, callback) {
 	});
 }
 
-function addPathToGame(gameId, username, path, callback) {
+function addPathToGame(gid, username, path, callback) {
 	var toInsert = {
-		"gameId": escape(gameId),
+		"gid": escape(gid),
 		"pathLength": path.length,
 		"username": escape(username),
 		"path": JSON.stringify(path)
@@ -42,12 +42,12 @@ function addPathToGame(gameId, username, path, callback) {
 	});
 }
 
-function getGameData(gameId, callback) {
+function getGameData(gid, callback) {
 	db.collection('games', function(error, coll) {
 		if (error) {
 			callback(null);
 		} else {
-			coll.find({"gameId": escape(gameId)}).toArray(function(err, docs) {
+			coll.find({"gid": escape(gid)}).toArray(function(err, docs) {
 				if (err) {
 					callback(null);
 				} else {
@@ -58,13 +58,13 @@ function getGameData(gameId, callback) {
 	});
 }
 
-// assumes gameId is valid
-function getGameResults(gameId, callback) {
+// assumes gid is valid
+function getGameResults(gid, callback) {
 	db.collection('completed_games', function(er, collection) {
 		if (er) {
 			callback(null);
 		} else {
-			collection.find({"gameId": escape(gameId)}).sort({'pathLength':1}).toArray(function(err, docs) {
+			collection.find({"gid": escape(gid)}).sort({'pathLength':1}).toArray(function(err, docs) {
 				if (err) {
 					callback(null);
 				} else {
@@ -75,12 +75,12 @@ function getGameResults(gameId, callback) {
 	});
 }
 
-function isValidGameId(gameId, callback) {
+function isValidgid(gid, callback) {
 	db.collection('games', function(er, collection) {
 		if (er) {
 			callback(false);
 		} else {
-			collection.find({"gameId": gameId}).toArray(function(err, docs) {
+			collection.find({"gid": gid}).toArray(function(err, docs) {
 				if (err) {
 					callback(false);
 				} else {
@@ -94,7 +94,7 @@ function isValidGameId(gameId, callback) {
 /* ---------------------------Export---------------------------- */
 
 module.exports.createGame = createGame;
-module.exports.isValidGameId = isValidGameId;
+module.exports.isValidgid = isValidgid;
 module.exports.getGameResults = getGameResults;
 module.exports.getGameData = getGameData;
 module.exports.addPathToGame = addPathToGame;

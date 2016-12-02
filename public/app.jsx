@@ -86,8 +86,9 @@ class NewGame extends React.Component {
     startGame() {
         this.checkPages(function(start, end) {
             $.getJSON("/api/startGame?start=" + start + "&end=" + end, function(data) {
-                window.history.pushState(data, 'WikiLinks', '/?gameId=' + data.gameId);
-                ReactDOM.render(<InGame gameId={data.gameId}/>, document.getElementById('app'));
+                console.log(data);
+                window.history.pushState(data, 'WikiLinks', '/?gid=' + data.gid);
+                ReactDOM.render(<InGame gid={data.gid}/>, document.getElementById('app'));
             });
         });
     }
@@ -188,11 +189,6 @@ class InGame extends React.Component {
     constructor(props) {
         super(props);
 
-        console.log(props.gameId);
-        $.getJSON( "/api/getGameData?gid="+props.gameId, function(data){
-          console.log(data);
-        });
-
         this.startTime = new Date();
         this.timeElapsed;
         this.state = {gameWon : false, time: 0, path: []}
@@ -200,6 +196,17 @@ class InGame extends React.Component {
         this.returnTimeElapsed = this.returnTimeElapsed.bind(this);
         this.addArticle = this.addArticle.bind(this);
         this.onWin = this.onWin.bind(this);
+        this.setEndpoints = this.setEndpoints.bind(this);
+
+    }
+
+    componentWillMount(){
+      $.getJSON( "/api/getGameData?gid="+this.props.gid, this.setEndpoints);
+    }
+
+    setEndpoints(data){
+      data = data[0];
+      this.setState({start: data.start, end: data.end});
     }
 
     returnTimeElapsed(time) {
@@ -217,20 +224,26 @@ class InGame extends React.Component {
     }
 
     render() {
-        if (!this.state.gameWon){
-          return (
-            <div>
-              <Timer start={Date.now()} timeCallback={this.returnTimeElapsed}/>
-              <ArticleSelect addArticle={this.addArticle} onWin={this.onWin} start="United States" end="Flag of the United States"/>
-            </div>
-          );
+        if (this.state.start && this.state.end){
+          if (!this.state.gameWon){
+            return (
+              <div>
+                <Timer start={Date.now()} timeCallback={this.returnTimeElapsed}/>
+                <ArticleSelect addArticle={this.addArticle} onWin={this.onWin} start={this.state.start} end={this.state.end}/>
+              </div>
+            );
+          }else{
+            return (
+              <div>
+                <h1>YOU WON</h1>
+                <h2>And you did it in {this.state.time} seconds</h2>
+                <p>{JSON.stringify(this.state.path)}</p>
+              </div>
+            );
+          }
         }else{
           return (
-            <div>
-              <h1>YOU WON</h1>
-              <h2>And you did it in {this.state.time} seconds</h2>
-              <p>{JSON.stringify(this.state.path)}</p>
-            </div>
+            <h1>Loading...</h1>
           );
         }
     }
@@ -244,11 +257,11 @@ class App extends React.Component {
     render(){
         var pageURL = decodeURIComponent(window.location.search.substring(1)),
             gidRegx = /(?:(?:gid=)([a-zA-Z0-9~\-_]*))/,
-            gameId = gidRegx.exec(pageURL);
+            gid = gidRegx.exec(pageURL);
 
-        if (true){
+        if (gid){
             return (
-                <InGame gameId={gameId}/>
+                <InGame gid={gid[1]}/>
             );
         } else {
             return (
