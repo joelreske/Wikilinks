@@ -80,7 +80,7 @@ class NewGame extends React.Component {
                         if (!data.valid) {
                             window.alert("End is not a valid Wikipedia Page");
                         } else {
-                            callback();
+                            callback(startPage, endPage);
                         }
                     });
                 }
@@ -89,8 +89,10 @@ class NewGame extends React.Component {
     }
 
     startGame() {
-        this.checkPages(function() {
-            console.log("ready");
+        this.checkPages(function(start, end) {
+            $.getJSON("/api/startGame?start=" + start + "&end=" + end, function(data) {
+                
+            });
         });
     }
 }
