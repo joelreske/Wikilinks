@@ -91,7 +91,8 @@ class NewGame extends React.Component {
     startGame() {
         this.checkPages(function(start, end) {
             $.getJSON("/api/startGame?start=" + start + "&end=" + end, function(data) {
-                
+                window.history.pushState(data, 'WikiLinks', '/?gid=' + data.gameId);
+                ReactDOM.render(<InGame gameId={data.gameId}/>, document.getElementById('app'));
             });
         });
     }
@@ -201,7 +202,7 @@ class InGame extends React.Component {
             //<Time time={this.state.time}/>
             <div>
             <Timer start={Date.now()} timeCallback={this.returnTimeElapsed}/>
-            <ArticleSelect addAtricle={this.addAtricle} start="United States" end="United States"/>
+            <ArticleSelect addAtricle={this.addArticle} start="United States" end="United States"/>
             </div>
           );
     }
@@ -213,7 +214,7 @@ class App extends React.Component {
     }
 
     render(){
-        if (true){
+        if (false){
             return (
                 <InGame gameId="1234"/>
             );
