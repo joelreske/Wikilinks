@@ -1,3 +1,4 @@
+
 class NewGame extends React.Component {
     constructor(props) {
         super(props);
@@ -6,8 +7,8 @@ class NewGame extends React.Component {
         this.parseStartPageEntry = this.parseStartPageEntry.bind(this);
         this.parseEndPageEntry = this.parseEndPageEntry.bind(this);
     }
-
-    render() {
+    
+    render(){
         return (
             <div className="container">
                 <div className="form-group">
@@ -64,16 +65,66 @@ class NewGame extends React.Component {
     }
 }
 
-class InGame extends React.Component{
+class Time extends React.Component {
     constructor(props) {
         super(props);
-
-        this.state = {"gameStarted" : false}
     }
 
     render() {
         return (
-            <div>Hello</div>
+            <div>{this.props.time}</div>
+          );
+    }
+}
+
+class Timer extends React.Component {
+    constructor(props){
+        super(props);
+
+        this.tick = this.tick.bind(this);
+        this.state = {elapsed: 0 };
+    }
+
+    componentDidMount(){
+        this.timer = setInterval(this.tick, 50);
+    }
+
+    componentWillUnmount(){
+        this.props.timeCallback(new Date() - this.props.start);
+    }
+
+    tick(){
+        this.setState({elapsed: new Date() - this.props.start});
+    }
+
+    render() {
+        var elapsed = Math.round(this.state.elapsed / 100);
+        var seconds = (elapsed / 10).toFixed(1);
+
+        return <p>Time Since Start: <b>{seconds} seconds</b></p>;
+    }
+}
+
+class InGame extends React.Component {
+    constructor(props) {
+        super(props);
+
+        console.log(props.gameId);
+        this.startTime = new Date();
+        this.timeElapsed;
+        this.state = {gameStarted : false, time: 0}
+
+        this.returnTimeElapsed = this.returnTimeElapsed.bind(this);
+    }
+
+    returnTimeElapsed(time) {
+      this.setState({"time": time});
+    }
+
+    render() {
+        return (
+            //<Time time={this.state.time}/>
+            <Timer start={Date.now()} timeCallback={this.returnTimeElapsed}/>
           );
     }
 }
