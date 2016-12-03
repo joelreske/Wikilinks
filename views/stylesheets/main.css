@@ -31,3 +31,38 @@ label {
 #app a{
     color: white;
 }
+
+/* Circular timer  */
+#CircularCountdownTimer {
+  position:relative;
+}
+
+#CircularCountdownTimer h2 {
+  display: inline-block;
+  text-align: center;
+  position: absolute;
+  left: 0;
+  font-size: 60px;
+  top: 20px;
+  width: 100%;
+  transition: color 1s linear;
+}
+
+#CircularCountdownTimer svg {
+  display: block;
+  margin: 0 auto;
+  -webkit-transform: rotate(-90deg);
+  transform: rotate(-90deg);
+}
+
+#CircularCountdownTimer circle {
+  stroke-width: 12;
+  fill: none;
+}
+
+#circle_animation {
+  stroke-dasharray: 440; /* this value is the pixel circumference of the circle */
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 1s linear, stroke 1s linear;
+}
+

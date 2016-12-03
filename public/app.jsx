@@ -47,7 +47,7 @@ class NewGame extends React.Component {
 
     render() {
         return (
-            <div className="container">
+            <div className="container" id="newGameContainer">
                 <NewGamePageForm id="startPage" label="Start Page:" placeholder="Enter Start Page" ref={(input) => {this.startInput = input;}}/>
                 <NewGamePageForm id="endPage" label="End Page:" placeholder="Enter End Page" ref={(input) => {this.endInput = input;}}/>
                 <button className="btn btn-default" onClick={this.startGame}>Start Game</button>
@@ -86,11 +86,55 @@ class NewGame extends React.Component {
     startGame() {
         this.checkPages(function(start, end) {
             $.getJSON("/api/startGame?start=" + start + "&end=" + end, function(data) {
-                console.log(data);
-                window.history.pushState(data, 'WikiLinks', '/?gid=' + data.gid);
-                ReactDOM.render(<InGame gid={data.gid}/>, document.getElementById('app'));
+                $("#newGameContainer").fadeOut(400, function() {
+                    window.history.pushState(data, 'WikiLinks', '/?gid=' + data.gid);
+                    ReactDOM.render(<InGame gid={data.gid}/>, document.getElementById('app'));
+                });
             });
         });
+    }
+}
+
+class CircularCountdownTimer extends React.Component {
+    constructor(props) {
+        super(props)
+        this.initialOffset = 440;
+        this.time = 3;
+        this.i = 1;
+        this.colors = ["#fc4444", "#fcf344", "#6fdb6f"];
+
+        this.tick = this.tick.bind(this);
+    }
+
+    componentDidMount() {
+        this.circle.style.strokeDashoffset = this.initialOffset;
+        this.circle.style.stroke = this.colors[0];
+        this.header.style.color = this.colors[0];
+        this.timer = setInterval(this.tick, 1000);
+    }
+
+    tick() {
+        this.header.innerHTML = 1 + this.time - this.i;
+        if (this.i == this.time + 1) {    
+            clearInterval(this.timer);
+            $("#CircularCountdownTimer").fadeOut(400, this.props.countdownDoneCallback);
+        } else {
+            this.circle.style.strokeDashoffset = this.initialOffset - (this.i * (this.initialOffset / this.time));
+            this.circle.style.stroke = this.colors[this.i - 1];
+            this.header.style.color = this.colors[this.i - 1];
+            this.i++;
+        }
+    }
+
+    render() {
+        return (
+            <div id="CircularCountdownTimer">
+                <h2 ref={(elm) => {this.header = elm;}}></h2>
+                <svg width="160" height="160" xmlns="http://www.w3.org/2000/svg">
+                    <circle id="circle_animation" r="69.85699" cy="81" cx="81" align="center" ref={(elm) => {this.circle = elm;}}/>
+                </svg>
+            </div>
+        );
     }
 }
 
@@ -218,10 +262,12 @@ class InGame extends React.Component {
         this.state = {
             gameWon: false,
             time: 0,
-            path: []
+            path: [],
+            showCountDownTimer: true
         }
 
         this.returnTimeElapsed = this.returnTimeElapsed.bind(this);
+        this.countdownDone = this.countdownDone.bind(this);
         this.addArticle = this.addArticle.bind(this);
         this.onWin = this.onWin.bind(this);
         this.setEndpoints = this.setEndpoints.bind(this);
@@ -260,22 +306,32 @@ class InGame extends React.Component {
         });
     }
 
+    countdownDone() {
+        this.setState({
+            showCountDownTimer: false
+        });
+    }
+
     render() {
-        if (this.state.start && this.state.end) {
+        if (this.state.showCountDownTimer) {
+            return (
+                <CircularCountdownTimer countdownDoneCallback={this.countdownDone}/>
+            );
+        } else if (this.state.start && this.state.end) {
             if (!this.state.gameWon) {
                 return (
                     <div>
-                <Timer start={this.startTime} timeCallback={this.returnTimeElapsed}/>
-                <ArticleSelect addArticle={this.addArticle} history={this.state.path} onWin={this.onWin} start={this.state.start} end={this.state.end}/>
-              </div>
+                        <Timer start={this.startTime} timeCallback={this.returnTimeElapsed}/>
+                        <ArticleSelect addArticle={this.addArticle} history={this.state.path} onWin={this.onWin} start={this.state.start} end={this.state.end}/>
+                    </div>
                 );
             } else {
                 return (
                     <div>
-                <h1>YOU WON</h1>
-                <h2>And you did it in {this.state.time/1000} seconds</h2>
-                <p>{JSON.stringify(this.state.path)}</p>
-              </div>
+                        <h1>YOU WON</h1>
+                        <h2>And you did it in {this.state.time/1000} seconds</h2>
+                        <p>{JSON.stringify(this.state.path)}</p>
+                    </div>
                 );
             }
         } else {
