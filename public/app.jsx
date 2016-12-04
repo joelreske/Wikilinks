@@ -48,9 +48,11 @@ class NewGame extends React.Component {
     render() {
         return (
             <div className="container" id="newGameContainer">
-                <NewGamePageForm id="startPage" label="Start Page:" placeholder="Enter Start Page" ref={(input) => {this.startInput = input;}}/>
-                <NewGamePageForm id="endPage" label="End Page:" placeholder="Enter End Page" ref={(input) => {this.endInput = input;}}/>
-                <button className="btn btn-default" onClick={this.startGame}>Start Game</button>
+                <div>
+                    <NewGamePageForm id="startPage" label="Start Page:" placeholder="Enter Start Page" ref={(input) => {this.startInput = input;}}/>
+                    <NewGamePageForm id="endPage" label="End Page:" placeholder="Enter End Page" ref={(input) => {this.endInput = input;}}/>
+                </div>
+                <button className="btn btn-default" id="startBtn" onClick={this.startGame}>Start Game</button>
             </div>
         );
 
@@ -245,7 +247,16 @@ class ArticleSelect extends React.Component {
 
         for (var i in history) {
             (function(i, obj) {
-                histpath.push(<span key={i} className="historyName"><a key={i} onClick={() => obj.nextPage(history[i])}>{history[i]}</a> -> </span>);
+                var historyItem = <a key={i} className="historyItem" onClick={() => obj.nextPage(history[i])}>{history[i]}</a>;
+
+                if (i != history.length - 1) {
+                    histpath.push(<span>
+                                    {historyItem}
+                                    <img key={i + "img"} className="rightArrow" src="/images/right-arrow.png"/>
+                                  </span>);
+                } else {
+                    histpath.push(historyItem);
+                }
             })(i, this);
         }
 
@@ -253,7 +264,7 @@ class ArticleSelect extends React.Component {
             <div className="container">
                 <p>Destination: {this.props.end}</p>
                 <div>{histpath}</div>
-                <input type="text" className="input-sm" id="search" placeholder="Search" onChange={this.search} ref={(input) => {this.searchInput = input;}}/>
+                <input type="text" key={"serach"} className="input-sm" id="search" placeholder="Search" onChange={this.search} ref={(input) => {this.searchInput = input;}}/>
                 <div>{links}</div>
             </div>
         );

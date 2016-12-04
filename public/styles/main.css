@@ -5,12 +5,16 @@ html, body {
 }
 
 body {
-        background-color: #6600ff;
-        font-size: 20px;
+  background-color: #6600ff;
+  font-size: 20px;
 }
 
 input {
   color: black;
+}
+
+label {
+  margin-right: .4em;
 }
 
 #header h1{
@@ -20,8 +24,41 @@ input {
 }
 
 #app a {
-    color: white;
-    cursor: pointer;
+  color: white;
+  cursor: pointer;
+}
+
+.btn {
+  margin: .2em .5em;
+}
+
+/* Start new game styles */
+#newGameContainer {
+  margin-top: 3em;
+  text-align: center;
+  clear: both;
+}
+
+#startBtn {
+  float: right;
+  clear: right;
+  display: block;
+}
+
+.form-group {
+  padding: 1em;
+  margin: .5em;
+  display: inline-block;
+  border: 1px solid gray;
+  border-radius: 25px;
+}
+/* End new game styles */
+
+/* In game styles */
+.rightArrow {
+  width: 5%;
+  margin: 0 .4em;
+  vertical-align: middle;
 }
 
 .endbtn {
@@ -32,7 +69,12 @@ input {
   background-color: #D1E8C8;
 }
 
-/* Circular timer  */
+#search {
+  margin: .8em .4em .6em .4em;
+}
+/* In game styles */
+
+/* Circular timer */
 #CircularCountdownTimer {
   position:relative;
   margin-top: 3em;
@@ -73,4 +115,6 @@ input {
     50% {stroke: #fcf244; color: #fcf244;}
     100% {stroke: #6fdb6f; color: #6fdb6f;}
 }
+
+/* End Circular timer */
 
