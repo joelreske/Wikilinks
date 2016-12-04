@@ -1,6 +1,7 @@
 html, body {
   width: 100%;
   height: 100%;
+  color: white;
 }
 
 body {
@@ -8,33 +9,27 @@ body {
         font-size: 20px;
 }
 
-label {
-	color: white;
+input {
+  color: black;
 }
 
 #header h1{
   font-size: 44px;
   font-weight: bold;
-  color: white;
   border-bottom: 1px solid white;
 }
 
-#app {
-
-}
-
-#app .articleName{
-  color: white;
-}
-#app .articleName:hover{
-  background-color: black;
-}
-
-#app .historyName{
-    display: inline-block;
-}
-#app a{
+#app a {
     color: white;
+    cursor: pointer;
+}
+
+.endbtn {
+  background-color: #96e874;
+}
+
+.endbtn:hover {
+  background-color: #D1E8C8;
 }
 
 /* Circular timer  */
@@ -51,7 +46,7 @@ label {
   font-size: 60px;
   top: 20px;
   width: 100%;
-  animation: example 4s linear 1s;
+  animation: countdownTimerAnimation 4s linear 1s;
 }
 
 #CircularCountdownTimer svg {
@@ -70,10 +65,10 @@ label {
   stroke-dasharray: 440; /* this value is the pixel circumference of the circle */
   stroke-dashoffset: 0;
   transition: stroke-dashoffset 1s cubic-bezier(.9,0,.1,1), stroke 1s linear;
-  animation: example 4s linear 1s;
+  animation: countdownTimerAnimation 4s linear 1s;
 }
 
-@keyframes example {
+@keyframes countdownTimerAnimation {
     0% {stroke: #fc4444; color: #fc4444;}
     50% {stroke: #fcf244; color: #fcf244;}
     100% {stroke: #6fdb6f; color: #6fdb6f;}

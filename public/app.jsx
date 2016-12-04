@@ -133,18 +133,6 @@ class CircularCountdownTimer extends React.Component {
     }
 }
 
-class Time extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
-    render() {
-        return (
-            <div>{this.props.time}</div>
-        );
-    }
-}
-
 class Timer extends React.Component {
     constructor(props) {
         super(props);
@@ -183,12 +171,13 @@ class ArticleSelect extends React.Component {
         super(props);
 
         this.state = {
-            article: this.props.start,
-            linksShown: []
+            history: [],
+            searchString: ""
         };
 
         this.getLinksForPage = this.getLinksForPage.bind(this);
         this.showLinks = this.showLinks.bind(this);
+        this.search = this.search.bind(this);
     }
 
     componentWillMount() {
@@ -197,9 +186,10 @@ class ArticleSelect extends React.Component {
 
     nextPage(page) {
         console.log("Going to: " + page);
-        this.props.addArticle(page);
+        this.state.history.push(page)
+
         if (page == this.props.end) {
-            this.props.onWin();
+            this.props.onWin(this.state.history);
         } else {
             this.getLinksForPage(page, this.showLinks);
         }
@@ -214,37 +204,59 @@ class ArticleSelect extends React.Component {
     }
 
     showLinks(data) {
+        this.searchInput.value = "";
+
         this.setState({
-            linksShown: data
+            article: data,
+            searchString: ""
+        });
+    }
+
+    search() {
+        this.setState({
+            searchString: this.searchInput.value
         });
     }
 
     render() {
-        var data = this.state.linksShown;
-        var table = [];
-        var row = [];
+        var data = this.state.article;
+        var history = this.state.history;
+        var searchString = this.state.searchString;
+
+        var links = []
+        var histpath = [];
+
         for (var i in data) {
             (function(i, obj) {
                 var articleName = data[i];
-                // console.log(articleName);
-                if (i%3 == 0) {
-                    // console.log(row);
-                    table.push(<tr key={i}>{row}</tr>);
-                    row = [];
+                var searchRegex = new RegExp("^" + searchString + ".*", "i")
+
+                if (searchRegex.test(articleName) || articleName == obj.props.end) {
+                    if (articleName == obj.props.end) {
+                       var btn = <button className="btn btn-default endbtn" key={i} onClick={() => obj.nextPage(articleName)}>{articleName}</button>; 
+                    } else {
+                        var btn = <button className="btn btn-default" key={i} onClick={() => obj.nextPage(articleName)}>{articleName}</button>;
+                    }
+
+                    links.push(btn);
                 }
-                row.push(<td key={i} className="articleName" onClick={() => obj.nextPage(articleName)}>{articleName}</td>);
             })(i, this);
         }
-        table = <table className="table table-bordered"><tbody>{table}</tbody></table>;
 
-        var history = this.props.history;
-        var histDis = [];
         for (var i in history) {
             (function(i, obj) {
-                histDis.push(<div key={i} className="historyName"><a key={i} onClick={() => obj.nextPage(history[i])}>{history[i]}</a> -> </div>);
+                histpath.push(<span key={i} className="historyName"><a key={i} onClick={() => obj.nextPage(history[i])}>{history[i]}</a> -> </span>);
             })(i, this);
         }
-        return <div className=""><div>{histDis}</div><br/>{table}</div>;
+
+        return (
+            <div className="container">
+                <p>Destination: {this.props.end}</p>
+                <div>{histpath}</div>
+                <input type="text" className="input-sm" id="search" placeholder="Search" onChange={this.search} ref={(input) => {this.searchInput = input;}}/>
+                <div>{links}</div>
+            </div>
+        );
     }
 }
 
@@ -257,13 +269,11 @@ class InGame extends React.Component {
         this.state = {
             gameWon: false,
             time: 0,
-            path: [],
             showCountDownTimer: true
         }
 
         this.returnTimeElapsed = this.returnTimeElapsed.bind(this);
         this.countdownDone = this.countdownDone.bind(this);
-        this.addArticle = this.addArticle.bind(this);
         this.onWin = this.onWin.bind(this);
         this.setEndpoints = this.setEndpoints.bind(this);
 
@@ -287,17 +297,10 @@ class InGame extends React.Component {
         });
     }
 
-    addArticle(name) {
-        var newPath = this.state.path;
-        newPath.push(name);
+    onWin(path) {
         this.setState({
-            path: newPath
-        });
-    }
-
-    onWin() {
-        this.setState({
-            gameWon: true
+            gameWon: true,
+            links: path
         });
     }
 
@@ -317,14 +320,14 @@ class InGame extends React.Component {
                 return (
                     <div>
                         <Timer start={this.startTime} timeCallback={this.returnTimeElapsed}/>
-                        <ArticleSelect addArticle={this.addArticle} history={this.state.path} onWin={this.onWin} start={this.state.start} end={this.state.end}/>
+                        <ArticleSelect onWin={this.onWin} start={this.state.start} end={this.state.end}/>
                     </div>
                 );
             } else {
                 return (
                     <div>
                         <h1>YOU WON</h1>
-                        <h2>And you did it in {this.state.time/1000} seconds</h2>
+                        <h2>And you did it in {this.state.time / 1000} seconds</h2>
                         <p>{JSON.stringify(this.state.path)}</p>
                     </div>
                 );
