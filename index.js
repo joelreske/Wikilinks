@@ -11,17 +11,12 @@ var wikilinks = require("./internal_modules/wikilinks.js");
 app.set('port', (process.env.PORT || 5000));
 
 app.use(express.static(__dirname + '/public'));
-app.use("/styles",express.static(__dirname + "/views/stylesheets"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // views is directory for all template files
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
-
-app.get('/', function(request, response) {
-	response.render('pages/index');
-});
 
 app.get('/api/startGame', function(request, response) {
 	response.setHeader('Content-Type', 'application/json');

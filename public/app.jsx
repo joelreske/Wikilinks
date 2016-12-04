@@ -100,28 +100,23 @@ class CircularCountdownTimer extends React.Component {
         super(props)
         this.initialOffset = 440;
         this.time = 3;
-        this.i = 1;
-        this.colors = ["#fc4444", "#fcf344", "#6fdb6f"];
+        this.i = 0;
 
         this.tick = this.tick.bind(this);
     }
 
     componentDidMount() {
         this.circle.style.strokeDashoffset = this.initialOffset;
-        this.circle.style.stroke = this.colors[0];
-        this.header.style.color = this.colors[0];
         this.timer = setInterval(this.tick, 1000);
     }
 
     tick() {
-        this.header.innerHTML = 1 + this.time - this.i;
-        if (this.i == this.time + 1) {    
+        this.header.innerHTML = this.time - this.i;
+        if (this.i == this.time) {    
             clearInterval(this.timer);
             $("#CircularCountdownTimer").fadeOut(400, this.props.countdownDoneCallback);
         } else {
-            this.circle.style.strokeDashoffset = this.initialOffset - (this.i * (this.initialOffset / this.time));
-            this.circle.style.stroke = this.colors[this.i - 1];
-            this.header.style.color = this.colors[this.i - 1];
+            this.circle.style.strokeDashoffset = this.initialOffset - (this.i + 1) * (this.initialOffset / this.time);
             this.i++;
         }
     }

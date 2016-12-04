@@ -51,7 +51,7 @@ label {
   font-size: 60px;
   top: 20px;
   width: 100%;
-  transition: color 1s linear;
+  animation: example 4s linear 1s;
 }
 
 #CircularCountdownTimer svg {
@@ -69,6 +69,13 @@ label {
 #circle_animation {
   stroke-dasharray: 440; /* this value is the pixel circumference of the circle */
   stroke-dashoffset: 0;
-  transition: stroke-dashoffset 1s linear, stroke 1s linear;
+  transition: stroke-dashoffset 1s cubic-bezier(.9,0,.1,1), stroke 1s linear;
+  animation: example 4s linear 1s;
+}
+
+@keyframes example {
+    0% {stroke: #fc4444; color: #fc4444;}
+    50% {stroke: #fcf244; color: #fcf244;}
+    100% {stroke: #6fdb6f; color: #6fdb6f;}
 }
 
