@@ -1,3 +1,5 @@
+var gamestore = new GameStore();
+
 class NewGamePageForm extends React.Component {
     constructor(props) {
         super(props);
@@ -57,12 +59,15 @@ class NewGame extends React.Component {
 
     render() {
         return (
-            <div id="newGameContainer">
-                <div>
-                    <NewGamePageForm id="startPage" label="Start Page:" placeholder="Enter Start Page" ref={(input) => {this.startInput = input;}}/>
-                    <NewGamePageForm id="endPage" label="End Page:" placeholder="Enter End Page" ref={(input) => {this.endInput = input;}}/>
+            <div>
+            <h2>Create a new Game:</h2>
+                <div id="newGameContainer">
+                    <div>
+                        <NewGamePageForm id="startPage" label="Start Page:" placeholder="Enter Start Page" ref={(input) => {this.startInput = input;}}/>
+                        <NewGamePageForm id="endPage" label="End Page:" placeholder="Enter End Page" ref={(input) => {this.endInput = input;}}/>
+                    </div>
+                    <button className="btn btn-default" id="startBtn" onClick={this.startGame}>Start Game</button>
                 </div>
-                <button className="btn btn-default" id="startBtn" onClick={this.startGame}>Start Game</button>
             </div>
         );
 
@@ -107,9 +112,42 @@ class NewGame extends React.Component {
     }
 }
 
+class GameHistory extends React.Component {
+    constructor(props) {
+        super(props);
+        this.onButtonClicked = this.onButtonClicked.bind(this);
+    }
+
+    onButtonClicked(gid) {
+        this.props.onGameClicked(gid);
+    }
+
+    render() {
+        var self = this;
+        var gameHistory = gamestore.getAllStoredGames();
+
+        if (gameHistory.length > 0) {
+            var games = [];
+            for (var i = 0; i < gameHistory.length; i++) {
+                (function(gid, start, end) {
+                    games.push(<button className="btn btn-default" key={i} onClick={function(){self.onButtonClicked(gid)} }><PathDisplay path={[start, end]}/></button>);
+                })(gameHistory[i].gid, gameHistory[i].start, gameHistory[i].end);
+            }
+
+            return (
+                <div>
+                    <h2>Or, replay a previous game:</h2>
+                    {games}
+                </div>);
+        } else {
+            return (<div></div>)
+        }
+    }
+}
+
 class CircularCountdownTimer extends React.Component {
     constructor(props) {
-        super(props)
+        super(props);
         this.initialOffset = 440;
         this.time = 3;
         this.i = 0;
@@ -316,6 +354,8 @@ class InGame extends React.Component {
 
     setEndpoints(data) {
         var data = data[0];
+        gamestore.storeGame(this.props.gid, data.start, data.end);
+
         this.setState({
             start: data.start,
             end: data.end
@@ -505,7 +545,10 @@ class App extends React.Component {
         } else if (this.state.page == "inGame") {
             return <InGame gid={this.gid} onPostGame={this.onPostGame}/>;
         } else {
-            return <NewGame onCreateGame={this.startGame}/>;
+            return (<div>
+                        <NewGame onCreateGame={this.startGame}/>
+                        <GameHistory onGameClicked={this.startGame}/> 
+                    </div>);
         }
     }
 }
