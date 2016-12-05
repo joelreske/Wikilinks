@@ -7,7 +7,7 @@ class NewGamePageForm extends React.Component {
 
     render() {
         return (
-            <div className="form-group">
+            <div className="form-group form-group-border">
                 <label htmlFor={this.props.id}>{this.props.label}</label>
                 <input type="text" className="input-sm" id={this.props.id} placeholder={this.props.placeholder} onChange={this.parsePageEntry} ref={(input) => {this.textInput = input;}}/>
                 <button className="btn btn-default" onClick={this.randomize}>Randomize</button>
@@ -45,9 +45,19 @@ class NewGame extends React.Component {
         this.startGame = this.startGame.bind(this);
     }
 
+    componentDidMount() {
+        var self = this;
+
+        $('#newGameContainer').keypress(function(e) {
+            if (e.which == 13) {
+                self.startGame();
+            }
+        });
+    }
+
     render() {
         return (
-            <div className="container" id="newGameContainer">
+            <div id="newGameContainer">
                 <div>
                     <NewGamePageForm id="startPage" label="Start Page:" placeholder="Enter Start Page" ref={(input) => {this.startInput = input;}}/>
                     <NewGamePageForm id="endPage" label="End Page:" placeholder="Enter End Page" ref={(input) => {this.endInput = input;}}/>
@@ -86,11 +96,11 @@ class NewGame extends React.Component {
     }
 
     startGame() {
+        var onCreateGame = this.props.onCreateGame;
         this.checkPages(function(start, end) {
             $.getJSON("/api/startGame?start=" + start + "&end=" + end, function(data) {
                 $("#newGameContainer").fadeOut(400, function() {
-                    window.history.pushState(data, 'WikiLinks', '/?gid=' + data.gid);
-                    ReactDOM.render(<InGame gid={data.gid}/>, document.getElementById('app'));
+                    onCreateGame(data.gid);
                 });
             });
         });
@@ -113,11 +123,12 @@ class CircularCountdownTimer extends React.Component {
     }
 
     tick() {
-        this.header.innerHTML = this.time - this.i;
-        if (this.i == this.time) {    
+        if (this.i == this.time) {
+            this.header.innerHTML = "GO";
             clearInterval(this.timer);
             $("#CircularCountdownTimer").fadeOut(400, this.props.countdownDoneCallback);
         } else {
+            this.header.innerHTML = this.time - this.i;
             this.circle.style.strokeDashoffset = this.initialOffset - (this.i + 1) * (this.initialOffset / this.time);
             this.i++;
         }
@@ -150,21 +161,53 @@ class Timer extends React.Component {
     }
 
     componentWillUnmount() {
-        this.props.timeCallback(new Date() - this.props.start);
         clearInterval(this.timer);
     }
 
     tick() {
         this.setState({
-            elapsed: new Date() - this.props.start
+            elapsed: this.diff()
         });
     }
 
-    render() {
-        var elapsed = Math.round(this.state.elapsed / 100);
-        var seconds = (elapsed / 10).toFixed(1);
+    val() {
+       return this.diff();
+    }
 
-        return <p style={{color:"white"}}>Time Since Start: <b>{seconds} seconds</b></p>;
+    diff() {
+        return (Math.round((new Date() - this.props.start) / 100) / 10).toFixed(1);
+    }
+
+    render() {
+        return <p style={{color:"white"}}>Time Since Start: <b>{this.state.elapsed } seconds</b></p>;
+    }
+}
+
+class PathDisplay extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        var history = this.props.path;
+        var histpath = [];
+
+        for (var i in history) {
+            (function(i, obj) {
+                var historyItem = <span key={i} className="historyItem">{history[i]}</span>;
+
+                if (i != history.length - 1) {
+                    histpath.push(<span>
+                                    {historyItem}
+                                    <img key={(i + 1) + "img"} className="rightArrow" src="/images/right-arrow.png"/>
+                                  </span>);
+                } else {
+                    histpath.push(historyItem);
+                }
+            })(i, this);
+        }
+
+        return (<div>{histpath}</div>);
     }
 }
 
@@ -222,11 +265,9 @@ class ArticleSelect extends React.Component {
 
     render() {
         var data = this.state.article;
-        var history = this.state.history;
         var searchString = this.state.searchString;
 
         var links = []
-        var histpath = [];
 
         for (var i in data) {
             (function(i, obj) {
@@ -245,26 +286,11 @@ class ArticleSelect extends React.Component {
             })(i, this);
         }
 
-        for (var i in history) {
-            (function(i, obj) {
-                var historyItem = <a key={i} className="historyItem" onClick={() => obj.nextPage(history[i])}>{history[i]}</a>;
-
-                if (i != history.length - 1) {
-                    histpath.push(<span>
-                                    {historyItem}
-                                    <img key={i + "img"} className="rightArrow" src="/images/right-arrow.png"/>
-                                  </span>);
-                } else {
-                    histpath.push(historyItem);
-                }
-            })(i, this);
-        }
-
         return (
             <div className="container">
                 <p>Destination: {this.props.end}</p>
-                <div>{histpath}</div>
-                <input type="text" key={"serach"} className="input-sm" id="search" placeholder="Search" onChange={this.search} ref={(input) => {this.searchInput = input;}}/>
+                <PathDisplay path={this.state.history}/>
+                <input type="text" key="search" className="input-sm" id="search" placeholder="Search" onChange={this.search} ref={(input) => {this.searchInput = input;}}/>
                 <div>{links}</div>
             </div>
         );
@@ -275,19 +301,13 @@ class InGame extends React.Component {
     constructor(props) {
         super(props);
 
-        this.startTime = new Date();
-        this.timeElapsed;
         this.state = {
-            gameWon: false,
-            time: 0,
             showCountDownTimer: true
         }
 
-        this.returnTimeElapsed = this.returnTimeElapsed.bind(this);
         this.countdownDone = this.countdownDone.bind(this);
         this.onWin = this.onWin.bind(this);
         this.setEndpoints = this.setEndpoints.bind(this);
-
     }
 
     componentWillMount() {
@@ -295,27 +315,19 @@ class InGame extends React.Component {
     }
 
     setEndpoints(data) {
-        data = data[0];
+        var data = data[0];
         this.setState({
             start: data.start,
             end: data.end
         });
     }
 
-    returnTimeElapsed(time) {
-        this.setState({
-            "time": time
-        });
-    }
-
     onWin(path) {
-        this.setState({
-            gameWon: true,
-            links: path
-        });
+        this.props.onPostGame(path, this.timer.val());
     }
 
     countdownDone() {
+        this.startTime = new Date();
         this.setState({
             showCountDownTimer: false
         });
@@ -323,52 +335,177 @@ class InGame extends React.Component {
 
     render() {
         if (this.state.showCountDownTimer) {
-            return (
-                <CircularCountdownTimer countdownDoneCallback={this.countdownDone}/>
-            );
+            return <CircularCountdownTimer countdownDoneCallback={this.countdownDone}/>;
         } else if (this.state.start && this.state.end) {
-            if (!this.state.gameWon) {
-                return (
-                    <div>
-                        <Timer start={this.startTime} timeCallback={this.returnTimeElapsed}/>
-                        <ArticleSelect onWin={this.onWin} start={this.state.start} end={this.state.end}/>
-                    </div>
-                );
-            } else {
-                return (
-                    <div>
-                        <h1>YOU WON</h1>
-                        <h2>And you did it in {this.state.time / 1000} seconds</h2>
-                        <p>{JSON.stringify(this.state.path)}</p>
-                    </div>
-                );
-            }
-        } else {
             return (
-                <h1>Loading...</h1>
+                <div>
+                    <Timer start={this.startTime} ref={(timer) => {this.timer = timer;}}/>
+                    <ArticleSelect onWin={this.onWin} start={this.state.start} end={this.state.end}/>
+                </div>
             );
+        } else {
+            return <h1>Loading...</h1>;
         }
+    }
+}
+
+class PostGame extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.sendScore = this.sendScore.bind(this);
+    }
+
+    componentDidMount() {
+        var self = this;
+
+        $('#name').keypress(function(e) {
+            if (e.which == 13) {
+                self.sendScore();
+            }
+        });
+    }
+
+    sendScore() {
+        if (this.textInput.value != "") {
+            $("#username-status").css("padding", 0);
+            $("#username-status").attr("src", "/images/spinner.gif").height(30).width(30)
+
+            $.post("/api/endGame", {'gid': this.props.gid, 'username':this.textInput.value, 'path':this.props.path}, function (data, status) {
+                $("#username-status").attr("src", "/images/checkmark.png");
+                $("#username-collection").fadeOut(1000);
+            });
+        } else {
+            window.alert("Username field cannot be empty");
+        }
+    }
+
+    render() {
+        return (
+        <span>
+            <div id="PostGame">
+                <h1>YOU WON</h1>
+                <h2>And you did it in {this.props.time} seconds.</h2>
+                <PathDisplay path={this.props.path}/>
+                <div id="username-collection" className="form-group" ref={(form) => {this.form = form;}}>
+                    <label htmlFor="name">Enter your name to save your score:</label>
+                    <span id="name-group">
+                        <input type="text" className="input-sm" id="name" placeholder="Name" ref={(input) => {this.textInput = input;}}/>
+                        <button className="btn btn-default" onClick={this.sendScore}>Send Score</button>
+                        <img id="username-status" ref={(img) => {this.img = img;}}/>
+                    </span>
+                </div>
+            </div>
+        </span>
+        );
+    }
+}
+
+class GameData extends React.Component { 
+    constructor(props) {
+        super(props);
+        this.playAgain = this.playAgain.bind(this);
+    }
+
+    playAgain() {
+        this.props.onPlayAgain();
+    }
+
+    render() {
+        // placeholder
+        return (
+            <div id="GameData">
+                <div style={{width:'50%', height:'300px', backgroundColor:'gray', margin:'0 auto'}}>
+                    Graph goes here
+                </div>
+                <button className="btn btn-default" id="startBtn" onClick={this.playAgain}>Play Again</button>
+            </div>
+        );
     }
 }
 
 class App extends React.Component {
     constructor() {
         super();
+
+        this.state = {
+            page: "",
+        };
+
+        this.startGame = this.startGame.bind(this);
+        this.onPostGame = this.onPostGame.bind(this);
+        this.onPlayAgain = this.onPlayAgain.bind(this);
+    }
+
+    componentWillMount() {
+        var self = this;
+
+        window.onpopstate = function(event) {
+            self.gid = "";
+            self.preRender();
+        };
+
+        this.preRender();
+    }
+
+    startGame(gid) {
+        this.gid = gid;
+        window.history.pushState({}, 'WikiLinks', '/?gid=' + gid);
+        this.preRender();
+    }
+
+    onPostGame(path, time) {
+        window.history.replaceState({}, 'WikiLinks Game Results', '/gameResults?gid=' + this.gid);
+        this.path = path;
+        this.time = time;
+        this.preRender(true);
+    }
+
+    onPlayAgain() {
+        this.startGame(this.gid);
+    }
+
+    preRender(getUsername) {
+        if (!this.gid) {
+            var pageURL = decodeURIComponent(window.location.search.substring(1)),
+            gidRegx = /(?:(?:gid=)([a-zA-Z0-9~\-_]*))/,
+            gid = gidRegx.exec(pageURL);
+            if (gid) {
+                this.gid = gid[1];
+            }
+        }
+
+        var page = "";
+        if (this.gid && window.location.pathname == "/gameResults") {
+            if (getUsername) {
+                page = "postGame"
+            } else {
+                page = "gameResults";
+            }
+        } else if (this.gid) {
+            page = "inGame"
+        } else {
+            page = "newGame"
+        }
+
+        this.setState({
+            "page":page
+        });
     }
 
     render() {
-        var pageURL = decodeURIComponent(window.location.search.substring(1)),
-            gidRegx = /(?:(?:gid=)([a-zA-Z0-9~\-_]*))/,
-            gid = gidRegx.exec(pageURL);
-
-        if (gid) {
+        if (this.state.page == "gameResults") {
+            return <GameData gid={this.gid} onPlayAgain={this.onPlayAgain}/>
+        } else if (this.state.page == "postGame") {
             return (
-                <InGame gid={gid[1]}/>
-            );
+                <div>
+                    <PostGame path={this.path} time={this.time} gid={this.gid}/>
+                    <GameData gid={this.gid} onPlayAgain={this.onPlayAgain}/> 
+                </div>);
+        } else if (this.state.page == "inGame") {
+            return <InGame gid={this.gid} onPostGame={this.onPostGame}/>;
         } else {
-            return (
-                <NewGame/>
-            );
+            return <NewGame onCreateGame={this.startGame}/>;
         }
     }
 }

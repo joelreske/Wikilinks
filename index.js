@@ -1,9 +1,6 @@
 var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
-var React = require('react');
-var ReactDOM = require('react-dom');
-
 
 var db = require("./internal_modules/dbhelper.js");
 var wikilinks = require("./internal_modules/wikilinks.js");
@@ -13,10 +10,6 @@ app.set('port', (process.env.PORT || 5000));
 app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
-// views is directory for all template files
-app.set('views', __dirname + '/views');
-app.set('view engine', 'ejs');
 
 app.get('/api/startGame', function(request, response) {
 	response.setHeader('Content-Type', 'application/json');
@@ -43,7 +36,7 @@ app.post('/api/endGame', function(request, response) {
 	var path = request.body.path;
 
 	if (gid && path && username) {
-		db.isValidgid(gid, function(valid) {
+		db.isValidGameId(gid, function(valid) {
 			if (valid) {
 				db.addPathToGame(gid, username, path, function(error) {
 					if (error) {
@@ -67,7 +60,7 @@ app.get('/api/getGameData', function(request, response) {
 	var gid = request.query.gid;
 
 	if (gid) {
-		db.isValidgid(gid, function(valid) {
+		db.isValidGameId(gid, function(valid) {
 			if (valid) {
 				db.getGameData(gid, function(data) {
 					if (data) {
@@ -139,6 +132,10 @@ app.get('/api/getLinksForPage', function(request, response) {
 	wikilinks.getLinksForPage(page, function(results) {
 		response.send(results);
 	});
+});
+
+app.get('/*', function(request, response){
+  	response.sendFile(__dirname + '/public/index.html');
 });
 
 // app.get('/api/getShortestPath', function(request, response) {

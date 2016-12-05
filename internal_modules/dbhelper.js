@@ -8,7 +8,7 @@ function createGame(startPage, endPage, callback) {
 	var toInsert = {
 		"start": escape(startPage),
 		"end": escape(endPage),
-		"gid": generateUniqueRandomId('games')
+		"gameId": generateUniqueRandomId('games')
 	};
 
 	db.collection('games', function(error, coll) {
@@ -16,38 +16,44 @@ function createGame(startPage, endPage, callback) {
 			if (error) {
 				callback(null);
 			} else {
+				toInsert["gid"] = toInsert["gameId"];
 				delete toInsert["_id"];
+				delete toInsert["gameId"];
 				callback(toInsert);
 			}
 	    });
 	});
 }
 
-function addPathToGame(gid, username, path, callback) {
+function addPathToGame(gameId, username, path, callback) {
 	var toInsert = {
-		"gid": escape(gid),
+		"gameId": escape(gameId),
 		"pathLength": path.length,
 		"username": escape(username),
 		"path": JSON.stringify(path)
 	};
 
 	db.collection('completed_games', function(error, coll) {
-		var id = coll.insert(toInsert, function(error, saved) {
-			if (error) {
-				callback(false);
-			} else {
-				callback(true);
-			}
-	    });
+		if (error) {
+			callback(true);
+		} else {
+			var id = coll.insert(toInsert, function(error, saved) {
+				if (error) {
+					callback(true);
+				} else {
+					callback(false);
+				}
+		    });
+		}
 	});
 }
 
-function getGameData(gid, callback) {
+function getGameData(gameId, callback) {
 	db.collection('games', function(error, coll) {
 		if (error) {
 			callback(null);
 		} else {
-			coll.find({"gid": escape(gid)}).toArray(function(err, docs) {
+			coll.find({"gameId": escape(gameId)}).toArray(function(err, docs) {
 				if (err) {
 					callback(null);
 				} else {
@@ -58,13 +64,13 @@ function getGameData(gid, callback) {
 	});
 }
 
-// assumes gid is valid
-function getGameResults(gid, callback) {
+// assumes gameId is valid
+function getGameResults(gameId, callback) {
 	db.collection('completed_games', function(er, collection) {
 		if (er) {
 			callback(null);
 		} else {
-			collection.find({"gid": escape(gid)}).sort({'pathLength':1}).toArray(function(err, docs) {
+			collection.find({"gameId": escape(gameId)}).sort({'pathLength':1}).toArray(function(err, docs) {
 				if (err) {
 					callback(null);
 				} else {
@@ -75,12 +81,12 @@ function getGameResults(gid, callback) {
 	});
 }
 
-function isValidgid(gid, callback) {
+function isValidGameId(gameId, callback) {
 	db.collection('games', function(er, collection) {
 		if (er) {
 			callback(false);
 		} else {
-			collection.find({"gid": gid}).toArray(function(err, docs) {
+			collection.find({"gameId": gameId}).toArray(function(err, docs) {
 				if (err) {
 					callback(false);
 				} else {
@@ -94,7 +100,7 @@ function isValidgid(gid, callback) {
 /* ---------------------------Export---------------------------- */
 
 module.exports.createGame = createGame;
-module.exports.isValidgid = isValidgid;
+module.exports.isValidGameId = isValidGameId;
 module.exports.getGameResults = getGameResults;
 module.exports.getGameData = getGameData;
 module.exports.addPathToGame = addPathToGame;
