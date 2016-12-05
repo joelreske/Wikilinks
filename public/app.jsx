@@ -115,11 +115,16 @@ class NewGame extends React.Component {
 class GameHistory extends React.Component {
     constructor(props) {
         super(props);
-        this.onButtonClicked = this.onButtonClicked.bind(this);
+        this.onReplayButtonClicked = this.onReplayButtonClicked.bind(this);
+        this.onViewStatsButtonClicked = this.onViewStatsButtonClicked.bind(this);
     }
 
-    onButtonClicked(gid) {
-        this.props.onGameClicked(gid);
+    onReplayButtonClicked(gid) {
+        this.props.onReplay(gid);
+    }
+
+    onViewStatsButtonClicked(gid) {
+        this.props.onViewStats(gid);
     }
 
     render() {
@@ -130,13 +135,19 @@ class GameHistory extends React.Component {
             var games = [];
             for (var i = 0; i < gameHistory.length; i++) {
                 (function(gid, start, end) {
-                    games.push(<button className="btn btn-default" key={i} onClick={function(){self.onButtonClicked(gid)} }><PathDisplay path={[start, end]}/></button>);
+                    games.push(
+                        <div>
+                            <PathDisplay path={[start, end]}/>
+                            <button className="btn btn-default" key={i + "replay"} onClick={function(){self.onReplayButtonClicked(gid)} }>Replay</button>
+                            <button className="btn btn-default" key={i + "states"} onClick={function(){self.onViewStatsButtonClicked(gid)} }>View Stats</button>
+                        </div>
+                    );
                 })(gameHistory[i].gid, gameHistory[i].start, gameHistory[i].end);
             }
 
             return (
                 <div>
-                    <h2>Or, replay a previous game:</h2>
+                    <h2>Or, view your previous games:</h2>
                     {games}
                 </div>);
         } else {
@@ -475,6 +486,7 @@ class App extends React.Component {
         this.startGame = this.startGame.bind(this);
         this.onPostGame = this.onPostGame.bind(this);
         this.onPlayAgain = this.onPlayAgain.bind(this);
+        this.viewStats = this.viewStats.bind(this);
     }
 
     componentWillMount() {
@@ -503,6 +515,11 @@ class App extends React.Component {
 
     onPlayAgain() {
         this.startGame(this.gid);
+    }
+
+    viewStats(gid) {
+        window.history.replaceState({}, 'WikiLinks Game Results', '/gameResults?gid=' + this.gid);
+        this.preRender()
     }
 
     preRender(getUsername) {
@@ -547,7 +564,7 @@ class App extends React.Component {
         } else {
             return (<div>
                         <NewGame onCreateGame={this.startGame}/>
-                        <GameHistory onGameClicked={this.startGame}/> 
+                        <GameHistory onReplay={this.startGame} onViewStats={this.viewStats}/> 
                     </div>);
         }
     }
