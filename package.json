@@ -16,6 +16,7 @@
     "mongodb": "latest",
     "node-wikipedia": "latest",
     "react": "^15.4.1",
+    "react-bootstrap": "^0.30.7",
     "react-button": "^1.2.1",
     "react-dom": "^15.4.1"
   },

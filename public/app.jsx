@@ -1,5 +1,16 @@
 var gamestore = new GameStore();
 
+var Popover = ReactBootstrap.Popover;
+var OverlayTrigger = ReactBootstrap.OverlayTrigger;
+var Button = ReactBootstrap.Button;
+var Form = ReactBootstrap.Form;
+var FormGroup = ReactBootstrap.FormGroup;
+var ControlLabel = ReactBootstrap.ControlLabel;
+var FormControl = ReactBootstrap.FormControl;
+var InputGroup = ReactBootstrap.InputGroup;
+var Tabs = ReactBootstrap.Tabs;
+var Tab = ReactBootstrap.Tab;
+
 class NewGamePageForm extends React.Component {
     constructor(props) {
         super(props);
@@ -9,16 +20,20 @@ class NewGamePageForm extends React.Component {
 
     render() {
         return (
-            <div className="form-group form-group-border">
-                <label htmlFor={this.props.id}>{this.props.label}</label>
-                <input type="text" className="input-sm" id={this.props.id} placeholder={this.props.placeholder} onChange={this.parsePageEntry} ref={(input) => {this.textInput = input;}}/>
-                <button className="btn btn-default" onClick={this.randomize}>Randomize</button>
-            </div>
+            <FormGroup controlId={this.props.id}>
+                <ControlLabel>{this.props.label}</ControlLabel>
+                <InputGroup>
+                    <FormControl bsSize="sm" type="text" placeholder={this.props.placeholder} onChange={this.parsePageEntry} ref='formControl'/> 
+                    <InputGroup.Button>
+                        <Button onClick={this.randomize}>Random</Button>
+                    </InputGroup.Button>
+                </InputGroup>
+            </FormGroup>
         );
     }
 
     randomize() {
-        var textInput = this.textInput;
+        var textInput = ReactDOM.findDOMNode(this.refs.formControl);
 
         $.getJSON("/api/getRandomPage", function(data) {
             textInput.value = data.pageTitle;
@@ -26,17 +41,18 @@ class NewGamePageForm extends React.Component {
     }
 
     parsePageEntry() {
+        var textInput = ReactDOM.findDOMNode(this.refs.formControl);
         var urlRegx = /(?:http:\/\/|https:\/\/)en.wikipedia.org\/wiki\/([^#<>[\]|{}]*)/i;
-        var match = urlRegx.exec(this.textInput.value);
+        var match = urlRegx.exec(textInput.value);
 
         if (match) {
             var pagetitle = match[1].replace(/_/g, " ");
-            this.textInput.value = pagetitle;
+            textInput.value = pagetitle;
         }
     }
 
     val() {
-        return this.textInput.value;
+        return ReactDOM.findDOMNode(this.refs.formControl).value;
     }
 }
 
@@ -60,13 +76,15 @@ class NewGame extends React.Component {
     render() {
         return (
             <div>
-            <h2>Create a new Game:</h2>
+            <h2>Create a new Game</h2>
                 <div id="newGameContainer">
                     <div>
-                        <NewGamePageForm id="startPage" label="Start Page:" placeholder="Enter Start Page" ref={(input) => {this.startInput = input;}}/>
-                        <NewGamePageForm id="endPage" label="End Page:" placeholder="Enter End Page" ref={(input) => {this.endInput = input;}}/>
+                        <Form inline componentClass="gameParam">
+                            <NewGamePageForm id="startPage" label="Start Page:" placeholder="Enter Start Page" ref='startInput'/>
+                            <NewGamePageForm id="endPage" label="End Page:" placeholder="Enter End Page" ref='endInput'/>
+                        </Form>
                     </div>
-                    <button className="btn btn-default" id="startBtn" onClick={this.startGame}>Start Game</button>
+                    <Button id="startBtn" onClick={this.startGame}>Start Game</Button>
                 </div>
             </div>
         );
@@ -74,8 +92,8 @@ class NewGame extends React.Component {
     }
 
     checkPages(callback) {
-        var startPage = this.startInput.val();
-        var endPage = this.endInput.val();
+        var startPage = this.refs.startInput.val();
+        var endPage = this.refs.endInput.val();
 
         if (startPage == "") {
             window.alert("Start is empty");
@@ -139,8 +157,8 @@ class GameHistory extends React.Component {
                         <div key={i + "historyGame"} className="historyGame">
                             <PathDisplay path={[start, end]}/>
                             <span className="buttonContainer" key={i + "buttonContainer"}>
-                                <button className="btn btn-default" key={i + "replay"} onClick={function(){self.onReplayButtonClicked(gid)} }>Replay</button>
-                                <button className="btn btn-default" key={i + "stats"} onClick={function(){self.onViewStatsButtonClicked(gid)} }>View Stats</button>
+                                <Button key={i + "replay"} onClick={function(){self.onReplayButtonClicked(gid)} }>Replay</Button>
+                                <Button key={i + "stats"} onClick={function(){self.onViewStatsButtonClicked(gid)} }>View Stats</Button>
                             </span>
                         </div>
                     );
@@ -300,7 +318,7 @@ class ArticleSelect extends React.Component {
     }
 
     showLinks(data) {
-        this.searchInput.value = "";
+        ReactDOM.findDOMNode(this.refs.search).value = "";
 
         this.setState({
             article: data,
@@ -309,8 +327,9 @@ class ArticleSelect extends React.Component {
     }
 
     search() {
+        var search = ReactDOM.findDOMNode(this.refs.search);
         this.setState({
-            searchString: this.searchInput.value
+            searchString: search.value
         });
     }
 
@@ -327,9 +346,9 @@ class ArticleSelect extends React.Component {
 
                 if (searchRegex.test(articleName) || articleName == obj.props.end) {
                     if (articleName == obj.props.end) {
-                       var btn = <button className="btn btn-default endbtn" key={i} onClick={() => obj.nextPage(articleName)}>{articleName}</button>; 
+                       var btn = <Button key={i} bsStyle="success" onClick={() => obj.nextPage(articleName)}>{articleName}</Button>; 
                     } else {
-                        var btn = <button className="btn btn-default" key={i} onClick={() => obj.nextPage(articleName)}>{articleName}</button>;
+                        var btn = <Button key={i} onClick={() => obj.nextPage(articleName)}>{articleName}</Button>;
                     }
 
                     links.push(btn);
@@ -341,7 +360,7 @@ class ArticleSelect extends React.Component {
             <div className="container">
                 <p>Destination: {this.props.end}</p>
                 <PathDisplay path={this.state.history}/>
-                <input type="text" key="search" className="input-sm" id="search" placeholder="Search" onChange={this.search} ref={(input) => {this.searchInput = input;}}/>
+                <FormControl bsSize="sm" type="text" id="search" key="search" placeholder="Search" onChange={this.search} ref="search"/>
                 <div>{links}</div>
             </div>
         );
@@ -414,18 +433,21 @@ class PostGame extends React.Component {
 
         $('#name').keypress(function(e) {
             if (e.which == 13) {
+                e.preventDefault();
                 self.sendScore();
+                return false;
             }
         });
     }
 
     sendScore() {
-        if (this.textInput.value != "") {
-            $("#username-status").css("padding", 0);
-            $("#username-status").attr("src", "/images/spinner.gif").height(30).width(30)
+        var name = ReactDOM.findDOMNode(this.refs.name).value;
+        if (name != "") {
+            $("#ajax-status").css("padding", 0);
+            $("#ajax-status").attr("src", "/images/spinner.gif").height(30).width(30);
 
-            $.post("/api/endGame", {'gid': this.props.gid, 'username':this.textInput.value, 'path':this.props.path}, function (data, status) {
-                $("#username-status").attr("src", "/images/checkmark.png");
+            $.post("/api/endGame", {'gid': this.props.gid, 'username':name, 'path':this.props.path}, function (data, status) {
+                $("#ajax-status").attr("src", "/images/checkmark.png");
                 $("#username-collection").fadeOut(1000);
             });
         } else {
@@ -439,37 +461,94 @@ class PostGame extends React.Component {
                 <h1>YOU WON</h1>
                 <h2>And you did it in {this.props.time} seconds.</h2>
                 <PathDisplay path={this.props.path}/>
-                <div id="username-collection" className="form-group" ref={(form) => {this.form = form;}}>
-                    <label htmlFor="name">Enter your name to save your score:</label>
-                    <span id="name-group">
-                        <input type="text" className="input-sm" id="name" placeholder="Name" ref={(input) => {this.textInput = input;}}/>
-                        <button className="btn btn-default" onClick={this.sendScore}>Send Score</button>
-                        <img id="username-status" ref={(img) => {this.img = img;}}/>
-                    </span>
+                <div id="username-collection">
+                    <Form inline>
+                        <FormGroup controlId="name-group">
+                            <ControlLabel>Enter your name to save your score:</ControlLabel>
+                            <FormControl bsSize="sm" type="text" id="name" placeholder="Name" ref="name"/>
+                            <Button onClick={this.sendScore}>Send Score</Button>
+                            <img id="ajax-status" ref={(img) => {this.img = img;}}/>
+                        </FormGroup>
+                    </Form>
                 </div>
             </div>
         );
     }
 }
 
-class GameData extends React.Component { 
+class GameData extends React.Component {
     constructor(props) {
         super(props);
         this.playAgain = this.playAgain.bind(this);
+        this.addTextToShareTab = this.addTextToShareTab.bind(this);
+        this.share = this.share.bind(this);
     }
 
     playAgain() {
         this.props.onPlayAgain();
     }
 
+    addTextToShareTab() {
+        this.link.value = window.location.origin + window.location.search;
+        this.link.select();
+    }
+
+    share() {
+        var emailRegex = /^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i;
+        var email = this.email;
+        var name = this.name;
+
+        if (name.value == "" || email.value == "") {
+            window.alert("Both fields must be set");
+        } else if (!emailRegex.test(email.value)) {
+            window.alert("Invalid email");
+        } else {
+            $("#ajax-status").css("padding", 0);
+            $("#ajax-status").attr("src", "/images/spinner.gif").height(30).width(30);
+            $.post("/api/share", {'name': name.value, 'email':email.value}, function (data, status) {
+                $("#ajax-status").attr("src", "/images/checkmark.png");
+                email.value = "";
+            });
+        }
+    }
+
     render() {
-        // placeholder
+        var sharePopover = (
+            <Popover id="share-popup" title="Share">
+                <Tabs id="share-tabs" defaultActiveKey={1}>
+                    <Tab eventKey={1} title="Email">
+                        <Form>
+                            <FormGroup controlId="share-email-group">
+                                <ControlLabel>Your name</ControlLabel>
+                                <FormControl bsSize="sm" type="text" id="name" placeholder="Name" inputRef={(input) => {this.name = input}}/>
+                            </FormGroup>
+                            <FormGroup controlId="share-email-group">
+                                <ControlLabel>Friend's Email</ControlLabel>
+                                <FormControl bsSize="sm" type="text" id="email" placeholder="Their Email" inputRef={(input) => {this.email = input}}/>
+                            </FormGroup>
+                            <Button onClick={this.share}>Send</Button>
+                            <img id="ajax-status" ref={(img) => {this.img = img;}}/>
+                        </Form>
+                    </Tab>
+                    <Tab eventKey={2} title="Link" onEntering={this.addTextToShareTab}>
+                        <FormControl bsSize="sm" type="text" inputRef={(input) => {this.link = input}}/>
+                        <p>Copy the link above and send it to whoever you want, however you want</p>
+                    </Tab>
+                </Tabs>
+            </Popover>
+        );
+
         return (
             <div id="GameData">
                 <div style={{width:'50%', height:'300px', backgroundColor:'gray', margin:'0 auto'}}>
                     Graph goes here
                 </div>
-                <button className="btn btn-default" id="startBtn" onClick={this.playAgain}>Play Again</button>
+                <span className="buttonContainer">
+                    <OverlayTrigger trigger="click" placement="left" overlay={sharePopover} rootClose ref='overlay'>
+                        <Button>Share</Button>
+                    </OverlayTrigger>
+                    <Button onClick={this.playAgain}>Play Again</Button>
+                </span>
             </div>
         );
     }
@@ -487,6 +566,7 @@ class App extends React.Component {
         this.onPostGame = this.onPostGame.bind(this);
         this.onPlayAgain = this.onPlayAgain.bind(this);
         this.viewStats = this.viewStats.bind(this);
+        this.gohome = this.gohome.bind(this);
     }
 
     componentWillMount() {
@@ -497,6 +577,12 @@ class App extends React.Component {
             self.preRender();
         };
 
+        this.preRender();
+    }
+
+    gohome() {
+        window.history.pushState({}, 'WikiLinks', '/');
+        this.gid = "";
         this.preRender();
     }
 
@@ -552,22 +638,32 @@ class App extends React.Component {
     }
 
     render() {
+        var contents;
+
         if (this.state.page == "gameResults") {
-            return <GameData gid={this.gid} onPlayAgain={this.onPlayAgain}/>
+            contents = <GameData gid={this.gid} onPlayAgain={this.onPlayAgain}/>
         } else if (this.state.page == "postGame") {
-            return (
+            contents = (
                 <div>
                     <PostGame path={this.path} time={this.time} gid={this.gid}/>
                     <GameData gid={this.gid} onPlayAgain={this.onPlayAgain}/> 
                 </div>);
         } else if (this.state.page == "inGame") {
-            return <InGame gid={this.gid} onPostGame={this.onPostGame}/>;
+            contents = <InGame gid={this.gid} onPostGame={this.onPostGame}/>;
         } else {
-            return (<div>
+            contents = (<div>
                         <NewGame onCreateGame={this.startGame}/>
                         <GameHistory onReplay={this.startGame} onViewStats={this.viewStats}/> 
                     </div>);
         }
+        return (
+            <div className="container-fluid">
+                <div id="header">
+                    <h1 onClick={this.gohome}>WikiLinks</h1>
+                </div>
+                {contents}
+            </div>
+        );
     }
 }
 

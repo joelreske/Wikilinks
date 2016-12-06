@@ -17,6 +17,10 @@ label {
   margin-right: .4em;
 }
 
+#header h1 {
+  cursor: pointer;
+}
+
 .container-fluid {
   max-width: 1080px;
 }
@@ -46,7 +50,6 @@ label {
 #startBtn {
   float: right;
   clear: right;
-  display: block;
 }
 
 .historyGame {
@@ -57,7 +60,7 @@ label {
   overflow: auto;
 }
 
-.historyGame .buttonContainer {
+.buttonContainer {
   float: right;
   clear: right;
 }
@@ -70,7 +73,7 @@ label {
   display: inline-block;
 }
 
-.form-group-border {
+.gameParam {
   padding: 1em;
   margin: .5em;
   display: inline-block;
@@ -83,14 +86,6 @@ label {
 .rightArrow {
   margin: 0 .4em;
   vertical-align: middle;
-}
-
-.endbtn {
-  background-color: #96e874;
-}
-
-.endbtn:hover {
-  background-color: #D1E8C8;
 }
 
 #search {
@@ -111,9 +106,13 @@ label {
   display: inline-block;
 }
 
-#username-status {
+#ajax-status {
   padding: 15px;
   border: none;
+}
+
+#share-popup {
+  color: black;
 }
 
 /* end Post game styles*/

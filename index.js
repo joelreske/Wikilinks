@@ -134,6 +134,10 @@ app.get('/api/getLinksForPage', function(request, response) {
 	});
 });
 
+app.post('/api/share', function(request, response){
+  	response.sendStatus(200);
+});
+
 app.get('/*', function(request, response){
   	response.sendFile(__dirname + '/public/index.html');
 });
