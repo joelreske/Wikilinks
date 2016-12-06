@@ -40,6 +40,7 @@ label {
 #newGameContainer {
   text-align: center;
   clear: both;
+  overflow: auto;
 }
 
 #startBtn {
@@ -48,11 +49,32 @@ label {
   display: block;
 }
 
+.historyGame {
+  margin-left: 4em;
+  padding: 1.5em 1em;
+  border-bottom: 2px solid gray;
+  clear: both;
+  overflow: auto;
+}
+
+.historyGame .buttonContainer {
+  float: right;
+  clear: right;
+}
+
+.historyGame:last-child { 
+  border: none
+}
+
+.historyGame .historyContainer {
+  display: inline-block;
+}
+
 .form-group-border {
   padding: 1em;
   margin: .5em;
   display: inline-block;
-  border: 1px solid gray;
+  border: 2px solid gray;
   border-radius: 25px;
 }
 /* End new game styles */
@@ -77,6 +99,10 @@ label {
 /* end In game styles */
 
 /*Post game styles*/
+#PostGame {
+  margin-bottom: .5em;
+}
+
 #GameData, #PostGame {
   text-align: center
 }

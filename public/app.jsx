@@ -136,10 +136,12 @@ class GameHistory extends React.Component {
             for (var i = 0; i < gameHistory.length; i++) {
                 (function(gid, start, end) {
                     games.push(
-                        <div>
+                        <div key={i + "historyGame"} className="historyGame">
                             <PathDisplay path={[start, end]}/>
-                            <button className="btn btn-default" key={i + "replay"} onClick={function(){self.onReplayButtonClicked(gid)} }>Replay</button>
-                            <button className="btn btn-default" key={i + "states"} onClick={function(){self.onViewStatsButtonClicked(gid)} }>View Stats</button>
+                            <span className="buttonContainer" key={i + "buttonContainer"}>
+                                <button className="btn btn-default" key={i + "replay"} onClick={function(){self.onReplayButtonClicked(gid)} }>Replay</button>
+                                <button className="btn btn-default" key={i + "stats"} onClick={function(){self.onViewStatsButtonClicked(gid)} }>View Stats</button>
+                            </span>
                         </div>
                     );
                 })(gameHistory[i].gid, gameHistory[i].start, gameHistory[i].end);
@@ -147,7 +149,7 @@ class GameHistory extends React.Component {
 
             return (
                 <div>
-                    <h2>Or, view your previous games:</h2>
+                    <h2>Or, choose from your previous games:</h2>
                     {games}
                 </div>);
         } else {
@@ -243,10 +245,10 @@ class PathDisplay extends React.Component {
 
         for (var i in history) {
             (function(i, obj) {
-                var historyItem = <span key={i} className="historyItem">{history[i]}</span>;
+                var historyItem = <span key={i + "historyItem"} className="historyItem">{history[i]}</span>;
 
                 if (i != history.length - 1) {
-                    histpath.push(<span>
+                    histpath.push(<span key={i + "historyItemContainer"}>
                                     {historyItem}
                                     <img key={(i + 1) + "img"} className="rightArrow" src="/images/right-arrow.png"/>
                                   </span>);
@@ -256,7 +258,7 @@ class PathDisplay extends React.Component {
             })(i, this);
         }
 
-        return (<div>{histpath}</div>);
+        return (<div className="historyContainer">{histpath}</div>);
     }
 }
 
@@ -433,7 +435,6 @@ class PostGame extends React.Component {
 
     render() {
         return (
-        <span>
             <div id="PostGame">
                 <h1>YOU WON</h1>
                 <h2>And you did it in {this.props.time} seconds.</h2>
@@ -447,7 +448,6 @@ class PostGame extends React.Component {
                     </span>
                 </div>
             </div>
-        </span>
         );
     }
 }
@@ -518,7 +518,8 @@ class App extends React.Component {
     }
 
     viewStats(gid) {
-        window.history.replaceState({}, 'WikiLinks Game Results', '/gameResults?gid=' + this.gid);
+        window.history.replaceState({}, 'WikiLinks Game Results', '/gameResults?gid=' + gid);
+        this.gid = gid;
         this.preRender()
     }
 
