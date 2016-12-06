@@ -1,6 +1,6 @@
 var gamestore = new GameStore();
 
-var Popover = ReactBootstrap.Popover;
+var Modal = ReactBootstrap.Modal;
 var OverlayTrigger = ReactBootstrap.OverlayTrigger;
 var Button = ReactBootstrap.Button;
 var Form = ReactBootstrap.Form;
@@ -482,6 +482,11 @@ class GameData extends React.Component {
         this.playAgain = this.playAgain.bind(this);
         this.addTextToShareTab = this.addTextToShareTab.bind(this);
         this.share = this.share.bind(this);
+        this.shareClose = this.shareClose.bind(this);
+
+        this.state = {
+            showShare: false
+        };
     }
 
     playAgain() {
@@ -491,6 +496,12 @@ class GameData extends React.Component {
     addTextToShareTab() {
         this.link.value = window.location.origin + window.location.search;
         this.link.select();
+    }
+
+    shareClose() {
+        this.setState({
+            showShare: false
+        });
     }
 
     share() {
@@ -513,30 +524,6 @@ class GameData extends React.Component {
     }
 
     render() {
-        var sharePopover = (
-            <Popover id="share-popup" title="Share">
-                <Tabs id="share-tabs" defaultActiveKey={1}>
-                    <Tab eventKey={1} title="Email">
-                        <Form>
-                            <FormGroup controlId="share-email-group">
-                                <ControlLabel>Your name</ControlLabel>
-                                <FormControl bsSize="sm" type="text" id="name" placeholder="Name" inputRef={(input) => {this.name = input}}/>
-                            </FormGroup>
-                            <FormGroup controlId="share-email-group">
-                                <ControlLabel>Friend's Email</ControlLabel>
-                                <FormControl bsSize="sm" type="text" id="email" placeholder="Their Email" inputRef={(input) => {this.email = input}}/>
-                            </FormGroup>
-                            <Button onClick={this.share}>Send</Button>
-                            <img id="ajax-status" ref={(img) => {this.img = img;}}/>
-                        </Form>
-                    </Tab>
-                    <Tab eventKey={2} title="Link" onEntering={this.addTextToShareTab}>
-                        <FormControl bsSize="sm" type="text" inputRef={(input) => {this.link = input}}/>
-                        <p>Copy the link above and send it to whoever you want, however you want</p>
-                    </Tab>
-                </Tabs>
-            </Popover>
-        );
 
         return (
             <div id="GameData">
@@ -544,11 +531,40 @@ class GameData extends React.Component {
                     Graph goes here
                 </div>
                 <span className="buttonContainer">
-                    <OverlayTrigger trigger="click" placement="left" overlay={sharePopover} rootClose ref='overlay'>
-                        <Button>Share</Button>
-                    </OverlayTrigger>
+                    <Button onClick={()=>{this.setState({ showShare: true })}}>Share</Button>
                     <Button onClick={this.playAgain}>Play Again</Button>
                 </span>
+
+                <Modal id="share-popup" bsSize="small" show={this.state.showShare} onHide={this.shareClose}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Share</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <Tabs id="share-tabs" defaultActiveKey={1}>
+                            <Tab eventKey={1} title="Email">
+                                <Form>
+                                    <FormGroup controlId="share-email-group">
+                                        <ControlLabel>Your name</ControlLabel>
+                                        <FormControl bsSize="sm" type="text" id="name" placeholder="Name" inputRef={(input) => {this.name = input}}/>
+                                    </FormGroup>
+                                    <FormGroup controlId="share-email-group">
+                                        <ControlLabel>Friend's Email</ControlLabel>
+                                        <FormControl bsSize="sm" type="text" id="email" placeholder="Their Email" inputRef={(input) => {this.email = input}}/>
+                                    </FormGroup>
+                                    <Button onClick={this.share}>Send</Button>
+                                    <img id="ajax-status" ref={(img) => {this.img = img;}}/>
+                                </Form>
+                            </Tab>
+                            <Tab eventKey={2} title="Link" onEntering={this.addTextToShareTab}>
+                                <FormControl bsSize="sm" type="text" inputRef={(input) => {this.link = input}}/>
+                                <p>Copy the link above and send it to whoever you want, however you want</p>
+                            </Tab>
+                        </Tabs>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button onClick={this.shareClose}>Close</Button>
+                    </Modal.Footer>
+                </Modal>
             </div>
         );
     }
