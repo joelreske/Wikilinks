@@ -514,7 +514,6 @@ class GameData extends React.Component {
             this.chart = new google.visualization.ScatterChart(this.refs.chart);
         }
         
-
         this.chart.draw(data, jsonData.options);
     }
 

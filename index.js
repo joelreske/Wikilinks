@@ -163,18 +163,18 @@ app.listen(app.get('port'), function() {
 
 function createDataForChart(data) {
 	var googleChartOptions = {
-          chart: {
-            title: 'Game Results'
-          },
-          hAxis: {title: 'Number of Pages'},
-          vAxis: {title: 'Time (seconds)'}
+       		title: 'Game Results',
+			legend: "none",
+			hAxis: {title: 'Number of Pages'},
+			vAxis: {title: 'Time (seconds)'}
         };
 
 
 	var googleChartData = {
 		"cols":[
 			{"label":"Number of Pages", "type":"number"},
-			{"label":"Time", "type":"number"}],
+			{"label":"Time", "type":"number"},
+			{"type": 'string', "role": 'tooltip'}],
 		"rows":[]
 	};
 
@@ -183,7 +183,8 @@ function createDataForChart(data) {
 
 		var row = {c:
 			[{v: item.pathLength},
-             {v: item.time}
+             {v: item.time},
+             {v: item.username + " found a path through " + item.pathLength + " pages in " + item.time + " seconds"}
         	]}
 
         googleChartData["rows"].push(row);
