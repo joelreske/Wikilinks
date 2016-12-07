@@ -446,7 +446,7 @@ class PostGame extends React.Component {
             $("#ajax-status").css("padding", 0);
             $("#ajax-status").attr("src", "/images/spinner.gif").height(30).width(30);
 
-            $.post("/api/endGame", {'gid': this.props.gid, 'username':name, 'path':this.props.path}, function (data, status) {
+            $.post("/api/endGame", {'gid': this.props.gid, 'username':name, 'path':this.props.path, 'time':this.props.time}, function (data, status) {
                 $("#ajax-status").attr("src", "/images/checkmark.png");
                 $("#username-collection").fadeOut(1000);
             });
@@ -483,10 +483,39 @@ class GameData extends React.Component {
         this.addTextToShareTab = this.addTextToShareTab.bind(this);
         this.share = this.share.bind(this);
         this.shareClose = this.shareClose.bind(this);
+        this.drawChart = this.drawChart.bind(this);
 
         this.state = {
             showShare: false
         };
+    }
+
+    componentDidMount() {
+        var self = this;
+
+        google.charts.load('current', {'packages':['corechart']});
+        google.charts.setOnLoadCallback(function () {
+            self.drawChart();
+            setInterval(self.drawChart, 10000);
+        });
+    }
+
+    drawChart() {
+        var gid = this.props.gid;
+
+        var jsonData = $.ajax({
+            url: "/api/getGameResults?gid=" + gid,
+            dataType: "json",
+            async: false
+        }).responseJSON;
+          
+        var data = new google.visualization.DataTable(jsonData["data"]);
+        if (!this.chart) {
+            this.chart = new google.visualization.ScatterChart(this.refs.chart);
+        }
+        
+
+        this.chart.draw(data, jsonData.options);
     }
 
     playAgain() {
@@ -527,9 +556,7 @@ class GameData extends React.Component {
 
         return (
             <div id="GameData">
-                <div style={{width:'50%', height:'300px', backgroundColor:'gray', margin:'0 auto'}}>
-                    Graph goes here
-                </div>
+                <div id="chart" ref="chart"></div>
                 <span className="buttonContainer">
                     <Button onClick={()=>{this.setState({ showShare: true })}}>Share</Button>
                     <Button onClick={this.playAgain}>Play Again</Button>

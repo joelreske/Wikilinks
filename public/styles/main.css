@@ -115,6 +115,12 @@ label {
   color: black;
 }
 
+#chart {
+  width: 500px;
+  height: 300px;
+  margin: 0 auto;
+}
+
 /* end Post game styles*/
 
 /* Circular timer */

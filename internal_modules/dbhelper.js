@@ -25,12 +25,13 @@ function createGame(startPage, endPage, callback) {
 	});
 }
 
-function addPathToGame(gameId, username, path, callback) {
+function addPathToGame(gameId, username, path, time, callback) {
 	var toInsert = {
 		"gameId": escape(gameId),
 		"pathLength": path.length,
 		"username": escape(username),
-		"path": JSON.stringify(path)
+		"path": JSON.stringify(path),
+		"time": escape(time)
 	};
 
 	db.collection('completed_games', function(error, coll) {

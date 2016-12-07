@@ -34,11 +34,12 @@ app.post('/api/endGame', function(request, response) {
 	var gid = request.body.gid;
 	var username = request.body.username;
 	var path = request.body.path;
+	var time = request.body.time;
 
-	if (gid && path && username) {
+	if (gid && path && username && time) {
 		db.isValidGameId(gid, function(valid) {
 			if (valid) {
-				db.addPathToGame(gid, username, path, function(error) {
+				db.addPathToGame(gid, username, path, time, function(error) {
 					if (error) {
 						response.sendStatus(500);
 					} else {
@@ -84,11 +85,11 @@ app.get('/api/getGameResults', function(request, response) {
 	var gid = request.query.gid;
 
 	if (gid) {
-		db.isValidgid(gid, function(valid) {
+		db.isValidGameId(gid, function(valid) {
 			if (valid) {
 				db.getGameResults(gid, function(data) {
 					if (data) {
-						response.send(data);
+						response.send(createDataForChart(data));
 					} else {
 						response.sendStatus(500);
 					}
@@ -159,3 +160,35 @@ app.get('/*', function(request, response){
 app.listen(app.get('port'), function() {
  	console.log('Node app is running on port', app.get('port'));
 });
+
+function createDataForChart(data) {
+	var googleChartOptions = {
+          chart: {
+            title: 'Game Results'
+          },
+          hAxis: {title: 'Number of Pages'},
+          vAxis: {title: 'Time (seconds)'}
+        };
+
+
+	var googleChartData = {
+		"cols":[
+			{"label":"Number of Pages", "type":"number"},
+			{"label":"Time", "type":"number"}],
+		"rows":[]
+	};
+
+	for (var i in data) {
+		var item = data[i];
+
+		var row = {c:
+			[{v: item.pathLength},
+             {v: item.time}
+        	]}
+
+        googleChartData["rows"].push(row);
+	}
+
+
+	return {"data":googleChartData, "options":googleChartOptions};
+}
