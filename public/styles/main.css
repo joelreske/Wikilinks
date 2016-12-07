@@ -116,9 +116,11 @@ label {
 }
 
 #chart {
-  width: 500px;
-  height: 300px;
+  width: 98%;
+  max-width: 35em;
+  height: 16em;
   margin: 0 auto;
+  margin-bottom: 1em;
 }
 
 /* end Post game styles*/

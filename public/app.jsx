@@ -484,6 +484,7 @@ class GameData extends React.Component {
         this.share = this.share.bind(this);
         this.shareClose = this.shareClose.bind(this);
         this.drawChart = this.drawChart.bind(this);
+        this.getChartData = this.getChartData.bind(this);
 
         this.state = {
             showShare: false
@@ -492,15 +493,16 @@ class GameData extends React.Component {
 
     componentDidMount() {
         var self = this;
+        window.onresize = this.getChartData;
 
         google.charts.load('current', {'packages':['corechart']});
         google.charts.setOnLoadCallback(function () {
-            self.drawChart();
-            setInterval(self.drawChart, 10000);
+            self.getChartData();
+            setInterval(self.getChartData, 10000);
         });
     }
 
-    drawChart() {
+    getChartData() {
         var gid = this.props.gid;
 
         var jsonData = $.ajax({
@@ -508,13 +510,18 @@ class GameData extends React.Component {
             dataType: "json",
             async: false
         }).responseJSON;
-          
-        var data = new google.visualization.DataTable(jsonData["data"]);
+
+        this.currentChartData = new google.visualization.DataTable(jsonData["data"]);
+        this.currentChartOptions = jsonData.options;
+        this.drawChart()
+    }
+
+    drawChart() {
         if (!this.chart) {
             this.chart = new google.visualization.ScatterChart(this.refs.chart);
         }
         
-        this.chart.draw(data, jsonData.options);
+        this.chart.draw(this.currentChartData, this.currentChartOptions);
     }
 
     playAgain() {
