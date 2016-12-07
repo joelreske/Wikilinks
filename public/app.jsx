@@ -342,7 +342,12 @@ class ArticleSelect extends React.Component {
         for (var i in data) {
             (function(i, obj) {
                 var articleName = data[i];
-                var searchRegex = new RegExp("^" + searchString + ".*", "i")
+                var searchRegex;
+                if (searchString.length < 2) {
+                    searchRegex = new RegExp("^" + searchString + ".*", "i");
+                } else {
+                    searchRegex = new RegExp("" + searchString + "", "i");
+                }
 
                 if (searchRegex.test(articleName) || articleName == obj.props.end) {
                     if (articleName == obj.props.end) {
