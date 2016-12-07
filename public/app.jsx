@@ -385,7 +385,6 @@ class InGame extends React.Component {
     }
 
     setEndpoints(data) {
-        var data = data[0];
         gamestore.storeGame(this.props.gid, data.start, data.end);
 
         this.setState({
@@ -541,19 +540,24 @@ class GameData extends React.Component {
 
     share() {
         var emailRegex = /^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i;
-        var email = this.email;
-        var name = this.name;
+        var email = this.email.value;
+        var name = this.name.value;
+        var friendName = this.friendName.value;
 
-        if (name.value == "" || email.value == "") {
-            window.alert("Both fields must be set");
-        } else if (!emailRegex.test(email.value)) {
+        if (name == "" || email == "" || friendName == "") {
+            window.alert("All fields must be set");
+        } else if (!emailRegex.test(email)) {
             window.alert("Invalid email");
         } else {
             $("#ajax-status").css("padding", 0);
             $("#ajax-status").attr("src", "/images/spinner.gif").height(30).width(30);
-            $.post("/api/share", {'name': name.value, 'email':email.value}, function (data, status) {
+
+            var emailInput = this.email;
+            var friendNameInput = this.friendName;
+            $.post("/api/share", {'userName': name, 'friendName': friendName, 'email':email, 'gid': this.props.gid}, function (data, status) {
                 $("#ajax-status").attr("src", "/images/checkmark.png");
-                email.value = "";
+                emailInput.value = "";
+                friendNameInput.value = "";
             });
         }
     }
@@ -578,7 +582,11 @@ class GameData extends React.Component {
                                 <Form>
                                     <FormGroup controlId="share-email-group">
                                         <ControlLabel>Your name</ControlLabel>
-                                        <FormControl bsSize="sm" type="text" id="name" placeholder="Name" inputRef={(input) => {this.name = input}}/>
+                                        <FormControl bsSize="sm" type="text" id="name" placeholder="Your Name" inputRef={(input) => {this.name = input}}/>
+                                    </FormGroup>
+                                    <FormGroup controlId="share-email-group">
+                                        <ControlLabel>Friend's name</ControlLabel>
+                                        <FormControl bsSize="sm" type="text" id="friendName" placeholder="Friend's Name" inputRef={(input) => {this.friendName = input}}/>
                                     </FormGroup>
                                     <FormGroup controlId="share-email-group">
                                         <ControlLabel>Friend's Email</ControlLabel>
@@ -659,6 +667,7 @@ class App extends React.Component {
     }
 
     preRender(getUsername) {
+
         if (!this.gid) {
             var pageURL = decodeURIComponent(window.location.search.substring(1)),
             gidRegx = /(?:(?:gid=)([a-zA-Z0-9~\-_]*))/,
@@ -705,12 +714,15 @@ class App extends React.Component {
                         <GameHistory onReplay={this.startGame} onViewStats={this.viewStats}/> 
                     </div>);
         }
+
         return (
             <div className="container-fluid">
                 <div id="header">
                     <h1 onClick={this.gohome}>WikiLinks</h1>
                 </div>
-                {contents}
+                <div id="main-content">
+                    {contents}
+                </div>
             </div>
         );
     }

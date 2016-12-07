@@ -4,6 +4,7 @@ var bodyParser = require('body-parser');
 
 var db = require("./internal_modules/dbhelper.js");
 var wikilinks = require("./internal_modules/wikilinks.js");
+var emailshare = require("./internal_modules/emailshare.js");
 
 app.set('port', (process.env.PORT || 5000));
 
@@ -135,8 +136,35 @@ app.get('/api/getLinksForPage', function(request, response) {
 	});
 });
 
-app.post('/api/share', function(request, response){
-  	response.sendStatus(200);
+app.post('/api/share', function(request, response) {
+	var userName = request.body.userName;
+	var friendName = request.body.friendName;
+	var email = request.body.email;
+	var gid = request.body.gid;
+
+	if (userName && friendName && email && gid) {
+		db.isValidGameId(gid, function(valid) {
+			if (valid) {
+				db.getGameData(gid, function(data) {
+					if (data) {
+						emailshare.share(userName, friendName, email, data.start, data.end, request.protocol + "://" + request.hostname + "/?gid=" + gid, function(success) {
+							if (success) {
+								response.sendStatus(200);
+							} else {
+								response.sendStatus(500);
+							}
+						});
+					} else {
+						response.sendStatus(500);
+					}
+				});
+			} else {
+				response.sendStatus(400);
+			}
+		});
+	} else {
+		response.sendStatus(400);
+	}
 });
 
 app.get('/*', function(request, response){

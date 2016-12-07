@@ -58,7 +58,7 @@ function getGameData(gameId, callback) {
 				if (err) {
 					callback(null);
 				} else {
-					callback(docs);
+					callback(docs[0]);
 				}
 			});
 		}
