@@ -1,4 +1,4 @@
-# Status report 2
+# Status report 3
 
 This week was all about improving upon the stong foundation that we already had with most of the major functionality done last week. This week was about adding features. 
 
