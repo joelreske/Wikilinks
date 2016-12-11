@@ -7,3 +7,6 @@ This week was all about improving upon the stong foundation that we already had 
 2) Google Charts. Now, when the game is finished, a chart will be displayed showing the scores of everyone who has played this same game before - hopefully all of those friends you've been sharing the game with via email. This allows you to see how you did time-wise and in the number of moves. 
 
 3) Layouts and sprucing up the interface using JQery. We were able to use a lot of really nice features in JQuery and Bootstrap UI to make some really nifty animations and make the game much more playable. Our focus over the next week will be to continue this work and make the game look as good as possible. 
+
+#Comments by Ming
+* "We hope to integrate charts so users can see how they stack up against their friends and competitors." => looks like that was accomplished!
