@@ -590,11 +590,11 @@ class GameData extends React.Component {
                                         <FormControl bsSize="sm" type="text" id="name" placeholder="Your Name" inputRef={(input) => {this.name = input}}/>
                                     </FormGroup>
                                     <FormGroup controlId="share-email-group">
-                                        <ControlLabel>Friend's name</ControlLabel>
+                                        <ControlLabel>Friend&#700;s name</ControlLabel>
                                         <FormControl bsSize="sm" type="text" id="friendName" placeholder="Friend's Name" inputRef={(input) => {this.friendName = input}}/>
                                     </FormGroup>
                                     <FormGroup controlId="share-email-group">
-                                        <ControlLabel>Friend's Email</ControlLabel>
+                                        <ControlLabel>Friend&#700;s Email</ControlLabel>
                                         <FormControl bsSize="sm" type="text" id="email" placeholder="Their Email" inputRef={(input) => {this.email = input}}/>
                                     </FormGroup>
                                     <Button onClick={this.share}>Send</Button>
