@@ -489,6 +489,7 @@ class GameData extends React.Component {
         this.shareClose = this.shareClose.bind(this);
         this.drawChart = this.drawChart.bind(this);
         this.getChartData = this.getChartData.bind(this);
+        this.playNewGame = this.playNewGame.bind(this);
 
         this.state = {
             showShare: false
@@ -530,6 +531,10 @@ class GameData extends React.Component {
 
     playAgain() {
         this.props.onPlayAgain();
+    }
+
+    playNewGame() {
+        this.props.onPlayNewGame();
     }
 
     addTextToShareTab() {
@@ -575,6 +580,7 @@ class GameData extends React.Component {
                 <span className="buttonContainer">
                     <Button onClick={()=>{this.setState({ showShare: true })}}>Share</Button>
                     <Button onClick={this.playAgain}>Play Again</Button>
+                    <Button onClick={this.playNewGame}>Play New Game</Button>
                 </span>
 
                 <Modal id="share-popup" bsSize="small" show={this.state.showShare} onHide={this.shareClose}>
@@ -709,7 +715,7 @@ class App extends React.Component {
             contents = (
                 <div>
                     <PostGame path={this.path} time={this.time} gid={this.gid}/>
-                    <GameData gid={this.gid} onPlayAgain={this.onPlayAgain}/> 
+                    <GameData gid={this.gid} onPlayAgain={this.onPlayAgain} onPlayNewGame={this.gohome}/> 
                 </div>);
         } else if (this.state.page == "inGame") {
             contents = <InGame gid={this.gid} onPostGame={this.onPostGame}/>;
