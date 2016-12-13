@@ -704,13 +704,26 @@ class App extends React.Component {
     }
 
     preRender(getUsername) {
-
         if (!this.gid) {
             var pageURL = decodeURIComponent(window.location.search.substring(1)),
             gidRegx = /(?:(?:gid=)([a-zA-Z0-9~\-_]*))/,
             gid = gidRegx.exec(pageURL);
             if (gid) {
-                this.gid = gid[1];
+                gid = gid[1];
+
+                var jsonData = $.ajax({
+                    url: "/api/isValidGid?gid=" + gid,
+                    dataType: "json",
+                    async: false
+                }).responseJSON;
+
+                if (jsonData.valid) {
+                    this.gid = gid;
+                } else {
+                    window.alert("Invalid Game Id");
+                    this.gohome();
+                    return;
+                }
             }
         }
 

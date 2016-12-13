@@ -112,6 +112,14 @@ app.get('/api/isWikipediaPage', function(request, response) {
 	});
 });
 
+app.get('/api/isValidGid', function(request, response) {
+	response.setHeader('Content-Type', 'application/json');
+
+	db.isValidGameId(request.query.gid, function(valid) {
+		response.send({"valid":valid});
+	});
+});
+
 app.get('/api/getRandomPage', function(request, response) {
 	response.setHeader('Content-Type', 'application/json');
 
