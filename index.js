@@ -19,11 +19,23 @@ app.get('/api/startGame', function(request, response) {
 	var end = request.query.end;
 
 	if (start && end) {
-		db.createGame(start, end, function(gameData) {
-			if (gameData) {
-				response.send(gameData);
+		wikilinks.getPageTitle(start, function(startPage) {
+			if (startPage != null) {
+				wikilinks.getPageTitle(end, function(endPage) {
+					if (endPage != null) {
+						db.createGame(startPage, endPage, function(gameData) {
+							if (gameData) {
+								response.send(gameData);
+							} else {
+								response.sendStatus(500);
+							}
+						});
+					} else {
+						response.sendStatus(400);
+					}
+				});
 			} else {
-				response.sendStatus(500);
+				response.sendStatus(400);
 			}
 		});
 	} else {

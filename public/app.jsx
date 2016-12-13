@@ -269,7 +269,7 @@ class PathDisplay extends React.Component {
                 var historyItem = <span key={i + "historyItem"} className="historyItem">{history[i]}</span>;
 
                 if (i != 0) {
-                    histpath.push(<span key={i + "historyItemContainer"} class="pathWrapper">
+                    histpath.push(<span key={i + "historyItemContainer"} className="pathWrapper">
                                     <img key={(i + 1) + "img"} className="rightArrow" src="/images/right-arrow.png"/>
                                     {historyItem}
                                   </span>);

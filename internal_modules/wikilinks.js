@@ -20,13 +20,19 @@ var getLinksForPage = function (pageTitle, callback) {
 	});
 }
 
-var isWikipediaPage = function(page, callback) {
+var getPageTitle = function(page, callback) {
 	wikipedia.page.data(page, {}, function(response) {
 		if (response) {
-			callback(true);
+			callback(response.title);
 		} else {
-			callback(false);
+			callback(null);
 		}
+	});
+}
+
+var isWikipediaPage = function(page, callback) {
+	getPageTitle(page, function(pageTitle) {
+		callback(pageTitle != null);
 	});
 }
 
@@ -71,5 +77,6 @@ function _getShortestPath(startPage, endPage, procData, callback) {
 }
 
 module.exports.isWikipediaPage = isWikipediaPage;
+module.exports.getPageTitle = getPageTitle;
 module.exports.getLinksForPage = getLinksForPage;
 module.exports.getShortestPath = getShortestPath;
