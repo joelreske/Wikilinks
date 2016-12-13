@@ -19,6 +19,7 @@
     "react-bootstrap": "^0.30.7",
     "react-button": "^1.2.1",
     "react-dom": "^15.4.1",
+    "react-ga": "^2.1.2",
     "sendgrid": "^4.7.1"
   },
   "license": "MIT",
