@@ -85,7 +85,7 @@ class NewGame extends React.Component {
                             <NewGamePageForm id="endPage" label="End Page:" placeholder="Enter End Page" ref='endInput'/>
                         </Form>
                     </div>
-                    <Button id="startBtn" onClick={this.startGame}>Start Game</Button>
+                    <Button id="startBtn" bsClass="btn btn-default linkBtn" onClick={this.startGame}>Start Game</Button>
                 </div>
             </div>
         );
@@ -268,10 +268,10 @@ class PathDisplay extends React.Component {
             (function(i, obj) {
                 var historyItem = <span key={i + "historyItem"} className="historyItem">{history[i]}</span>;
 
-                if (i != history.length - 1) {
-                    histpath.push(<span key={i + "historyItemContainer"}>
-                                    {historyItem}
+                if (i != 0) {
+                    histpath.push(<span key={i + "historyItemContainer"} class="pathWrapper">
                                     <img key={(i + 1) + "img"} className="rightArrow" src="/images/right-arrow.png"/>
+                                    {historyItem}
                                   </span>);
                 } else {
                     histpath.push(historyItem);
