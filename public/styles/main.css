@@ -117,6 +117,7 @@ label {
 
 #win-popup {
   color: black;
+  text-align: center;
 }
 
 #ajax-status {
