@@ -10,6 +10,7 @@ var FormControl = ReactBootstrap.FormControl;
 var InputGroup = ReactBootstrap.InputGroup;
 var Tabs = ReactBootstrap.Tabs;
 var Tab = ReactBootstrap.Tab;
+var ButtonToolbar = ReactBootstrap.ButtonToolbar
 
 class NewGamePageForm extends React.Component {
     constructor(props) {
@@ -79,7 +80,7 @@ class NewGame extends React.Component {
             <h2>Create a new Game</h2>
                 <div id="newGameContainer">
                     <div>
-                        <Form inline componentClass="gameParam">
+                        <Form inline>
                             <NewGamePageForm id="startPage" label="Start Page:" placeholder="Enter Start Page" ref='startInput'/>
                             <NewGamePageForm id="endPage" label="End Page:" placeholder="Enter End Page" ref='endInput'/>
                         </Form>
@@ -157,8 +158,10 @@ class GameHistory extends React.Component {
                         <div key={i + "historyGame"} className="historyGame">
                             <PathDisplay path={[start, end]}/>
                             <span className="buttonContainer" key={i + "buttonContainer"}>
-                                <Button key={i + "replay"} onClick={function(){self.onReplayButtonClicked(gid)} }>Replay</Button>
-                                <Button key={i + "stats"} onClick={function(){self.onViewStatsButtonClicked(gid)} }>View Stats</Button>
+                                <ButtonToolbar>
+                                    <Button key={i + "replay"} onClick={function(){self.onReplayButtonClicked(gid)} }>Replay</Button>
+                                    <Button key={i + "stats"} onClick={function(){self.onViewStatsButtonClicked(gid)} }>View Stats</Button>
+                                </ButtonToolbar>
                             </span>
                         </div>
                     );
@@ -351,9 +354,9 @@ class ArticleSelect extends React.Component {
 
                 if (searchRegex.test(articleName) || articleName == obj.props.end) {
                     if (articleName == obj.props.end) {
-                       var btn = <Button key={i} bsStyle="success" onClick={() => obj.nextPage(articleName)}>{articleName}</Button>; 
+                       var btn = <Button key={i} bsClass="btn btn-success linkbtn" onClick={() => obj.nextPage(articleName)}>{articleName}</Button>; 
                     } else {
-                        var btn = <Button key={i} onClick={() => obj.nextPage(articleName)}>{articleName}</Button>;
+                        var btn = <Button key={i} bsClass="btn btn-default linkBtn" onClick={() => obj.nextPage(articleName)}>{articleName}</Button>;
                     }
 
                     links.push(btn);
@@ -429,7 +432,12 @@ class PostGame extends React.Component {
     constructor(props) {
         super(props);
 
+        this.state = {
+            show: true
+        };
+
         this.sendScore = this.sendScore.bind(this);
+        this.close = this.close.bind(this);
     }
 
     componentDidMount() {
@@ -459,23 +467,38 @@ class PostGame extends React.Component {
         }
     }
 
+    close() {
+        this.setState({
+            show: false
+        });
+    }
+
     render() {
         return (
-            <div id="PostGame">
-                <h1>YOU WON</h1>
-                <h2>And you did it in {this.props.time} seconds.</h2>
-                <PathDisplay path={this.props.path}/>
-                <div id="username-collection">
-                    <Form inline>
-                        <FormGroup controlId="name-group">
-                            <ControlLabel>Enter your name to save your score:</ControlLabel>
-                            <FormControl bsSize="sm" type="text" id="name" placeholder="Name" ref="name"/>
-                            <Button onClick={this.sendScore}>Send Score</Button>
+             <Modal id="win-popup" bsSize="large" show={this.state.show} onHide={this.close}>
+                <Modal.Body>
+                    <h1>YOU WON</h1>
+                    <h2>And you did it in {this.props.time} seconds.</h2>
+                    <PathDisplay path={this.props.path}/>
+                    <div id="username-collection">
+                        <Form inline>
+                            <FormGroup controlId="name-group">
+                                <ControlLabel>Enter your name to save your score:</ControlLabel>
+                                <InputGroup>
+                                    <FormControl bsSize="sm" type="text" id="name" placeholder="Name" ref="name"/>
+                                    <InputGroup.Button>
+                                        <Button onClick={this.sendScore}>Send Score</Button>
+                                    </InputGroup.Button>
+                                </InputGroup>
+                            </FormGroup>
                             <img id="ajax-status" ref={(img) => {this.img = img;}}/>
-                        </FormGroup>
-                    </Form>
-                </div>
-            </div>
+                        </Form>
+                    </div>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button onClick={this.close}>Close</Button>
+                </Modal.Footer>
+            </Modal>
         );
     }
 }
@@ -576,11 +599,14 @@ class GameData extends React.Component {
 
         return (
             <div id="GameData">
+                <h1>Game Results</h1>
                 <div id="chart" ref="chart"></div>
                 <span className="buttonContainer">
-                    <Button onClick={()=>{this.setState({ showShare: true })}}>Share</Button>
-                    <Button onClick={this.playAgain}>Play Again</Button>
-                    <Button onClick={this.playNewGame}>Play New Game</Button>
+                    <ButtonToolbar>
+                        <Button onClick={()=>{this.setState({ showShare: true })}}>Share</Button>
+                        <Button onClick={this.playAgain}>Play Again</Button>
+                        <Button onClick={this.playNewGame}>Play New Game</Button>
+                    </ButtonToolbar>
                 </span>
 
                 <Modal id="share-popup" bsSize="small" show={this.state.showShare} onHide={this.shareClose}>
@@ -710,7 +736,7 @@ class App extends React.Component {
         var contents;
 
         if (this.state.page == "gameResults") {
-            contents = <GameData gid={this.gid} onPlayAgain={this.onPlayAgain}/>
+            contents = <GameData gid={this.gid} onPlayAgain={this.onPlayAgain} onPlayNewGame={this.gohome}/>
         } else if (this.state.page == "postGame") {
             contents = (
                 <div>

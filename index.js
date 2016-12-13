@@ -191,10 +191,17 @@ app.listen(app.get('port'), function() {
 
 function createDataForChart(data) {
 	var googleChartOptions = {
-       		title: 'Game Results',
 			legend: "none",
-			hAxis: {title: 'Number of Pages'},
-			vAxis: {title: 'Time (seconds)'}
+			hAxis: {title: 'Number of Pages',
+					textStyle:{color: 'white'},
+					titleTextStyle:{color: 'white'},
+					baselineColor:'#FFF'},
+			vAxis: {title: 'Time (seconds)',
+					textStyle:{color: '#FFF'},
+					titleTextStyle:{color: 'white'},
+					baselineColor:'#FFF'},
+			backgroundColor: { fill:'transparent' },
+			colors: ['#FFBC00']
         };
 
 

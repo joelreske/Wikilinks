@@ -36,10 +36,6 @@ label {
   cursor: pointer;
 }
 
-.btn {
-  margin: .2em .5em;
-}
-
 /* Start new game styles */
 #newGameContainer {
   text-align: center;
@@ -88,6 +84,10 @@ label {
   vertical-align: middle;
 }
 
+.linkBtn {
+  margin: .3em .4em;
+}
+
 #search {
   margin: .8em .4em .6em .4em;
 }
@@ -102,8 +102,12 @@ label {
   text-align: center
 }
 
-#name-group {
-  display: inline-block;
+#GameData h1 {
+  text-align: left;
+}
+
+#win-popup {
+  color: black;
 }
 
 #ajax-status {
