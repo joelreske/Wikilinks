@@ -1,12 +1,18 @@
-html, body {
-  width: 100%;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
   height: 100%;
-  color: white;
 }
 
 body {
   background-color: #6600ff;
   font-size: 20px;
+  height: 100%;
+  color: white;
 }
 
 input {
@@ -17,23 +23,41 @@ label {
   margin-right: .4em;
 }
 
-#header h1 {
+#footer a {
+  color: white;
+  border-bottom: 1px dotted white;
   cursor: pointer;
 }
 
-.container-fluid {
-  max-width: 1080px;
+#footer a:hover {
+  color: white;
+  border-bottom: 1px solid white
 }
 
-#header h1{
+#header h1 {
+  cursor: pointer;
   font-size: 44px;
   font-weight: bold;
   border-bottom: 1px solid white;
 }
 
-#app a {
-  color: white;
-  cursor: pointer;
+.container {
+  max-width: 1080px;
+  margin: 0 auto;
+  display: flex;
+  min-height: 97vh;
+  flex-direction: column;
+}
+
+#container-fluid {
+  flex: 1;
+}
+
+#footer {
+  margin-top: auto;
+  border-top: 1px solid gray;
+  padding: 1em .2em;
+  font-size: 16px
 }
 
 /* Start new game styles */

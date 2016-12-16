@@ -19,6 +19,10 @@ class NewGamePageForm extends React.Component {
         this.parsePageEntry = this.parsePageEntry.bind(this);
     }
 
+    componentDidMount() {
+        ReactDOM.findDOMNode(this.refs.formControl).value = this.props.initialValue;
+    }
+
     render() {
         return (
             <FormGroup controlId={this.props.id}>
@@ -81,8 +85,8 @@ class NewGame extends React.Component {
                 <div id="newGameContainer">
                     <div>
                         <Form inline>
-                            <NewGamePageForm id="startPage" label="Start Page:" placeholder="Enter Start Page" ref='startInput'/>
-                            <NewGamePageForm id="endPage" label="End Page:" placeholder="Enter End Page" ref='endInput'/>
+                            <NewGamePageForm id="startPage" label="Start Page:" placeholder="Enter Start Page" ref='startInput' initialValue='Apple'/>
+                            <NewGamePageForm id="endPage" label="End Page:" placeholder="Enter End Page" ref='endInput' initialValue='Adolf Hitler'/>
                         </Form>
                     </div>
                     <Button id="startBtn" bsClass="btn btn-default linkBtn" onClick={this.startGame}>Start Game</Button>
@@ -760,18 +764,24 @@ class App extends React.Component {
             contents = <InGame gid={this.gid} onPostGame={this.onPostGame}/>;
         } else {
             contents = (<div>
+                        <p>Welcome to WikiLinks, the 6 degrees of Wikipedia game. Try to get from a start page to an end page by navigating each article’s links and challenge your friends once you're done. Try "Apple" to "Adolf Hitler" or "Tufts" to "Banana" to start!</p>
                         <NewGame onCreateGame={this.startGame}/>
                         <GameHistory onReplay={this.startGame} onViewStats={this.viewStats}/> 
                     </div>);
         }
 
         return (
-            <div className="container-fluid">
-                <div id="header">
-                    <h1 onClick={this.gohome}>WikiLinks</h1>
+            <div className="container">
+                <div className="container-fluid">
+                    <div id="header">
+                        <h1 onClick={this.gohome}>WikiLinks</h1>
+                    </div>
+                    <div id="main-content">
+                        {contents}
+                    </div>
                 </div>
-                <div id="main-content">
-                    {contents}
+                <div id="footer">
+                    <p>Created by <a href="http://tobyglover.com" target="_blank">Toby Glover</a>, <a href="https://github.com/joelreske"  target="_blank">Joel Reske</a>, <a href="https://github.com/rgalbiati" target="_blank">Raina Galbiati</a>, and <a href="https://github.com/asmith1" target="_blank">Ashley Smith</a></p>
                 </div>
             </div>
         );
