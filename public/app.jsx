@@ -12,7 +12,7 @@ var Tabs = ReactBootstrap.Tabs;
 var Tab = ReactBootstrap.Tab;
 var ButtonToolbar = ReactBootstrap.ButtonToolbar
 
-function performAjax(method, url, data, callback) {
+function performAjax(method, url, data, parse, callback) {
     var xhr = new XMLHttpRequest();
 
     xhr.onreadystatechange = function() {
@@ -22,7 +22,10 @@ function performAjax(method, url, data, callback) {
 
             if (this.status == 200) {
                 error = false;
-                resData = JSON.parse(this.responseText);
+                resData = this.responseText;
+                if (parse) {
+                    resData = JSON.parse(this.responseText);
+                }
             } 
             callback(resData, error);
         }
@@ -100,7 +103,7 @@ class NewGamePageForm extends React.Component {
     randomize() {
         var input = this.refs.input;
 
-        performAjax("GET", "/api/getRandomPage", null, function(data, err) {
+        `performAjax`("GET", "/api/getRandomPage", null, true, function(data, err) {
             console.log(data);
             input.setVal(data.pageTitle);
         });
@@ -131,9 +134,12 @@ class NewGame extends React.Component {
     componentDidMount() {
         var self = this;
 
-        $('#newGameContainer').keypress(function(e) {
-            if (e.which == 13) {
+        document.getElementById('newGameContainer').addEventListener('keypress', function (e) {
+            var key = e.which || e.keyCode;
+            if (key === 13) { 
+                e.preventDefault();
                 self.startGame();
+                return false;
             }
         });
     }
@@ -162,11 +168,11 @@ class NewGame extends React.Component {
         } else if (startPage == endPage) {
             window.alert("Start and end cannot be the same");
         } else {
-            performAjax("GET", "/api/isWikipediaPage", {page: startPage}, function(data, error) {
+            performAjax("GET", "/api/isWikipediaPage", {page: startPage}, true, function(data, error) {
                 if (!data.valid) {
                     window.alert("Start is not a valid Wikipedia Page");
                 } else {
-                    performAjax("GET", "/api/isWikipediaPage", {page: endPage}, function(data, error) {
+                    performAjax("GET", "/api/isWikipediaPage", {page: endPage}, true, function(data, error) {
                         if (!data.valid) {
                             window.alert("End is not a valid Wikipedia Page");
                         } else {
@@ -181,10 +187,8 @@ class NewGame extends React.Component {
     startGame() {
         var onCreateGame = this.props.onCreateGame;
         this.checkPages(function(start, end) {
-            performAjax("GET", "/api/startGame", {"start": start, "end": end}, function(data, error) {
-                $("#newGameContainer").fadeOut(400, function() {
-                    onCreateGame(data.gid);
-                });
+            performAjax("GET", "/api/startGame", {"start": start, "end": end}, true, function(data, error) {
+                onCreateGame(data.gid);
             });
         });
     }
@@ -255,7 +259,7 @@ class CircularCountdownTimer extends React.Component {
         if (this.i == this.time) {
             this.header.innerHTML = "GO";
             clearInterval(this.timer);
-            $("#CircularCountdownTimer").fadeOut(400, this.props.countdownDoneCallback);
+            this.props.countdownDoneCallback();
         } else {
             this.header.innerHTML = this.time - this.i;
             this.circle.style.strokeDashoffset = this.initialOffset - (this.i + 1) * (this.initialOffset / this.time);
@@ -365,7 +369,7 @@ class ArticleSelect extends React.Component {
         if (page == this.props.end) {
             this.props.onWin(this.state.history);
         } else {
-            performAjax("GET", "/api/getLinksForPage", {"page":page}, this.showLinks);
+            performAjax("GET", "/api/getLinksForPage", {"page":page}, true, this.showLinks);
         }
     }
 
@@ -436,7 +440,7 @@ class InGame extends React.Component {
     }
 
     componentWillMount() {
-        performAjax("GET", "/api/getGameData", {"gid": this.props.gid}, this.setEndpoints);
+        performAjax("GET", "/api/getGameData", {"gid": this.props.gid}, true, this.setEndpoints);
     }
 
     setEndpoints(data, error) {
@@ -483,7 +487,7 @@ class PostGame extends React.Component {
         this.state = {
             show: true
         };
-
+        this.sent = false;
         this.sendScore = this.sendScore.bind(this);
         this.close = this.close.bind(this);
     }
@@ -491,8 +495,9 @@ class PostGame extends React.Component {
     componentDidMount() {
         var self = this;
 
-        $('#name').keypress(function(e) {
-            if (e.which == 13) {
+        document.getElementById('name').addEventListener('keypress', function (e) {
+            var key = e.which || e.keyCode;
+            if (key === 13) { 
                 e.preventDefault();
                 self.sendScore();
                 return false;
@@ -502,13 +507,16 @@ class PostGame extends React.Component {
 
     sendScore() {
         var name = ReactDOM.findDOMNode(this.refs.name).value;
-        if (name != "") {
-            $("#ajax-status").css("padding", 0);
-            $("#ajax-status").attr("src", "/images/spinner.gif").height(30).width(30);
-
-            performAjax("POST", "/api/endGame", {'gid': this.props.gid, 'username':name, 'path':this.props.path, 'time':this.props.time}, function (data, status) {
-                $("#ajax-status").attr("src", "/images/checkmark.png");
-                $("#username-collection").fadeOut(1000);
+        if (name != "" && !this.sent) {
+            var ajaxStatus = document.getElementById("ajax-status");
+            ajaxStatus.style.padding = 0;
+            ajaxStatus.style.height = "30px";
+            ajaxStatus.style.width = "30px";
+            ajaxStatus.src = "/images/spinner.gif";
+            var self = this;
+            performAjax("POST", "/api/endGame", {'gid': this.props.gid, 'username':name, 'path':this.props.path, 'time':this.props.time}, false, function (data, status) {
+                ajaxStatus.src = "/images/checkmark.png";
+                self.sent = true
             });
         } else {
             window.alert("Username field cannot be empty");
@@ -580,7 +588,7 @@ class GameData extends React.Component {
     }
 
     getChartData() {
-        performAjax("GET", "/api/getGameResults", {"gid": this.props.gid}, this.dataDidLoad)
+        performAjax("GET", "/api/getGameResults", {"gid": this.props.gid}, true, this.dataDidLoad)
     }
 
     dataDidLoad(data, error) {
@@ -627,14 +635,17 @@ class GameData extends React.Component {
         } else if (!emailRegex.test(email)) {
             window.alert("Invalid email");
         } else {
-            $("#ajax-status").css("padding", 0);
-            $("#ajax-status").attr("src", "/images/spinner.gif").height(30).width(30);
+            var ajaxStatus = document.getElementById("ajax-status");
+            ajaxStatus.style.padding = 0;
+            ajaxStatus.style.height = 30;
+            ajaxStatus.style.width = 30;
+            ajaxStatus.src = "/images/spinner.gif";
 
             var emailInput = this.email;
             var friendNameInput = this.friendName;
 
-            performAjax("POST", "/api/share", {'userName': name, 'friendName': friendName, 'email':email, 'gid': this.props.gid}, function (data, status) {
-                $("#ajax-status").attr("src", "/images/checkmark.png");
+            performAjax("POST", "/api/share", {'userName': name, 'friendName': friendName, 'email':email, 'gid': this.props.gid}, false, function (data, status) {
+                ajaxStatus.src = "/images/checkmark.png";
                 emailInput.value = "";
                 friendNameInput.value = "";
             });
@@ -760,7 +771,7 @@ class App extends React.Component {
                 gid = gid[1];
                 var self = this;
 
-                performAjax("GET", "/api/isValidGid", {"gid": gid}, function(data, error) {
+                performAjax("GET", "/api/isValidGid", {"gid": gid}, true, function(data, error) {
                     if (data.valid) {
                         self.gid = gid;
                         self.preRender();
