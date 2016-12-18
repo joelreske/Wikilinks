@@ -1,3 +1,13 @@
+* {
+  padding: 0;
+  margin: 0;
+  font-size: 16px;
+}
+
+*:focus {
+  outline: none;
+}
+
 body {
   font-family: 'Open Sans', sans-serif;
 }
@@ -6,15 +16,63 @@ html {
   height: 100%;
 }
 
-#header h1{
+header h1{
   font-size: 72px;
   font-family: 'Lora', serif;
   text-align: center;
   padding: 30px;
 }
 
+footer {
+  margin-top: auto;
+  border-top: 1px solid gray;
+  padding: 1em .2em;
+  font-size: 16px
+}
 
+main {
+  max-width: 1080px;
+  margin: 0 auto;
+  display: flex;
+  min-height: 97vh;
+  flex-direction: column;
+}
 
+input[type=text] {
+  width: 100%;
+  padding: .1em .2em;
+  border: none;
+  border-bottom: 2px solid darkgray;
+}
+
+input[type=text]:focus {
+  border-bottom: 2px solid black;
+}
+
+#container-fluid {
+  flex: 1;
+}
+
+#newGameContainer {
+  text-align: center;
+}
+
+.newGameOption {
+  display: inline-block;
+  width: 20em;
+  margin: 1em;
+}
+
+.newGameOption div {
+  clear: both;
+  overflow: none;
+  text-align: left
+}
+
+.newGameOption a {
+  float: right;
+  clear: right;
+}
 
 /* Circular timer */
 #CircularCountdownTimer {

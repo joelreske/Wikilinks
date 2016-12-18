@@ -12,6 +12,24 @@ var Tabs = ReactBootstrap.Tabs;
 var Tab = ReactBootstrap.Tab;
 var ButtonToolbar = ReactBootstrap.ButtonToolbar
 
+class TextInput extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.textDidChange = this.textDidChange.bind(this);
+    }
+
+    textDidChange() {
+        if (this.props.onTextChange) {
+            this.props.onTextChange(this.refs.input);
+        }
+    }
+
+    render() {
+        return <input id={this.props.id} type="text" onchange={this.textDidChange} ref='input' placeholder={this.props.placeholder}/>
+    }
+}
+
 class NewGamePageForm extends React.Component {
     constructor(props) {
         super(props);
@@ -25,15 +43,13 @@ class NewGamePageForm extends React.Component {
 
     render() {
         return (
-            <FormGroup controlId={this.props.id}>
-                <ControlLabel>{this.props.label}</ControlLabel>
-                <InputGroup>
-                    <FormControl bsSize="sm" type="text" placeholder={this.props.placeholder} onChange={this.parsePageEntry} ref='formControl'/> 
-                    <InputGroup.Button>
-                        <Button onClick={this.randomize}>Random</Button>
-                    </InputGroup.Button>
-                </InputGroup>
-            </FormGroup>
+            <div className="newGameOption">
+                <TextInput onTextChange={this.parsePageEntry} placeholder={this.props.placeholder}/>
+                <div>
+                    <label>{this.props.label}</label>
+                    <a onclick={this.randomize}>Randomize</a>
+                </div>
+            </div>
         );
     }
 
@@ -80,18 +96,13 @@ class NewGame extends React.Component {
 
     render() {
         return (
-            <div>
-            <h2>Create a new Game</h2>
-                <div id="newGameContainer">
-                    <div>
-                        <Form inline>
-                            <NewGamePageForm id="startPage" label="Start Page:" placeholder="Enter Start Page" ref='startInput' initialValue='Apple'/>
-                            <NewGamePageForm id="endPage" label="End Page:" placeholder="Enter End Page" ref='endInput' initialValue='Adolf Hitler'/>
-                        </Form>
-                    </div>
-                    <Button id="startBtn" bsClass="btn btn-default linkBtn" onClick={this.startGame}>Start Game</Button>
+            <section id="newGameContainer">
+                <div>
+                    <NewGamePageForm id="startPage" label="Start Page" placeholder="Enter Start Page" ref='startInput' initialValue='Apple'/>
+                    <NewGamePageForm id="endPage" label="End Page" placeholder="Enter End Page" ref='endInput' initialValue='Adolf Hitler'/>
                 </div>
-            </div>
+                <Button id="startBtn" bsClass="btn btn-default linkBtn" onClick={this.startGame}>Start Game</Button>
+            </section>
         );
 
     }
@@ -771,19 +782,19 @@ class App extends React.Component {
         }
 
         return (
-            <div className="container">
+            <main>
                 <div className="container-fluid">
-                    <div id="header">
+                    <header>
                         <h1 onClick={this.gohome}>WikiLinks</h1>
-                    </div>
-                    <div id="main-content">
+                    </header>
+                    <section id="main-content">
                         {contents}
-                    </div>
+                    </section>
                 </div>
-                <div id="footer">
+                <footer>
                     <p>Created by <a href="http://tobyglover.com" target="_blank">Toby Glover</a>, <a href="https://github.com/joelreske"  target="_blank">Joel Reske</a>, <a href="https://github.com/rgalbiati" target="_blank">Raina Galbiati</a>, and <a href="https://github.com/asmith1" target="_blank">Ashley Smith</a></p>
-                </div>
-            </div>
+                </footer>
+            </main>
         );
     }
 }
