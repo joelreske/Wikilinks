@@ -85,6 +85,29 @@ button.greenbtn:hover {
   background-color: #698C6E;
 }
 
+
+button.linkbtn {
+  background-color: white;
+  border: solid 1px #5A5A5A;
+  color: #333333;
+  margin: .2em;
+}
+
+button.linkbtn:hover {
+  color: white;
+  background-color: #698C6E;
+}
+
+button.winlinkbtn {
+  color: white;
+  background-color: #698C6E;
+}
+
+#search {
+  margin: 10px;
+  width: 100%;
+}
+
 #container-fluid {
   flex: 1;
 }
@@ -116,14 +139,6 @@ button.greenbtn:hover {
   text-align: center;
   font-size: 38px;
   margin-top: -30px;
-}
-
-.btn {
-
-}
-
-.greenbtn{
-  
 }
 
 /* Circular timer */

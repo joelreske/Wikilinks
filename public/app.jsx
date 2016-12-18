@@ -263,7 +263,7 @@ class Timer extends React.Component {
     }
 
     render() {
-        return <p><b>{this.state.elapsed } seconds</b></p>;
+        return <h2><b>{this.state.elapsed } seconds</b></h2>;
     }
 }
 
@@ -311,11 +311,18 @@ class ArticleSelect extends React.Component {
 
     componentWillMount() {
         this.nextPage(this.props.start);
+
+        window.addEventListener("keydown",function (e) {
+            if ((e.ctrlKey || e.metaKey) && e.keyCode === 70) {
+                e.preventDefault();
+                document.getElementById("search").focus();
+            }
+        })
     }
 
     nextPage(page) {
         console.log("Going to: " + page);
-        this.state.history.push(page)
+        this.state.history.push(page);
 
         if (page == this.props.end) {
             this.props.onWin(this.state.history);
@@ -352,7 +359,7 @@ class ArticleSelect extends React.Component {
         var data = this.state.article;
         var searchString = this.state.searchString;
 
-        var links = []
+        var links = [];
 
         for (var i in data) {
             (function(i, obj) {
@@ -366,9 +373,9 @@ class ArticleSelect extends React.Component {
 
                 if (searchRegex.test(articleName) || articleName == obj.props.end) {
                     if (articleName == obj.props.end) {
-                       var btn = <button key={i} className="greenbtn" onClick={() => obj.nextPage(articleName)}>{articleName}</button>; 
+                       var btn = <button key={i} className="winlinkbtn" onClick={() => obj.nextPage(articleName)}>{articleName}</button>; 
                     } else {
-                        var btn = <button key={i} className="btn" onClick={() => obj.nextPage(articleName)}>{articleName}</button>;
+                        var btn = <button key={i} className="linkbtn" onClick={() => obj.nextPage(articleName)}>{articleName}</button>;
                     }
 
                     links.push(btn);
@@ -378,7 +385,8 @@ class ArticleSelect extends React.Component {
         // <PathDisplay path={this.state.history}/>
         return (
             <div>
-                <FormControl bsSize="sm" type="text" id="search" key="search" placeholder="Search" onChange={this.search} ref="search"/>
+                <h2>You are on <b>{this.state.history[this.state.history.length - 1]}</b></h2>
+                <input type="text" id="search" key="search" placeholder="Search" onChange={this.search} ref="search"/>
                 <div>{links}</div>
             </div>
         );
@@ -779,7 +787,7 @@ class App extends React.Component {
 
         return (
             <main>
-                <div className="container-fluid">
+                <div>
                     <header>
                         <h1 onClick={this.gohome}>WikiLinks</h1>
                     </header>
