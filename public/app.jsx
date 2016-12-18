@@ -433,6 +433,7 @@ class InGame extends React.Component {
         } else if (this.state.start && this.state.end) {
             return (
                 <div>
+                    <h2>{this.state.start} to {this.state.end}</h2>
                     <Timer start={this.startTime} ref={(timer) => {this.timer = timer;}}/>
                     <ArticleSelect onWin={this.onWin} start={this.state.start} end={this.state.end}/>
                 </div>
