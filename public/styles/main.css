@@ -1,167 +1,20 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+body {
+  font-family: 'Open Sans', sans-serif;
 }
 
 html {
   height: 100%;
 }
 
-body {
-  background-color: #6600ff;
-  font-size: 20px;
-  height: 100%;
-  color: white;
-}
-
-input {
-  color: black;
-}
-
-label {
-  margin-right: .4em;
-}
-
-#footer a {
-  color: white;
-  border-bottom: 1px dotted white;
-  cursor: pointer;
-}
-
-#footer a:hover {
-  color: white;
-  border-bottom: 1px solid white
-}
-
-#header h1 {
-  cursor: pointer;
-  font-size: 44px;
-  font-weight: bold;
-  border-bottom: 1px solid white;
-}
-
-.container {
-  max-width: 1080px;
-  margin: 0 auto;
-  display: flex;
-  min-height: 97vh;
-  flex-direction: column;
-}
-
-#container-fluid {
-  flex: 1;
-}
-
-#footer {
-  margin-top: auto;
-  border-top: 1px solid gray;
-  padding: 1em .2em;
-  font-size: 16px
-}
-
-/* Start new game styles */
-#newGameContainer {
+#header h1{
+  font-size: 72px;
+  font-family: 'Lora', serif;
   text-align: center;
-  clear: both;
-  overflow: auto;
+  padding: 30px;
 }
 
-#startBtn {
-  float: right;
-  clear: right;
-}
 
-.form-group {
-  margin-right: .2em;
-  margin-left: .2em;
-}
 
-.historyGame {
-  margin-left: 4em;
-  padding: 1.5em 1em;
-  border-bottom: 2px solid gray;
-  clear: both;
-  overflow: auto;
-}
-
-.buttonContainer {
-  float: right;
-  clear: right;
-}
-
-.historyGame:last-child { 
-  border: none
-}
-
-.historyGame .historyContainer {
-  display: inline-block;
-}
-
-.gameParam {
-  padding: 1em;
-  margin: .5em;
-  display: inline-block;
-  border: 2px solid gray;
-  border-radius: 25px;
-}
-/* End new game styles */
-
-/* In game styles */
-.rightArrow {
-  margin: 0 .4em;
-  vertical-align: middle;
-}
-
-.pathWrapper {
-  display: inline-block;
-}
-
-.linkBtn {
-  margin: .3em .4em;
-}
-
-#search {
-  margin: .8em .4em .6em .4em;
-}
-/* end In game styles */
-
-/*Post game styles*/
-#PostGame {
-  margin-bottom: .5em;
-}
-
-#GameData, #PostGame {
-  text-align: center
-}
-
-#GameData h1 {
-  text-align: left;
-}
-
-#win-popup {
-  color: black;
-  text-align: center;
-}
-
-#ajax-status {
-  padding: 15px;
-  border: none;
-}
-
-#share-popup {
-  color: black;
-}
-
-#chart {
-  width: 98%;
-  max-width: 35em;
-  height: 16em;
-  margin: 0 auto;
-  margin-bottom: 1em;
-}
-
-/* end Post game styles*/
 
 /* Circular timer */
 #CircularCountdownTimer {
