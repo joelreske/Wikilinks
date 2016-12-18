@@ -21,6 +21,7 @@ header h1{
   font-family: 'Lora', serif;
   text-align: center;
   padding: 30px;
+  cursor: pointer;
 }
 
 footer {
@@ -61,6 +62,27 @@ a:hover {
 
 label {
   font-weight: normal;
+}
+
+button {
+  border-radius: 3px;
+  border: none;
+  background-color: #545454;
+  padding: .5em .6em;
+  color: white;
+  font-weight: bold;
+}
+
+/*button:hover {
+  background-color: #5F8996;
+}*/
+
+button.greennbtn {
+  background-color: #679E6E;
+}
+
+button.greenbtn:hover {
+  background-color: #698C6E;
 }
 
 #container-fluid {

@@ -98,7 +98,7 @@ class NewGame extends React.Component {
                     <NewGamePageForm id="startPage" label="Start Page" placeholder="Enter Start Page" ref='startInput' initialValue='Apple'/>
                     <NewGamePageForm id="endPage" label="End Page" placeholder="Enter End Page" ref='endInput' initialValue='Adolf Hitler'/>
                 </div>
-                <button id="startBtn" onClick={this.startGame}>Start Game</button>
+                <button id="startBtn" className="greennbtn" onClick={this.startGame}>Start Game</button>
             </section>
         );
 
