@@ -266,7 +266,7 @@ class Timer extends React.Component {
     }
 
     render() {
-        return <p style={{color:"white"}}>Time Since Start: <b>{this.state.elapsed } seconds</b></p>;
+        return <h2><b>{this.state.elapsed } seconds</b></h2>;
     }
 }
 
@@ -308,11 +308,18 @@ class ArticleSelect extends React.Component {
 
     componentWillMount() {
         this.nextPage(this.props.start);
+
+        window.addEventListener("keydown",function (e) {
+            if ((e.ctrlKey || e.metaKey) && e.keyCode === 70) {
+                e.preventDefault();
+                document.getElementById("search").focus();
+            }
+        })
     }
 
     nextPage(page) {
         console.log("Going to: " + page);
-        this.state.history.push(page)
+        this.state.history.push(page);
 
         if (page == this.props.end) {
             this.props.onWin(this.state.history);
@@ -349,7 +356,7 @@ class ArticleSelect extends React.Component {
         var data = this.state.article;
         var searchString = this.state.searchString;
 
-        var links = []
+        var links = [];
 
         for (var i in data) {
             (function(i, obj) {
@@ -363,21 +370,20 @@ class ArticleSelect extends React.Component {
 
                 if (searchRegex.test(articleName) || articleName == obj.props.end) {
                     if (articleName == obj.props.end) {
-                       var btn = <Button key={i} bsClass="btn btn-success linkbtn" onClick={() => obj.nextPage(articleName)}>{articleName}</Button>; 
+                       var btn = <button key={i} className="winlinkbtn" onClick={() => obj.nextPage(articleName)}>{articleName}</button>; 
                     } else {
-                        var btn = <Button key={i} bsClass="btn btn-default linkBtn" onClick={() => obj.nextPage(articleName)}>{articleName}</Button>;
+                        var btn = <button key={i} className="linkbtn" onClick={() => obj.nextPage(articleName)}>{articleName}</button>;
                     }
 
                     links.push(btn);
                 }
             })(i, this);
         }
-
+        // <PathDisplay path={this.state.history}/>
         return (
-            <div className="container">
-                <p>Destination: {this.props.end}</p>
-                <PathDisplay path={this.state.history}/>
-                <FormControl bsSize="sm" type="text" id="search" key="search" placeholder="Search" onChange={this.search} ref="search"/>
+            <div>
+                <h2>You are on <b>{this.state.history[this.state.history.length - 1]}</b></h2>
+                <input type="text" id="search" key="search" placeholder="Search" onChange={this.search} ref="search"/>
                 <div>{links}</div>
             </div>
         );
@@ -426,7 +432,7 @@ class InGame extends React.Component {
             return <CircularCountdownTimer countdownDoneCallback={this.countdownDone}/>;
         } else if (this.state.start && this.state.end) {
             return (
-                <div>
+                <div className="inGame">
                     <h2>{this.state.start} to {this.state.end}</h2>
                     <Timer start={this.startTime} ref={(timer) => {this.timer = timer;}}/>
                     <ArticleSelect onWin={this.onWin} start={this.state.start} end={this.state.end}/>
@@ -778,7 +784,7 @@ class App extends React.Component {
 
         return (
             <main>
-                <div className="container-fluid">
+                <div>
                     <header>
                         <h1 onClick={this.gohome}>WikiLinks</h1>
                     </header>
