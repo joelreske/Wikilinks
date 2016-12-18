@@ -49,6 +49,20 @@ input[type=text]:focus {
   border-bottom: 2px solid black;
 }
 
+a, a:visited {
+  color: #616161;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+a:hover {
+  color: black;
+}
+
+label {
+  font-weight: normal;
+}
+
 #container-fluid {
   flex: 1;
 }
@@ -64,6 +78,8 @@ input[type=text]:focus {
 }
 
 .newGameOption div {
+  margin-top: .1em;
+  padding-left: .2em;
   clear: both;
   overflow: none;
   text-align: left

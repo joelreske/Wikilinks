@@ -25,6 +25,10 @@ class TextInput extends React.Component {
         }
     }
 
+    val() {
+        return this.refs.input.value;
+    }
+
     render() {
         return <input id={this.props.id} type="text" onchange={this.textDidChange} ref='input' placeholder={this.props.placeholder}/>
     }
@@ -37,14 +41,10 @@ class NewGamePageForm extends React.Component {
         this.parsePageEntry = this.parsePageEntry.bind(this);
     }
 
-    componentDidMount() {
-        ReactDOM.findDOMNode(this.refs.formControl).value = this.props.initialValue;
-    }
-
     render() {
         return (
             <div className="newGameOption">
-                <TextInput onTextChange={this.parsePageEntry} placeholder={this.props.placeholder}/>
+                <TextInput onTextChange={this.parsePageEntry} placeholder={this.props.placeholder} ref="input" initialValue={this.props.initialValue}/>
                 <div>
                     <label>{this.props.label}</label>
                     <a onclick={this.randomize}>Randomize</a>
@@ -54,26 +54,23 @@ class NewGamePageForm extends React.Component {
     }
 
     randomize() {
-        var textInput = ReactDOM.findDOMNode(this.refs.formControl);
-
         $.getJSON("/api/getRandomPage", function(data) {
-            textInput.value = data.pageTitle;
+            this.refs.input.value = data.pageTitle;
         });
     }
 
     parsePageEntry() {
-        var textInput = ReactDOM.findDOMNode(this.refs.formControl);
         var urlRegx = /(?:http:\/\/|https:\/\/)en.wikipedia.org\/wiki\/([^#<>[\]|{}]*)/i;
-        var match = urlRegx.exec(textInput.value);
+        var match = urlRegx.exec(this.refs.input.value);
 
         if (match) {
             var pagetitle = match[1].replace(/_/g, " ");
-            textInput.value = pagetitle;
+            this.refs.input.value = pagetitle;
         }
     }
 
     val() {
-        return ReactDOM.findDOMNode(this.refs.formControl).value;
+        return this.refs.input.val();
     }
 }
 
@@ -101,7 +98,7 @@ class NewGame extends React.Component {
                     <NewGamePageForm id="startPage" label="Start Page" placeholder="Enter Start Page" ref='startInput' initialValue='Apple'/>
                     <NewGamePageForm id="endPage" label="End Page" placeholder="Enter End Page" ref='endInput' initialValue='Adolf Hitler'/>
                 </div>
-                <Button id="startBtn" bsClass="btn btn-default linkBtn" onClick={this.startGame}>Start Game</Button>
+                <button id="startBtn" onClick={this.startGame}>Start Game</button>
             </section>
         );
 
