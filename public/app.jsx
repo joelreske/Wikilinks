@@ -12,6 +12,46 @@ var Tabs = ReactBootstrap.Tabs;
 var Tab = ReactBootstrap.Tab;
 var ButtonToolbar = ReactBootstrap.ButtonToolbar
 
+function performAjax(method, url, data, callback) {
+    var xhr = new XMLHttpRequest();
+
+    xhr.onreadystatechange = function() {
+        if (this.readyState == 4)  {
+            var error = true;
+            var resData = null;
+
+            if (this.status == 200) {
+                error = false;
+                resData = JSON.parse(this.responseText);
+            } 
+            callback(resData, error);
+        }
+    };
+
+    var dataString = "";
+
+    if (data != null) {
+        if (method == "GET") {
+            url += "?";
+            for (var key in data) {
+                url += key + "=" + data[key] + "&";
+            }
+        } else {
+            dataString = JSON.stringify(data);
+        }
+        
+    }
+    xhr.open(method, url, true);
+
+    if (method == "GET") {
+        xhr.send();
+    } else {
+        xhr.setRequestHeader("Content-type", "application/json");
+        xhr.send(dataString);
+    }
+
+}
+
 class TextInput extends React.Component {
     constructor(props) {
         super(props);
@@ -34,7 +74,7 @@ class TextInput extends React.Component {
     }
 
     render() {
-        return <input id={this.props.id} type="text"    autocomplete="off" onChange={this.textDidChange} ref='input' placeholder={this.props.placeholder}/>
+        return <input id={this.props.id} type="text" autoComplete="off" onChange={this.textDidChange} ref='input' placeholder={this.props.placeholder}/>
     }
 }
 
@@ -59,7 +99,9 @@ class NewGamePageForm extends React.Component {
 
     randomize() {
         var input = this.refs.input;
-        $.getJSON("/api/getRandomPage", function(data) {
+
+        performAjax("GET", "/api/getRandomPage", null, function(data, err) {
+            console.log(data);
             input.setVal(data.pageTitle);
         });
     }
@@ -120,11 +162,11 @@ class NewGame extends React.Component {
         } else if (startPage == endPage) {
             window.alert("Start and end cannot be the same");
         } else {
-            $.getJSON("/api/isWikipediaPage?page=" + startPage, function(data) {
+            performAjax("GET", "/api/isWikipediaPage", {page: startPage}, function(data, error) {
                 if (!data.valid) {
                     window.alert("Start is not a valid Wikipedia Page");
                 } else {
-                    $.getJSON("/api/isWikipediaPage?page=" + endPage, function(data) {
+                    performAjax("GET", "/api/isWikipediaPage", {page: endPage}, function(data, error) {
                         if (!data.valid) {
                             window.alert("End is not a valid Wikipedia Page");
                         } else {
@@ -139,7 +181,7 @@ class NewGame extends React.Component {
     startGame() {
         var onCreateGame = this.props.onCreateGame;
         this.checkPages(function(start, end) {
-            $.getJSON("/api/startGame?start=" + start + "&end=" + end, function(data) {
+            performAjax("GET", "/api/startGame", {"start": start, "end": end}, function(data, error) {
                 $("#newGameContainer").fadeOut(400, function() {
                     onCreateGame(data.gid);
                 });
@@ -301,7 +343,6 @@ class ArticleSelect extends React.Component {
             searchString: ""
         };
 
-        this.getLinksForPage = this.getLinksForPage.bind(this);
         this.showLinks = this.showLinks.bind(this);
         this.search = this.search.bind(this);
     }
@@ -324,19 +365,11 @@ class ArticleSelect extends React.Component {
         if (page == this.props.end) {
             this.props.onWin(this.state.history);
         } else {
-            this.getLinksForPage(page, this.showLinks);
+            performAjax("GET", "/api/getLinksForPage", {"page":page}, this.showLinks);
         }
     }
 
-    getLinksForPage(page, callback) {
-        if (page) {
-            $.getJSON("/api/getLinksForPage?page=" + page, callback);
-        } else {
-            console.log("Shoot.");
-        }
-    }
-
-    showLinks(data) {
+    showLinks(data, error) {
         this.refs.search.setVal("");
 
         this.setState({
@@ -403,10 +436,10 @@ class InGame extends React.Component {
     }
 
     componentWillMount() {
-        $.getJSON("/api/getGameData?gid=" + this.props.gid, this.setEndpoints);
+        performAjax("GET", "/api/getGameData", {"gid": this.props.gid}, this.setEndpoints);
     }
 
-    setEndpoints(data) {
+    setEndpoints(data, error) {
         gamestore.storeGame(this.props.gid, data.start, data.end);
 
         this.setState({
@@ -473,7 +506,7 @@ class PostGame extends React.Component {
             $("#ajax-status").css("padding", 0);
             $("#ajax-status").attr("src", "/images/spinner.gif").height(30).width(30);
 
-            $.post("/api/endGame", {'gid': this.props.gid, 'username':name, 'path':this.props.path, 'time':this.props.time}, function (data, status) {
+            performAjax("POST", "/api/endGame", {'gid': this.props.gid, 'username':name, 'path':this.props.path, 'time':this.props.time}, function (data, status) {
                 $("#ajax-status").attr("src", "/images/checkmark.png");
                 $("#username-collection").fadeOut(1000);
             });
@@ -528,6 +561,7 @@ class GameData extends React.Component {
         this.drawChart = this.drawChart.bind(this);
         this.getChartData = this.getChartData.bind(this);
         this.playNewGame = this.playNewGame.bind(this);
+        this.dataDidLoad = this.dataDidLoad.bind(this);
 
         this.state = {
             showShare: false
@@ -546,16 +580,12 @@ class GameData extends React.Component {
     }
 
     getChartData() {
-        var gid = this.props.gid;
+        performAjax("GET", "/api/getGameResults", {"gid": this.props.gid}, this.dataDidLoad)
+    }
 
-        var jsonData = $.ajax({
-            url: "/api/getGameResults?gid=" + gid,
-            dataType: "json",
-            async: false
-        }).responseJSON;
-
-        this.currentChartData = new google.visualization.DataTable(jsonData["data"]);
-        this.currentChartOptions = jsonData.options;
+    dataDidLoad(data, error) {
+        this.currentChartData = new google.visualization.DataTable(data["data"]);
+        this.currentChartOptions = data.options;
         this.drawChart()
     }
 
@@ -602,7 +632,8 @@ class GameData extends React.Component {
 
             var emailInput = this.email;
             var friendNameInput = this.friendName;
-            $.post("/api/share", {'userName': name, 'friendName': friendName, 'email':email, 'gid': this.props.gid}, function (data, status) {
+
+            performAjax("POST", "/api/share", {'userName': name, 'friendName': friendName, 'email':email, 'gid': this.props.gid}, function (data, status) {
                 $("#ajax-status").attr("src", "/images/checkmark.png");
                 emailInput.value = "";
                 friendNameInput.value = "";
@@ -676,6 +707,7 @@ class App extends React.Component {
         this.onPlayAgain = this.onPlayAgain.bind(this);
         this.viewStats = this.viewStats.bind(this);
         this.gohome = this.gohome.bind(this);
+        this.preRender = this.preRender.bind(this);
     }
 
     componentWillMount() {
@@ -719,45 +751,44 @@ class App extends React.Component {
     }
 
     preRender(getUsername) {
-        if (!this.gid) {
+        if (typeof this.gid === 'undefined' || this.gid == null) {
             var pageURL = decodeURIComponent(window.location.search.substring(1)),
             gidRegx = /(?:(?:gid=)([a-zA-Z0-9~\-_]*))/,
             gid = gidRegx.exec(pageURL);
+
             if (gid) {
                 gid = gid[1];
+                var self = this;
 
-                var jsonData = $.ajax({
-                    url: "/api/isValidGid?gid=" + gid,
-                    dataType: "json",
-                    async: false
-                }).responseJSON;
-
-                if (jsonData.valid) {
-                    this.gid = gid;
-                } else {
-                    window.alert("Invalid Game Id");
-                    this.gohome();
-                    return;
-                }
+                performAjax("GET", "/api/isValidGid", {"gid": gid}, function(data, error) {
+                    if (data.valid) {
+                        self.gid = gid;
+                        self.preRender();
+                    } else {
+                        window.alert("Invalid Game Id");
+                        self.gohome();
+                    }
+                });
             }
-        }
-
-        var page = "";
-        if (this.gid && window.location.pathname == "/gameResults") {
-            if (getUsername) {
-                page = "postGame"
-            } else {
-                page = "gameResults";
-            }
-        } else if (this.gid) {
-            page = "inGame"
         } else {
-            page = "newGame"
-        }
+            var page = "";
 
-        this.setState({
-            "page":page
-        });
+            if (this.gid && window.location.pathname == "/gameResults") {
+                if (getUsername) {
+                    page = "postGame"
+                } else {
+                    page = "gameResults";
+                }
+            } else if (this.gid) {
+                page = "inGame"
+            } else {
+                page = "newGame"
+            }
+
+            this.setState({
+                "page":page
+            });
+        }
     }
 
     render() {
