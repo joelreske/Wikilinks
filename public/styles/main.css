@@ -31,11 +31,12 @@ header h1{
 footer {
   margin-top: auto;
   border-top: 1px solid gray;
-  padding: 1em .2em;
+  padding: 1em .6em;
   font-size: 16px
 }
 
 main {
+  width: 98%;
   max-width: 1080px;
   margin: 0 auto;
   display: flex;
@@ -95,10 +96,6 @@ button.linkbtn:hover, button.winlinkbtn:hover {
 #search {
   margin: 10px;
   width: 100%;
-}
-
-#container-fluid {
-  flex: 1;
 }
 
 #welcome {
@@ -213,6 +210,6 @@ button.linkbtn:hover, button.winlinkbtn:hover {
 
 @media screen and (max-width: 560px) {
     .historyGame {
-      margin-left: 0;
+      margin: 0;
     }
 }
