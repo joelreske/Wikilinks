@@ -263,7 +263,7 @@ class Timer extends React.Component {
     }
 
     render() {
-        return <p style={{color:"white"}}>Time Since Start: <b>{this.state.elapsed } seconds</b></p>;
+        return <p><b>{this.state.elapsed } seconds</b></p>;
     }
 }
 
@@ -366,20 +366,18 @@ class ArticleSelect extends React.Component {
 
                 if (searchRegex.test(articleName) || articleName == obj.props.end) {
                     if (articleName == obj.props.end) {
-                       var btn = <Button key={i} bsClass="btn btn-success linkbtn" onClick={() => obj.nextPage(articleName)}>{articleName}</Button>; 
+                       var btn = <button key={i} className="greenbtn" onClick={() => obj.nextPage(articleName)}>{articleName}</button>; 
                     } else {
-                        var btn = <Button key={i} bsClass="btn btn-default linkBtn" onClick={() => obj.nextPage(articleName)}>{articleName}</Button>;
+                        var btn = <button key={i} className="btn" onClick={() => obj.nextPage(articleName)}>{articleName}</button>;
                     }
 
                     links.push(btn);
                 }
             })(i, this);
         }
-
+        // <PathDisplay path={this.state.history}/>
         return (
-            <div className="container">
-                <p>Destination: {this.props.end}</p>
-                <PathDisplay path={this.state.history}/>
+            <div>
                 <FormControl bsSize="sm" type="text" id="search" key="search" placeholder="Search" onChange={this.search} ref="search"/>
                 <div>{links}</div>
             </div>
@@ -429,7 +427,7 @@ class InGame extends React.Component {
             return <CircularCountdownTimer countdownDoneCallback={this.countdownDone}/>;
         } else if (this.state.start && this.state.end) {
             return (
-                <div>
+                <div className="inGame">
                     <h2>{this.state.start} to {this.state.end}</h2>
                     <Timer start={this.startTime} ref={(timer) => {this.timer = timer;}}/>
                     <ArticleSelect onWin={this.onWin} start={this.state.start} end={this.state.end}/>
