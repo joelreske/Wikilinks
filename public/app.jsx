@@ -29,6 +29,10 @@ class TextInput extends React.Component {
         return this.refs.input.value;
     }
 
+    val(text) {
+        this.refs.input.value = text;
+    }
+
     render() {
         return <input id={this.props.id} type="text" onchange={this.textDidChange} ref='input' placeholder={this.props.placeholder}/>
     }
@@ -47,15 +51,16 @@ class NewGamePageForm extends React.Component {
                 <TextInput onTextChange={this.parsePageEntry} placeholder={this.props.placeholder} ref="input" initialValue={this.props.initialValue}/>
                 <div>
                     <label>{this.props.label}</label>
-                    <a onclick={this.randomize}>Randomize</a>
+                    <a onClick={this.randomize}>Randomize</a>
                 </div>
             </div>
         );
     }
 
     randomize() {
+        var input = this.refs.input;
         $.getJSON("/api/getRandomPage", function(data) {
-            this.refs.input.value = data.pageTitle;
+            input.val(data.pageTitle);
         });
     }
 
@@ -169,11 +174,9 @@ class GameHistory extends React.Component {
                     games.push(
                         <div key={i + "historyGame"} className="historyGame">
                             <PathDisplay path={[start, end]}/>
-                            <span className="buttonContainer" key={i + "buttonContainer"}>
-                                <ButtonToolbar>
-                                    <Button key={i + "replay"} onClick={function(){self.onReplayButtonClicked(gid)} }>Replay</Button>
-                                    <Button key={i + "stats"} onClick={function(){self.onViewStatsButtonClicked(gid)} }>View Stats</Button>
-                                </ButtonToolbar>
+                            <span className="options">
+                                <a key={i + "replay"} onClick={function(){self.onReplayButtonClicked(gid)} }>Replay</a>
+                                <a key={i + "stats"} onClick={function(){self.onViewStatsButtonClicked(gid)} }>View Stats</a>
                             </span>
                         </div>
                     );
@@ -182,7 +185,7 @@ class GameHistory extends React.Component {
 
             return (
                 <div>
-                    <h2>Or, choose from your previous games:</h2>
+                    <h3>Choose from previous games</h3>
                     {games}
                 </div>);
         } else {
@@ -278,16 +281,10 @@ class PathDisplay extends React.Component {
 
         for (var i in history) {
             (function(i, obj) {
-                var historyItem = <span key={i + "historyItem"} className="historyItem">{history[i]}</span>;
-
                 if (i != 0) {
-                    histpath.push(<span key={i + "historyItemContainer"} className="pathWrapper">
-                                    <img key={(i + 1) + "img"} className="rightArrow" src="/images/right-arrow.png"/>
-                                    {historyItem}
-                                  </span>);
-                } else {
-                    histpath.push(historyItem);
+                    histpath.push(<span key={i + "arrow"} className="arrow">&rarr;</span>);
                 }
+                histpath.push(<span key={i + "historyItem"} className="historyItem">{history[i]}</span>);
             })(i, this);
         }
 
@@ -773,7 +770,7 @@ class App extends React.Component {
             contents = <InGame gid={this.gid} onPostGame={this.onPostGame}/>;
         } else {
             contents = (<div>
-                        <p>Welcome to WikiLinks, the 6 degrees of Wikipedia game. Try to get from a start page to an end page by navigating each article’s links and challenge your friends once you're done. Try "Apple" to "Adolf Hitler" or "Tufts" to "Banana" to start!</p>
+                        <p id="welcome">Welcome to WikiLinks, the 6 degrees of Wikipedia game. Get from a start page to an end page by navigating each article’s links. Try "Apple" to "Adolf Hitler" or "Tufts" to "Banana" to start!</p>
                         <NewGame onCreateGame={this.startGame}/>
                         <GameHistory onReplay={this.startGame} onViewStats={this.viewStats}/> 
                     </div>);

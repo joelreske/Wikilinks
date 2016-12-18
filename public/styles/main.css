@@ -73,9 +73,9 @@ button {
   font-weight: bold;
 }
 
-/*button:hover {
+button:hover {
   background-color: #5F8996;
-}*/
+}
 
 button.greennbtn {
   background-color: #679E6E;
@@ -89,11 +89,17 @@ button.greenbtn:hover {
   flex: 1;
 }
 
+#welcome {
+  font-size: 20px
+}
+
 #newGameContainer {
+  margin: 4em 0;
   text-align: center;
 }
 
 .newGameOption {
+  font-size: 20px;
   display: inline-block;
   width: 20em;
   margin: 1em;
@@ -110,6 +116,38 @@ button.greenbtn:hover {
 .newGameOption a {
   float: right;
   clear: right;
+}
+
+.historyContainer * {
+  vertical-align: middle;
+}
+
+.arrow {
+  display: inline-block;
+  font-size: 20px;
+  padding: 0 .1em;
+}
+
+.historyGame {
+  margin: 0 2em;
+  padding: .8em 0;
+  border-bottom: 1px solid gray;
+  clear: both;
+  overflow: hidden;
+}
+
+.historyGame .historyContainer {
+  float: left;
+  clear: left;
+}
+
+.historyGame .options {
+  float: right;
+  clear: right;
+}
+
+.historyGame a {
+  margin: .3em ;
 }
 
 /* Circular timer */
