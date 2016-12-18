@@ -21,7 +21,7 @@ class TextInput extends React.Component {
 
     textDidChange() {
         if (this.props.onTextChange) {
-            this.props.onTextChange(this.refs.input);
+            this.props.onTextChange(this.refs.input.value);
         }
     }
 
@@ -29,12 +29,12 @@ class TextInput extends React.Component {
         return this.refs.input.value;
     }
 
-    val(text) {
+    setVal(text) {
         this.refs.input.value = text;
     }
 
     render() {
-        return <input id={this.props.id} type="text" onchange={this.textDidChange} ref='input' placeholder={this.props.placeholder}/>
+        return <input id={this.props.id} type="text"    autocomplete="off" onChange={this.textDidChange} ref='input' placeholder={this.props.placeholder}/>
     }
 }
 
@@ -60,17 +60,17 @@ class NewGamePageForm extends React.Component {
     randomize() {
         var input = this.refs.input;
         $.getJSON("/api/getRandomPage", function(data) {
-            input.val(data.pageTitle);
+            input.setVal(data.pageTitle);
         });
     }
 
     parsePageEntry() {
         var urlRegx = /(?:http:\/\/|https:\/\/)en.wikipedia.org\/wiki\/([^#<>[\]|{}]*)/i;
-        var match = urlRegx.exec(this.refs.input.value);
+        var match = urlRegx.exec(this.refs.input.val());
 
         if (match) {
             var pagetitle = match[1].replace(/_/g, " ");
-            this.refs.input.value = pagetitle;
+            this.refs.input.setVal(pagetitle);
         }
     }
 
@@ -103,7 +103,7 @@ class NewGame extends React.Component {
                     <NewGamePageForm id="startPage" label="Start Page" placeholder="Enter Start Page" ref='startInput' initialValue='Apple'/>
                     <NewGamePageForm id="endPage" label="End Page" placeholder="Enter End Page" ref='endInput' initialValue='Adolf Hitler'/>
                 </div>
-                <button id="startBtn" className="greennbtn" onClick={this.startGame}>Start Game</button>
+                <button id="startBtn" className="winlinkbtn" onClick={this.startGame}>Start Game</button>
             </section>
         );
 
@@ -337,7 +337,7 @@ class ArticleSelect extends React.Component {
     }
 
     showLinks(data) {
-        ReactDOM.findDOMNode(this.refs.search).value = "";
+        this.refs.search.setVal("");
 
         this.setState({
             article: data,
@@ -345,10 +345,9 @@ class ArticleSelect extends React.Component {
         });
     }
 
-    search() {
-        var search = ReactDOM.findDOMNode(this.refs.search);
+    search(text) {
         this.setState({
-            searchString: search.value
+            searchString: text
         });
     }
 
@@ -383,7 +382,7 @@ class ArticleSelect extends React.Component {
         return (
             <div>
                 <h2>You are on <b>{this.state.history[this.state.history.length - 1]}</b></h2>
-                <input type="text" id="search" key="search" placeholder="Search" onChange={this.search} ref="search"/>
+                <TextInput id="search" placeholder="Search" onTextChange={this.search} ref="search"/>
                 <div>{links}</div>
             </div>
         );
