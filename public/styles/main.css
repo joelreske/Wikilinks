@@ -19,7 +19,7 @@ header {
 }
 header h1 {
     font-size: 72px;
-    padding: 30px;
+    padding: 30px 0;
     cursor: pointer;
     display: inline-block;
     font-weight: normal;
@@ -109,8 +109,10 @@ button:hover, button.winlinkbtn:hover {
 }
 .newGameOption {
     display: inline-block;
-    width: 20em;
+    width: 90%;
+    max-width: 20em;
     margin: 1em;
+    box-sizing: border-box;
 }
 .newGameOption div {
     margin-top: .1em;

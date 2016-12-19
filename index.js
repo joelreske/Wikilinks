@@ -14,6 +14,24 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 
+app.get('/*', function(request, response, next) {
+    var isWww = false;
+    for (var i = 0; i < request.subdomains.length; i++) {
+        if (request.subdomains[i] == 'www') {
+            isWww = true;
+            break;
+        }
+    }
+
+    if (isWww) {
+        var hostname = request.hostname.split(".");
+        var newHostname = hostname[hostname.length - 2] + "." +hostname[hostname.length - 1];
+        response.redirect(301, request.protocol + "://" + newHostname + request.originalUrl);
+    } else {
+        next();
+    }
+});
+
 app.get('/api/startGame', function(request, response) {
     response.setHeader('Content-Type', 'application/json');
 
@@ -196,7 +214,7 @@ app.post('/api/share', function(request, response) {
 });
 
 app.get('/*', function(request, response) {
-    response.sendFile(__dirname + '/public/index.html');
+    response.sendFile(__dirname + '/pages/index.html');
 });
 
 // app.get('/api/getShortestPath', function(request, response) {
