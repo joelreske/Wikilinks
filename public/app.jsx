@@ -105,13 +105,17 @@ class NewGamePageForm extends React.Component {
     render() {
         return (
             <div className="newGameOption">
-                <TextInput onTextChange={this.parsePageEntry} placeholder={this.props.placeholder} ref="input" initialValue={this.props.initialValue}/>
+                <TextInput onTextChange={this.parsePageEntry} placeholder={this.props.placeholder} ref="input"/>
                 <div>
                     <label>{this.props.label}</label>
                     <a onClick={this.randomize}>Randomize</a>
                 </div>
             </div>
         );
+    }
+
+    componentDidMount() {
+        this.randomize();
     }
 
     randomize() {
@@ -162,8 +166,8 @@ class NewGame extends React.Component {
         return (
             <section id="newGameContainer">
                 <div>
-                    <NewGamePageForm id="startPage" label="Start Page" placeholder="Enter Start Page" ref='startInput' initialValue='Apple'/>
-                    <NewGamePageForm id="endPage" label="End Page" placeholder="Enter End Page" ref='endInput' initialValue='Adolf Hitler'/>
+                    <NewGamePageForm id="startPage" label="Start Page" placeholder="Enter Start Page" ref='startInput'/>
+                    <NewGamePageForm id="endPage" label="End Page" placeholder="Enter End Page" ref='endInput'/>
                 </div>
                 <button id="startBtn" className="winlinkbtn" onClick={this.startGame}>Start Game</button>
             </section>
@@ -913,7 +917,7 @@ class App extends React.Component {
             contents = <InGame gid={this.gid} onPostGame={this.onPostGame}/>;
         } else {
             contents = (<div>
-                        <p id="welcome">Welcome to WikiLinks, the 6 degrees of Wikipedia game. Get from a start page to an end page by navigating each article’s links. Try "Apple" to "Adolf Hitler" or "Tufts" to "Banana" to start!</p>
+                        <p id="welcome">Welcome to WikiLinks, the 6 degrees of Wikipedia game. Get from a start page to an end page by navigating each article’s links. Try "Apple" to "Ray Charles" or "Tufts" to "Banana" to start!</p>
                         <NewGame onCreateGame={this.startGame}/>
                         <GameHistory onReplay={this.startGame} onViewStats={this.viewStats}/> 
                     </div>);
@@ -930,7 +934,8 @@ class App extends React.Component {
                     </section>
                 </main>
                 <footer>
-                    <p>Created by <a href="http://tobyglover.com" target="_blank">Toby Glover</a>, <a href="https://github.com/joelreske"  target="_blank">Joel Reske</a>, <a href="https://github.com/rgalbiati" target="_blank">Raina Galbiati</a>, and <a href="https://github.com/asmith1" target="_blank">Ashley Smith</a></p>
+                    <p>Copyright &copy; {new Date().getFullYear()} All Right Reserved </p>
+                    <p><a href="http://tobyglover.com" target="_blank">Toby Glover</a> and <a href="https://github.com/joelreske" target="_blank">Joel Reske</a> (<a href="https://github.com/joelreske/Wikilinks" target="_blank">Source</a> and <a href="http://comp20.wikilinks.io" target="_blank">Original Version</a>, with help from <a href="https://github.com/rgalbiati" target="_blank">Raina Galbiati</a> and <a href="https://github.com/asmith1" target="_blank">Ashley Smith</a>)</p>
                 </footer>
             </div>
         );
