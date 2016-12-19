@@ -425,7 +425,7 @@ class ArticleSelect extends React.Component {
                     if (articleName == obj.props.end) {
                         var btn = <button key={i} className="winlinkbtn" onClick={() => obj.nextPage(articleName)}>{articleName}</button>;
                     } else {
-                        var btn = <button key={i} className="linkbtn" onClick={() => obj.nextPage(articleName)}>{articleName}</button>;
+                        var btn = <button key={i} onClick={() => obj.nextPage(articleName)}>{articleName}</button>;
                     }
 
                     links.push(btn);
@@ -502,9 +502,9 @@ class InGame extends React.Component {
 class Modal extends React.Component {
     constructor(props) {
         super(props);
-        if (this.props.id == null){
+        if (this.props.id == null) {
             this.id = "";
-        }else{
+        } else {
             this.id = this.props.id;
         }
 
@@ -527,7 +527,7 @@ class Modal extends React.Component {
                             {this.props.children}
                         </div>
                         <div className="close">
-                            <button className="linkbtn" onClick={this.close}>Close</button>
+                            <button onClick={this.close}>Close</button>
                         </div>
                     </div>
                 </div>);
@@ -611,6 +611,13 @@ class PostGame extends React.Component {
 class GameData extends React.Component {
     constructor(props) {
         super(props);
+
+        this.state = {
+            showShare: false,
+            start: "",
+            end: "",
+        };
+
         this.playAgain = this.playAgain.bind(this);
         this.share = this.share.bind(this);
         this.shareClose = this.shareClose.bind(this);
@@ -620,9 +627,12 @@ class GameData extends React.Component {
         this.dataDidLoad = this.dataDidLoad.bind(this);
         this.selectLink = this.selectLink.bind(this);
 
-        this.state = {
-            showShare: false
-        };
+        var self = this;
+        performAjax("GET", "/api/getGameData", {
+            "gid": this.props.gid
+        }, true, function(data, error){
+            self.setState({start: data.start, end: data.end});
+        });
     }
 
     componentDidMount() {
@@ -630,7 +640,7 @@ class GameData extends React.Component {
         window.onresize = this.getChartData;
 
         google.charts.load('current', {
-            'packages': ['corechart']
+            'packages': ['scatter']
         });
         google.charts.setOnLoadCallback(function() {
             self.getChartData();
@@ -652,7 +662,7 @@ class GameData extends React.Component {
 
     drawChart() {
         if (!this.chart) {
-            this.chart = new google.visualization.ScatterChart(this.refs.chart);
+            this.chart = new google.charts.Scatter(this.refs.chart);
         }
 
         this.chart.draw(this.currentChartData, this.currentChartOptions);
@@ -709,14 +719,19 @@ class GameData extends React.Component {
     }
 
     render() {
+        var path = "";
+        if (this.state.start && this.state.end){
+            path = <h2 style={{fontFamily: "'Lora', serif"}}><b>{this.state.start}</b> to <b>{this.state.end}</b></h2>;
+        }
         return (
             <div id="GameData">
                 <h1>Game Results</h1>
+                {path}
                 <div id="chart" ref="chart"></div>
                 <span className="buttonContainer">
                     <button onClick={()=>{this.setState({ showShare: true })}}>Share</button>
-                    <button onClick={this.playAgain}>Play Again</button>
-                    <button onClick={this.playNewGame}>Play New Game</button>
+                    <button onClick={this.playNewGame}>New Game</button>
+                    <button onClick={this.playAgain}>Replay</button>
                 </span>
 
                 <Modal id="sharePopup" show={this.state.showShare} onHide={this.shareClose}>
@@ -859,19 +874,19 @@ class App extends React.Component {
         }
 
         return (
-            <main>
-                <div>
+            <div id="mainContainer">
+                <main>
                     <header>
                         <h1 onClick={this.gohome}>WikiLinks</h1>
                     </header>
                     <section id="main-content">
                         {contents}
                     </section>
-                </div>
+                </main>
                 <footer>
                     <p>Created by <a href="http://tobyglover.com" target="_blank">Toby Glover</a>, <a href="https://github.com/joelreske"  target="_blank">Joel Reske</a>, <a href="https://github.com/rgalbiati" target="_blank">Raina Galbiati</a>, and <a href="https://github.com/asmith1" target="_blank">Ashley Smith</a></p>
                 </footer>
-            </main>
+            </div>
         );
     }
 }

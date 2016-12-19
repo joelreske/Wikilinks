@@ -31,7 +31,15 @@ header h1{
 }
 
 h1 {
+  font-size: 32px;
+  font-weight: normal;
+  text-align: center;
   font-family: 'Lora', serif;
+}
+
+h2 {
+  text-align: center;
+  font-weight: normal;
 }
 
 footer {
@@ -42,6 +50,11 @@ footer {
 }
 
 main {
+  padding-bottom: 40px;
+  flex: 1;
+}
+
+#mainContainer {
   width: 98%;
   max-width: 1080px;
   margin: 0 auto;
@@ -82,9 +95,6 @@ button {
   padding: .5em .6em;
   font-weight: bold;
   cursor: pointer;
-}
-
-button.linkbtn {
   background-color: white;
   color: #333333;
   margin: .2em;
@@ -95,9 +105,14 @@ button.winlinkbtn {
   background-color: #5EDB75;
 }
 
-button.linkbtn:hover, button.winlinkbtn:hover {
+button:hover, button.winlinkbtn:hover {
   color: white;
   background-color: #698C6E;
+}
+
+.buttonContainer {
+  display: block;
+  text-align: center;
 }
 
 #search {
@@ -248,6 +263,14 @@ button.linkbtn:hover, button.winlinkbtn:hover {
 
 .ajax-status {
   margin-left: 5px;
+}
+
+/* Chart */
+#chart {
+  height: 500px;
+  box-sizing: border-box;
+  padding: 3em;
+  width: 98%;
 }
 
 /* Circular timer */
