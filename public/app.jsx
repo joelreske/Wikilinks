@@ -99,13 +99,17 @@ class NewGamePageForm extends React.Component {
     render() {
         return (
             <div className="newGameOption">
-                <TextInput onTextChange={this.parsePageEntry} placeholder={this.props.placeholder} ref="input" initialValue={this.props.initialValue}/>
+                <TextInput onTextChange={this.parsePageEntry} placeholder={this.props.placeholder} ref="input"/>
                 <div>
                     <label>{this.props.label}</label>
                     <a onClick={this.randomize}>Randomize</a>
                 </div>
             </div>
         );
+    }
+
+    componentDidMount() {
+        this.randomize();
     }
 
     randomize() {
@@ -156,8 +160,8 @@ class NewGame extends React.Component {
         return (
             <section id="newGameContainer">
                 <div>
-                    <NewGamePageForm id="startPage" label="Start Page" placeholder="Enter Start Page" ref='startInput' initialValue='Apple'/>
-                    <NewGamePageForm id="endPage" label="End Page" placeholder="Enter End Page" ref='endInput' initialValue='Adolf Hitler'/>
+                    <NewGamePageForm id="startPage" label="Start Page" placeholder="Enter Start Page" ref='startInput'/>
+                    <NewGamePageForm id="endPage" label="End Page" placeholder="Enter End Page" ref='endInput'/>
                 </div>
                 <button id="startBtn" className="winlinkbtn" onClick={this.startGame}>Start Game</button>
             </section>
