@@ -24,7 +24,8 @@ app.get('/*', function(request, response, next) {
     }
 
     if (isWww) {
-        response.redirect(301, request.protocol + "://" + request.hostname + request.originalUrl);
+        console.log(request.protocol + "://" + request.hostname + request.originalUrl);
+        // response.redirect(301, request.protocol + "://" + request.hostname + request.originalUrl);
     } else {
         next();
     }
