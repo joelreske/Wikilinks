@@ -14,9 +14,20 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 
-app.get('/', function(request, response, next) {
-    console.log(request.subdomains);
-    next();
+app.get('/*', function(request, response, next) {
+    var isWww = false;
+    for (var i = 0; i < request.subdomains.length; i++) {
+        if (request.subdomains[i] == 'www') {
+            isWww = true;
+            break;
+        }
+    }
+
+    if (isWww) {
+        response.redirect(301, request.protocol + "://" + request.hostname + request.originalUrl);
+    } else {
+        next();
+    }
 });
 
 app.get('/api/startGame', function(request, response) {
