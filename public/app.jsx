@@ -1,5 +1,11 @@
 var gamestore = new GameStore();
 
+function htmlDecode(input)
+{
+  var doc = new DOMParser().parseFromString(input, "text/html");
+  return doc.documentElement.textContent;
+}
+
 function performAjax(method, url, data, parse, callback) {
     var xhr = new XMLHttpRequest();
 
@@ -621,7 +627,6 @@ class GameData extends React.Component {
         this.playAgain = this.playAgain.bind(this);
         this.share = this.share.bind(this);
         this.shareClose = this.shareClose.bind(this);
-        this.drawChart = this.drawChart.bind(this);
         this.getChartData = this.getChartData.bind(this);
         this.playNewGame = this.playNewGame.bind(this);
         this.dataDidLoad = this.dataDidLoad.bind(this);
@@ -630,8 +635,11 @@ class GameData extends React.Component {
         var self = this;
         performAjax("GET", "/api/getGameData", {
             "gid": this.props.gid
-        }, true, function(data, error){
-            self.setState({start: data.start, end: data.end});
+        }, true, function(data, error) {
+            self.setState({
+                start: data.start,
+                end: data.end
+            });
         });
     }
 
@@ -639,13 +647,8 @@ class GameData extends React.Component {
         var self = this;
         window.onresize = this.getChartData;
 
-        google.charts.load('current', {
-            'packages': ['scatter']
-        });
-        google.charts.setOnLoadCallback(function() {
-            self.getChartData();
-            setInterval(self.getChartData, 10000);
-        });
+        self.getChartData();
+        //setInterval(self.getChartData, 10000);
     }
 
     getChartData() {
@@ -655,17 +658,60 @@ class GameData extends React.Component {
     }
 
     dataDidLoad(data, error) {
-        this.currentChartData = new google.visualization.DataTable(data["data"]);
-        this.currentChartOptions = data.options;
-        this.drawChart()
-    }
+        console.log(data);
 
-    drawChart() {
-        if (!this.chart) {
-            this.chart = new google.charts.Scatter(this.refs.chart);
+        var options = {
+            showLine: false,
+            axisX: {
+                type: Chartist.AutoScaleAxis,
+                onlyInteger: true
+            },
+            axisY: {
+                type: Chartist.AutoScaleAxis,
+                onlyInteger: true
+            },
+            chartPadding: {
+                top: 50,
+                right: 50,
+                bottom: 70,
+                left: 0
+            },
+            width: "1080px",
+            height: "512px",
+            plugins: [
+                Chartist.plugins.tooltip({
+                    tooltipFnc : function(meta, dat){
+                        var metaDecoded = htmlDecode(meta);
+                        return metaDecoded;
+                    }
+                }),
+                Chartist.plugins.ctAxisTitle({
+                    axisX: {
+                        axisTitle: 'Time (seconds)',
+                        axisClass: 'ct-axis-title',
+                        offset: {
+                            x: -5,
+                            y: 50
+                        },
+                        textAnchor: 'middle'
+                    },
+                    axisY: {
+                        axisTitle: 'Articles Visited',
+                        axisClass: 'ct-axis-title',
+                        offset: {
+                            x: 0,
+                            y: -1
+                        },
+                        flipTitle: true
+                    }
+                })
+              ]
         }
 
-        this.chart.draw(this.currentChartData, this.currentChartOptions);
+        // Create a new line chart object where as first parameter we pass in a selector
+        // that is resolving to our chart container element. The Second parameter
+        // is the actual data object.
+        new Chartist.Line('.ct-chart', data, options);
     }
 
     playAgain() {
@@ -720,14 +766,14 @@ class GameData extends React.Component {
 
     render() {
         var path = "";
-        if (this.state.start && this.state.end){
+        if (this.state.start && this.state.end) {
             path = <h2 style={{fontFamily: "'Lora', serif"}}><b>{this.state.start}</b> to <b>{this.state.end}</b></h2>;
         }
         return (
             <div id="GameData">
                 <h1>Game Results</h1>
                 {path}
-                <div id="chart" ref="chart"></div>
+                <div className="ct-chart"></div>
                 <span className="buttonContainer">
                     <button onClick={()=>{this.setState({ showShare: true })}}>Share</button>
                     <button onClick={this.playNewGame}>New Game</button>
