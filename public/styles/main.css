@@ -46,7 +46,7 @@ footer {
   margin-top: auto;
   border-top: 1px solid gray;
   padding: 1em .6em;
-  font-size: 16px
+  text-align:center;
 }
 
 main {
@@ -285,7 +285,7 @@ button:hover, button.winlinkbtn:hover {
   position: absolute;
   left: 0;
   font-size: 60px;
-  top: 20px;
+  top: 40px;
   width: 100%;
   animation: countdownTimerAnimation 4s linear 1s;
 }
