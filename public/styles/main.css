@@ -59,7 +59,7 @@ main {
   max-width: 1080px;
   margin: 0 auto;
   display: flex;
-  min-height: 97vh;
+  min-height: 89vh;
   flex-direction: column;
 }
 
