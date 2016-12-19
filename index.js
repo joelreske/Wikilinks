@@ -236,53 +236,20 @@ app.listen(app.get('port'), function() {
 });
 
 function createDataForChart(data) {
-    var googleChartOptions = {
-        legend: {
-            position: 'none'
-        },
-        axes: {
-	         x: {
-	             0: { side: 'bottom', label: "Time (seconds)"}
-	         },
-	         y: {
-	             0: { side: 'left', label: "Number of Pages"}
-	         }
-	    },
-        backgroundColor: {
-            fill: 'transparent'
-        },
-        colors: ['#698C6E']
-    };
-
-
-    var googleChartData = {
-        "cols": [{
-            "label": "Time",
-            "type": "number"
-        }, {
-            "label": "Number of Pages",
-            "type": "number"
-        }],
-        "rows": []
-    };
-
+	var series = [[]];
     for (var i in data) {
         var item = data[i];
+        item.time = parseFloat(item.time);
 
-        var row = {
-            c: [{
-                v: item.time
-            }, {
-                v: item.pathLength
-            }]
+        if (item.time > 0 && item.pathLength > 0){
+        	metaString = "<b>"+item.username + "</b></br>" + item.pathLength + " articles</br>" + item.time +" seconds";
+        	series[0].push({x: parseFloat(item.time), y: item.pathLength, meta: metaString});
         }
 
-        googleChartData["rows"].push(row);
+        
     }
 
-
     return {
-        "data": googleChartData,
-        "options": googleChartOptions
+        "series": series
     };
 }

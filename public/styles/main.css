@@ -1,59 +1,49 @@
 * {
-  padding: 0;
-  margin: 0;
-  font-size: 16px;
-  -webkit-margin-before: 0;
-  -webkit-margin-after: 0;
+    padding: 0;
+    margin: 0;
+    font-size: 16px;
+    -webkit-margin-before: 0;
+    -webkit-margin-after: 0;
 }
-
 *:focus {
-  outline: none;
+    outline: none;
 }
-
 body {
-  font-family: 'Open Sans', sans-serif;
+    font-family: 'Open Sans', sans-serif;
 }
-
 html {
-  height: 100%;
+    height: 100%;
 }
-
 header {
-  text-align: center;
+    text-align: center;
 }
-
-header h1{
-  font-size: 72px;
-  padding: 30px;
-  cursor: pointer;
-  display: inline-block;
-  font-weight: normal;
+header h1 {
+    font-size: 72px;
+    padding: 30px;
+    cursor: pointer;
+    display: inline-block;
+    font-weight: normal;
 }
-
 h1 {
-  font-size: 32px;
-  font-weight: normal;
-  text-align: center;
-  font-family: 'Lora', serif;
+    font-size: 32px;
+    font-weight: normal;
+    text-align: center;
+    font-family: 'Lora', serif;
 }
-
 h2 {
-  text-align: center;
-  font-weight: normal;
+    text-align: center;
+    font-weight: normal;
 }
-
 footer {
   margin-top: auto;
   border-top: 1px solid gray;
   padding: 1em .6em;
   text-align:center;
 }
-
 main {
-  padding-bottom: 40px;
-  flex: 1;
+    padding-bottom: 40px;
+    flex: 1;
 }
-
 #mainContainer {
   width: 98%;
   max-width: 1080px;
@@ -62,223 +52,237 @@ main {
   min-height: 89vh;
   flex-direction: column;
 }
-
 input[type=text] {
-  font-size: 20px;
-  width: 100%;
-  padding: .1em .2em;
-  border: none;
-  border-bottom: 2px solid darkgray;
+    font-size: 20px;
+    width: 100%;
+    padding: .1em .2em;
+    border: none;
+    border-bottom: 2px solid darkgray;
 }
-
 input[type=text]:focus {
-  border-bottom: 2px solid black;
+    border-bottom: 2px solid black;
 }
-
 a, a:visited {
-  color: #616161;
-  cursor: pointer;
-  text-decoration: underline;
+    color: #616161;
+    cursor: pointer;
+    text-decoration: underline;
 }
-
 a:hover {
-  color: black;
+    color: black;
 }
-
 label {
-  font-weight: normal;
+    font-weight: normal;
 }
-
 button {
-  border-radius: 3px;
-  border: solid 1px #5A5A5A;
-  padding: .5em .6em;
-  font-weight: bold;
-  cursor: pointer;
-  background-color: white;
-  color: #333333;
-  margin: .2em;
+    border-radius: 3px;
+    border: solid 1px #5A5A5A;
+    padding: .5em .6em;
+    font-weight: bold;
+    cursor: pointer;
+    background-color: white;
+    color: #333333;
+    margin: .2em;
 }
-
 button.winlinkbtn {
-  color: black;
-  background-color: #5EDB75;
+    color: black;
+    background-color: #5EDB75;
 }
-
 button:hover, button.winlinkbtn:hover {
-  color: white;
-  background-color: #698C6E;
+    color: white;
+    background-color: #698C6E;
 }
-
 .buttonContainer {
-  display: block;
-  text-align: center;
+    display: block;
+    text-align: center;
 }
-
 #search {
-  margin-bottom: 10px;
-  margin-top: 10px;
-  width: 100%;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    width: 100%;
 }
-
 #welcome {
-  font-size: 20px
+    font-size: 20px
 }
-
 #newGameContainer {
-  margin: 4em 0;
-  text-align: center;
+    margin: 4em 0;
+    text-align: center;
 }
-
 .newGameOption {
-  display: inline-block;
-  width: 20em;
-  margin: 1em;
+    display: inline-block;
+    width: 20em;
+    margin: 1em;
 }
-
 .newGameOption div {
-  margin-top: .1em;
-  padding-left: .2em;
-  clear: both;
-  overflow: none;
-  text-align: left
+    margin-top: .1em;
+    padding-left: .2em;
+    clear: both;
+    overflow: none;
+    text-align: left
 }
-
 .newGameOption a {
-  float: right;
-  clear: right;
+    float: right;
+    clear: right;
 }
-
 .historyContainer * {
-  vertical-align: middle;
+    vertical-align: middle;
 }
-
 .arrow {
-  display: inline-block;
-  font-size: 20px;
-  padding: 0 .1em;
+    display: inline-block;
+    font-size: 20px;
+    padding: 0 .1em;
 }
-
 .historyGame {
-  margin: 0 2em;
-  padding: .8em 0;
-  border-bottom: 1px solid gray;
-  clear: both;
-  overflow: hidden;
+    margin: 0 2em;
+    padding: .8em 0;
+    border-bottom: 1px solid gray;
+    clear: both;
+    overflow: hidden;
 }
-
 .historyGame .historyContainer {
-  float: left;
-  clear: left;
+    float: left;
+    clear: left;
 }
-
 .historyGame .options {
-  float: right;
-  clear: right;
+    float: right;
+    clear: right;
 }
-
 .historyGame a {
-  margin: .3em;
+    margin: .3em;
 }
-
 .inGame h2 {
-  text-align: center;
-  font-size: 38px;
-  margin-top: -30px;
-  font-weight: normal;
+    text-align: center;
+    font-size: 38px;
+    margin-top: -30px;
+    font-weight: normal;
 }
-
 .modal-background {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: #565656;
-  opacity: .5;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #565656;
+    opacity: .5;
 }
-
 .modal-foreground {
-  position: absolute;
-  margin: 0 auto;
-  top: 10em;
-  border-radius: 3px;
-  border: 1px solid black;
-  background-color: white;
-  padding-bottom:  1em;
-  box-sizing: border-box;
-  text-align: center;
-  left: 50%;
-  transform: translateX(-50%);
-  max-width: 98%;
+    position: absolute;
+    margin: 0 auto;
+    top: 10em;
+    border-radius: 3px;
+    border: 1px solid black;
+    background-color: white;
+    padding-bottom: 1em;
+    box-sizing: border-box;
+    text-align: center;
+    left: 50%;
+    transform: translateX(-50%);
+    max-width: 98%;
 }
-
 .modal-content {
-  padding: 3em 3em .5em 3em;
+    padding: 3em 3em .5em 3em;
 }
-
 .modal-foreground .close {
-  border-top: 1px solid gray;
-  padding: .6em 2em 0em 2em;
-  width: 100%;
-  box-sizing: border-box;
-  text-align: right;
+    border-top: 1px solid gray;
+    padding: .6em 2em 0em 2em;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: right;
 }
-
 .modal-foreground h1 {
-  font-size: 48px;
+    font-size: 48px;
 }
-
 .modal-foreground h2 {
-  font-weight: normal;
+    font-weight: normal;
 }
-
 .modal-foreground #sendName #name {
-  width: 10em;
-  display: inline;
-  margin: 0.5em;
+    width: 10em;
+    display: inline;
+    margin: 0.5em;
 }
 .modal-foreground #sendName button {
-  display: inline;
-  text-align: center;
+    display: inline;
+    text-align: center;
 }
-
 #sendContainer * {
-  vertical-align: middle;
+    vertical-align: middle;
 }
-
 #sharePopup input[type=text] {
-  margin: 0.3em 0;
-  max-width: 400px;
+    margin: 0.3em 0;
+    max-width: 400px;
 }
-
 #sharePopup h2 {
-  text-align: left;
-  font-size: 20px;
-  font-weight: bold;
-  width: 100%;
-  display: block;
-  padding-left: 2em;
+    text-align: left;
+    font-size: 20px;
+    font-weight: bold;
+    width: 100%;
+    display: block;
+    padding-left: 2em;
 }
-
 .ajax-status {
-  margin-left: 5px;
+    margin-left: 5px;
 }
-
 /* Chart */
+
 #chart {
-  height: 500px;
-  box-sizing: border-box;
-  padding: 3em;
-  width: 98%;
+    height: 500px;
+    box-sizing: border-box;
+    padding: 3em;
+    width: 98%;
 }
-
+.ct-chart-line {
+    margin: 0px 0px 0px 0px;
+    box-sizing: border-box;
+    max-width: 90%;
+}
+.ct-chart-line {
+    padding: 0px 0px 0px 50px;
+}
+.ct-series-a .ct-point {
+    stroke: #698C6E;
+    stroke-width: 10px;
+}
+.chartist-tooltip {
+    position: absolute;
+    display: inline-block;
+    opacity: 0;
+    min-width: 5em;
+    padding: .5em;
+    background-color: white;
+    border: 1px solid #000;
+    border-radius: 3px;
+    font-family: Oxygen, Helvetica, Arial, sans-serif;
+    font-weight: normal;
+    text-align: center;
+    pointer-events: none;
+    z-index: 1;
+    -webkit-transition: opacity .2s linear;
+    -moz-transition: opacity .2s linear;
+    -o-transition: opacity .2s linear;
+    transition: opacity .2s linear;
+}
+.chartist-tooltip:before {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    margin-left: -15px;
+    border: 15px solid transparent;
+    border-top-color: #333333;
+}
+.chartist-tooltip.tooltip-show {
+    opacity: 1;
+}
+.ct-area, .ct-line {
+    pointer-events: none;
+}
 /* Circular timer */
-#CircularCountdownTimer {
-  position:relative;
-  margin-top: 3em;
-}
 
+#CircularCountdownTimer {
+    position: relative;
+    margin-top: 3em;
+}
 #CircularCountdownTimer h2 {
   display: inline-block;
   text-align: center;
@@ -289,36 +293,41 @@ button:hover, button.winlinkbtn:hover {
   width: 100%;
   animation: countdownTimerAnimation 4s linear 1s;
 }
-
 #CircularCountdownTimer svg {
-  display: block;
-  margin: 0 auto;
-  -webkit-transform: rotate(-90deg);
-  transform: rotate(-90deg);
+    display: block;
+    margin: 0 auto;
+    -webkit-transform: rotate(-90deg);
+    transform: rotate(-90deg);
 }
-
 #CircularCountdownTimer circle {
-  stroke-width: 12;
-  fill: none;
+    stroke-width: 12;
+    fill: none;
 }
-
 #circle_animation {
-  stroke-dasharray: 440; /* this value is the pixel circumference of the circle */
-  stroke-dashoffset: 0;
-  transition: stroke-dashoffset 1s cubic-bezier(.9,0,.1,1), stroke 1s linear;
-  animation: countdownTimerAnimation 4s linear 1s;
+    stroke-dasharray: 440;
+    /* this value is the pixel circumference of the circle */
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 1s cubic-bezier(.9, 0, .1, 1), stroke 1s linear;
+    animation: countdownTimerAnimation 4s linear 1s;
 }
-
 @keyframes countdownTimerAnimation {
-    0% {stroke: #fc4444; color: #fc4444;}
-    50% {stroke: #fcf244; color: #fcf244;}
-    100% {stroke: #6fdb6f; color: #6fdb6f;}
+    0% {
+        stroke: #fc4444;
+        color: #fc4444;
+    }
+    50% {
+        stroke: #fcf244;
+        color: #fcf244;
+    }
+    100% {
+        stroke: #6fdb6f;
+        color: #6fdb6f;
+    }
 }
-
 /* End Circular timer */
 
 @media screen and (max-width: 560px) {
     .historyGame {
-      margin: 0;
+        margin: 0;
     }
 }
