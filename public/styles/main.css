@@ -2,6 +2,8 @@
   padding: 0;
   margin: 0;
   font-size: 16px;
+  -webkit-margin-before: 0;
+  -webkit-margin-after: 0;
 }
 
 *:focus {
@@ -22,10 +24,14 @@ header {
 
 header h1{
   font-size: 72px;
-  font-family: 'Lora', serif;
   padding: 30px;
   cursor: pointer;
   display: inline-block;
+  font-weight: normal;
+}
+
+h1 {
+  font-family: 'Lora', serif;
 }
 
 footer {
@@ -75,6 +81,7 @@ button {
   border: solid 1px #5A5A5A;
   padding: .5em .6em;
   font-weight: bold;
+  cursor: pointer;
 }
 
 button.linkbtn {
@@ -94,7 +101,8 @@ button.linkbtn:hover, button.winlinkbtn:hover {
 }
 
 #search {
-  margin: 10px;
+  margin-bottom: 10px;
+  margin-top: 10px;
   width: 100%;
 }
 
@@ -162,6 +170,84 @@ button.linkbtn:hover, button.winlinkbtn:hover {
   text-align: center;
   font-size: 38px;
   margin-top: -30px;
+  font-weight: normal;
+}
+
+.modal-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #565656;
+  opacity: .5;
+}
+
+.modal-foreground {
+  position: absolute;
+  margin: 0 auto;
+  top: 10em;
+  border-radius: 3px;
+  border: 1px solid black;
+  background-color: white;
+  padding-bottom:  1em;
+  box-sizing: border-box;
+  text-align: center;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 98%;
+}
+
+.modal-content {
+  padding: 3em 3em .5em 3em;
+}
+
+.modal-foreground .close {
+  border-top: 1px solid gray;
+  padding: .6em 2em 0em 2em;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: right;
+}
+
+.modal-foreground h1 {
+  font-size: 48px;
+}
+
+.modal-foreground h2 {
+  font-weight: normal;
+}
+
+.modal-foreground #sendName #name {
+  width: 10em;
+  display: inline;
+  margin: 0.5em;
+}
+.modal-foreground #sendName button {
+  display: inline;
+  text-align: center;
+}
+
+#sendContainer * {
+  vertical-align: middle;
+}
+
+#sharePopup input[type=text] {
+  margin: 0.3em 0;
+  max-width: 400px;
+}
+
+#sharePopup h2 {
+  text-align: left;
+  font-size: 20px;
+  font-weight: bold;
+  width: 100%;
+  display: block;
+  padding-left: 2em;
+}
+
+.ajax-status {
+  margin-left: 5px;
 }
 
 /* Circular timer */

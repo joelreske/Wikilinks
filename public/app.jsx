@@ -1,22 +1,10 @@
 var gamestore = new GameStore();
 
-var Modal = ReactBootstrap.Modal;
-var OverlayTrigger = ReactBootstrap.OverlayTrigger;
-var Button = ReactBootstrap.Button;
-var Form = ReactBootstrap.Form;
-var FormGroup = ReactBootstrap.FormGroup;
-var ControlLabel = ReactBootstrap.ControlLabel;
-var FormControl = ReactBootstrap.FormControl;
-var InputGroup = ReactBootstrap.InputGroup;
-var Tabs = ReactBootstrap.Tabs;
-var Tab = ReactBootstrap.Tab;
-var ButtonToolbar = ReactBootstrap.ButtonToolbar
-
 function performAjax(method, url, data, parse, callback) {
     var xhr = new XMLHttpRequest();
 
     xhr.onreadystatechange = function() {
-        if (this.readyState == 4)  {
+        if (this.readyState == 4) {
             var error = true;
             var resData = null;
 
@@ -26,7 +14,7 @@ function performAjax(method, url, data, parse, callback) {
                 if (parse) {
                     resData = JSON.parse(this.responseText);
                 }
-            } 
+            }
             callback(resData, error);
         }
     };
@@ -42,7 +30,7 @@ function performAjax(method, url, data, parse, callback) {
         } else {
             dataString = JSON.stringify(data);
         }
-        
+
     }
     xhr.open(method, url, true);
 
@@ -60,12 +48,23 @@ class TextInput extends React.Component {
         super(props);
 
         this.textDidChange = this.textDidChange.bind(this);
+        this.onFocus = this.onFocus.bind(this);
     }
 
     textDidChange() {
         if (this.props.onTextChange) {
             this.props.onTextChange(this.refs.input.value);
         }
+    }
+
+    onFocus() {
+        if (this.props.onFocus) {
+            this.props.onFocus();
+        }
+    }
+
+    select() {
+        this.refs.input.select();
     }
 
     val() {
@@ -76,8 +75,17 @@ class TextInput extends React.Component {
         this.refs.input.value = text;
     }
 
+    componentDidMount() {
+        if (this.props.focus) {
+            this.refs.input.focus();
+        }
+        if (this.props.value) {
+            this.setVal(this.props.value);
+        }
+    }
+
     render() {
-        return <input id={this.props.id} type="text" autoComplete="off" onChange={this.textDidChange} ref='input' placeholder={this.props.placeholder}/>
+        return <input id={this.props.id} type="text" autoComplete="off" onChange={this.textDidChange} ref='input' placeholder={this.props.placeholder} onFocus={this.onFocus}/>
     }
 }
 
@@ -103,7 +111,7 @@ class NewGamePageForm extends React.Component {
     randomize() {
         var input = this.refs.input;
 
-        `performAjax`("GET", "/api/getRandomPage", null, true, function(data, err) {
+        performAjax("GET", "/api/getRandomPage", null, true, function(data, err) {
             console.log(data);
             input.setVal(data.pageTitle);
         });
@@ -134,9 +142,9 @@ class NewGame extends React.Component {
     componentDidMount() {
         var self = this;
 
-        document.getElementById('newGameContainer').addEventListener('keypress', function (e) {
+        document.getElementById('newGameContainer').addEventListener('keypress', function(e) {
             var key = e.which || e.keyCode;
-            if (key === 13) { 
+            if (key === 13) {
                 e.preventDefault();
                 self.startGame();
                 return false;
@@ -168,11 +176,15 @@ class NewGame extends React.Component {
         } else if (startPage == endPage) {
             window.alert("Start and end cannot be the same");
         } else {
-            performAjax("GET", "/api/isWikipediaPage", {page: startPage}, true, function(data, error) {
+            performAjax("GET", "/api/isWikipediaPage", {
+                page: startPage
+            }, true, function(data, error) {
                 if (!data.valid) {
                     window.alert("Start is not a valid Wikipedia Page");
                 } else {
-                    performAjax("GET", "/api/isWikipediaPage", {page: endPage}, true, function(data, error) {
+                    performAjax("GET", "/api/isWikipediaPage", {
+                        page: endPage
+                    }, true, function(data, error) {
                         if (!data.valid) {
                             window.alert("End is not a valid Wikipedia Page");
                         } else {
@@ -187,7 +199,10 @@ class NewGame extends React.Component {
     startGame() {
         var onCreateGame = this.props.onCreateGame;
         this.checkPages(function(start, end) {
-            performAjax("GET", "/api/startGame", {"start": start, "end": end}, true, function(data, error) {
+            performAjax("GET", "/api/startGame", {
+                "start": start,
+                "end": end
+            }, true, function(data, error) {
                 onCreateGame(data.gid);
             });
         });
@@ -304,7 +319,7 @@ class Timer extends React.Component {
     }
 
     val() {
-       return this.diff();
+        return this.diff();
     }
 
     diff() {
@@ -354,7 +369,7 @@ class ArticleSelect extends React.Component {
     componentWillMount() {
         this.nextPage(this.props.start);
 
-        window.addEventListener("keydown",function (e) {
+        window.addEventListener("keydown", function(e) {
             if ((e.ctrlKey || e.metaKey) && e.keyCode === 70) {
                 e.preventDefault();
                 document.getElementById("search").focus();
@@ -369,7 +384,9 @@ class ArticleSelect extends React.Component {
         if (page == this.props.end) {
             this.props.onWin(this.state.history);
         } else {
-            performAjax("GET", "/api/getLinksForPage", {"page":page}, true, this.showLinks);
+            performAjax("GET", "/api/getLinksForPage", {
+                "page": page
+            }, true, this.showLinks);
         }
     }
 
@@ -406,7 +423,7 @@ class ArticleSelect extends React.Component {
 
                 if (searchRegex.test(articleName) || articleName == obj.props.end) {
                     if (articleName == obj.props.end) {
-                       var btn = <button key={i} className="winlinkbtn" onClick={() => obj.nextPage(articleName)}>{articleName}</button>; 
+                        var btn = <button key={i} className="winlinkbtn" onClick={() => obj.nextPage(articleName)}>{articleName}</button>;
                     } else {
                         var btn = <button key={i} className="linkbtn" onClick={() => obj.nextPage(articleName)}>{articleName}</button>;
                     }
@@ -419,7 +436,7 @@ class ArticleSelect extends React.Component {
         return (
             <div>
                 <h2>You are on <b>{this.state.history[this.state.history.length - 1]}</b></h2>
-                <TextInput id="search" placeholder="Search" onTextChange={this.search} ref="search"/>
+                <TextInput id="search" focus={true} placeholder="Search" onTextChange={this.search} ref="search"/>
                 <div>{links}</div>
             </div>
         );
@@ -440,7 +457,9 @@ class InGame extends React.Component {
     }
 
     componentWillMount() {
-        performAjax("GET", "/api/getGameData", {"gid": this.props.gid}, true, this.setEndpoints);
+        performAjax("GET", "/api/getGameData", {
+            "gid": this.props.gid
+        }, true, this.setEndpoints);
     }
 
     setEndpoints(data, error) {
@@ -480,6 +499,42 @@ class InGame extends React.Component {
     }
 }
 
+class Modal extends React.Component {
+    constructor(props) {
+        super(props);
+        if (this.props.id == null){
+            this.id = "";
+        }else{
+            this.id = this.props.id;
+        }
+
+        this.close = this.close.bind(this);
+    }
+
+    close() {
+        this.props.onHide();
+    }
+
+    render() {
+        if (!this.props.show) {
+            return <div></div>;
+        }
+
+        return (<div id={this.id}>
+                    <div className="modal-background" onClick={this.close}></div>
+                    <div className="modal-foreground">
+                        <div className="modal-content">
+                            {this.props.children}
+                        </div>
+                        <div className="close">
+                            <button className="linkbtn" onClick={this.close}>Close</button>
+                        </div>
+                    </div>
+                </div>);
+
+    }
+}
+
 class PostGame extends React.Component {
     constructor(props) {
         super(props);
@@ -495,9 +550,9 @@ class PostGame extends React.Component {
     componentDidMount() {
         var self = this;
 
-        document.getElementById('name').addEventListener('keypress', function (e) {
+        document.getElementById('name').addEventListener('keypress', function(e) {
             var key = e.which || e.keyCode;
-            if (key === 13) { 
+            if (key === 13) {
                 e.preventDefault();
                 self.sendScore();
                 return false;
@@ -508,13 +563,18 @@ class PostGame extends React.Component {
     sendScore() {
         var name = ReactDOM.findDOMNode(this.refs.name).value;
         if (name != "" && !this.sent) {
-            var ajaxStatus = document.getElementById("ajax-status");
+            var ajaxStatus = this.refs.img;
             ajaxStatus.style.padding = 0;
             ajaxStatus.style.height = "30px";
             ajaxStatus.style.width = "30px";
             ajaxStatus.src = "/images/spinner.gif";
             var self = this;
-            performAjax("POST", "/api/endGame", {'gid': this.props.gid, 'username':name, 'path':this.props.path, 'time':this.props.time}, false, function (data, status) {
+            performAjax("POST", "/api/endGame", {
+                'gid': this.props.gid,
+                'username': name,
+                'path': this.props.path,
+                'time': this.props.time
+            }, false, function(data, status) {
                 ajaxStatus.src = "/images/checkmark.png";
                 self.sent = true
             });
@@ -531,29 +591,18 @@ class PostGame extends React.Component {
 
     render() {
         return (
-             <Modal id="win-popup" bsSize="large" show={this.state.show} onHide={this.close}>
-                <Modal.Body>
-                    <h1>YOU WON</h1>
-                    <h2>And you did it in {this.props.time} seconds.</h2>
-                    <PathDisplay path={this.props.path}/>
-                    <div id="username-collection">
-                        <Form inline>
-                            <FormGroup controlId="name-group">
-                                <ControlLabel>Enter your name to save your score:</ControlLabel>
-                                <InputGroup>
-                                    <FormControl bsSize="sm" type="text" id="name" placeholder="Name" ref="name"/>
-                                    <InputGroup.Button>
-                                        <Button onClick={this.sendScore}>Send Score</Button>
-                                    </InputGroup.Button>
-                                </InputGroup>
-                            </FormGroup>
-                            <img id="ajax-status" ref={(img) => {this.img = img;}}/>
-                        </Form>
+            <Modal show={this.state.show} onHide={this.close}>
+                <h1>YOU WON</h1>
+                <h2>And you did it in <b>{this.props.time}</b> seconds.</h2>
+                <PathDisplay path={this.props.path}/>
+                <div id="sendName">
+                    <label>Enter your name to save your score:</label>
+                    <TextInput id="name" placeholder="Name" ref="name"/>
+                    <div id="sendContainer">
+                        <button onClick={this.sendScore}>Send Score</button>
+                        <img className="ajax-status" ref="img"/>
                     </div>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button onClick={this.close}>Close</Button>
-                </Modal.Footer>
+                </div>
             </Modal>
         );
     }
@@ -563,13 +612,13 @@ class GameData extends React.Component {
     constructor(props) {
         super(props);
         this.playAgain = this.playAgain.bind(this);
-        this.addTextToShareTab = this.addTextToShareTab.bind(this);
         this.share = this.share.bind(this);
         this.shareClose = this.shareClose.bind(this);
         this.drawChart = this.drawChart.bind(this);
         this.getChartData = this.getChartData.bind(this);
         this.playNewGame = this.playNewGame.bind(this);
         this.dataDidLoad = this.dataDidLoad.bind(this);
+        this.selectLink = this.selectLink.bind(this);
 
         this.state = {
             showShare: false
@@ -580,15 +629,19 @@ class GameData extends React.Component {
         var self = this;
         window.onresize = this.getChartData;
 
-        google.charts.load('current', {'packages':['corechart']});
-        google.charts.setOnLoadCallback(function () {
+        google.charts.load('current', {
+            'packages': ['corechart']
+        });
+        google.charts.setOnLoadCallback(function() {
             self.getChartData();
             setInterval(self.getChartData, 10000);
         });
     }
 
     getChartData() {
-        performAjax("GET", "/api/getGameResults", {"gid": this.props.gid}, true, this.dataDidLoad)
+        performAjax("GET", "/api/getGameResults", {
+            "gid": this.props.gid
+        }, true, this.dataDidLoad)
     }
 
     dataDidLoad(data, error) {
@@ -601,7 +654,7 @@ class GameData extends React.Component {
         if (!this.chart) {
             this.chart = new google.visualization.ScatterChart(this.refs.chart);
         }
-        
+
         this.chart.draw(this.currentChartData, this.currentChartOptions);
     }
 
@@ -613,11 +666,6 @@ class GameData extends React.Component {
         this.props.onPlayNewGame();
     }
 
-    addTextToShareTab() {
-        this.link.value = window.location.origin + window.location.search;
-        this.link.select();
-    }
-
     shareClose() {
         this.setState({
             showShare: false
@@ -626,25 +674,29 @@ class GameData extends React.Component {
 
     share() {
         var emailRegex = /^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i;
-        var email = this.email.value;
-        var name = this.name.value;
-        var friendName = this.friendName.value;
+        var email = this.refs.email.val();
+        var name = this.refs.name.val();
+        var friendName = this.refs.friendName.val();
 
         if (name == "" || email == "" || friendName == "") {
             window.alert("All fields must be set");
         } else if (!emailRegex.test(email)) {
             window.alert("Invalid email");
         } else {
-            var ajaxStatus = document.getElementById("ajax-status");
-            ajaxStatus.style.padding = 0;
-            ajaxStatus.style.height = 30;
-            ajaxStatus.style.width = 30;
+            var ajaxStatus = this.refs.img;
+            ajaxStatus.style.height = "30px";
+            ajaxStatus.style.width = "30px";
             ajaxStatus.src = "/images/spinner.gif";
 
-            var emailInput = this.email;
-            var friendNameInput = this.friendName;
+            var emailInput = this.refs.email;
+            var friendNameInput = this.refs.friendName;
 
-            performAjax("POST", "/api/share", {'userName': name, 'friendName': friendName, 'email':email, 'gid': this.props.gid}, false, function (data, status) {
+            performAjax("POST", "/api/share", {
+                'userName': name,
+                'friendName': friendName,
+                'email': email,
+                'gid': this.props.gid
+            }, false, function(data, status) {
                 ajaxStatus.src = "/images/checkmark.png";
                 emailInput.value = "";
                 friendNameInput.value = "";
@@ -652,53 +704,34 @@ class GameData extends React.Component {
         }
     }
 
-    render() {
+    selectLink() {
+        this.refs.link.select();
+    }
 
+    render() {
         return (
             <div id="GameData">
                 <h1>Game Results</h1>
                 <div id="chart" ref="chart"></div>
                 <span className="buttonContainer">
-                    <ButtonToolbar>
-                        <Button onClick={()=>{this.setState({ showShare: true })}}>Share</Button>
-                        <Button onClick={this.playAgain}>Play Again</Button>
-                        <Button onClick={this.playNewGame}>Play New Game</Button>
-                    </ButtonToolbar>
+                    <button onClick={()=>{this.setState({ showShare: true })}}>Share</button>
+                    <button onClick={this.playAgain}>Play Again</button>
+                    <button onClick={this.playNewGame}>Play New Game</button>
                 </span>
 
-                <Modal id="share-popup" bsSize="small" show={this.state.showShare} onHide={this.shareClose}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>Share</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <Tabs id="share-tabs" defaultActiveKey={1}>
-                            <Tab eventKey={1} title="Email">
-                                <Form>
-                                    <FormGroup controlId="share-email-group">
-                                        <ControlLabel>Your name</ControlLabel>
-                                        <FormControl bsSize="sm" type="text" id="name" placeholder="Your Name" inputRef={(input) => {this.name = input}}/>
-                                    </FormGroup>
-                                    <FormGroup controlId="share-email-group">
-                                        <ControlLabel>Friend&#700;s name</ControlLabel>
-                                        <FormControl bsSize="sm" type="text" id="friendName" placeholder="Friend's Name" inputRef={(input) => {this.friendName = input}}/>
-                                    </FormGroup>
-                                    <FormGroup controlId="share-email-group">
-                                        <ControlLabel>Friend&#700;s Email</ControlLabel>
-                                        <FormControl bsSize="sm" type="text" id="email" placeholder="Their Email" inputRef={(input) => {this.email = input}}/>
-                                    </FormGroup>
-                                    <Button onClick={this.share}>Send</Button>
-                                    <img id="ajax-status" ref={(img) => {this.img = img;}}/>
-                                </Form>
-                            </Tab>
-                            <Tab eventKey={2} title="Link" onEntering={this.addTextToShareTab}>
-                                <FormControl bsSize="sm" type="text" inputRef={(input) => {this.link = input}}/>
-                                <p>Copy the link above and send it to whoever you want, however you want</p>
-                            </Tab>
-                        </Tabs>
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button onClick={this.shareClose}>Close</Button>
-                    </Modal.Footer>
+                <Modal id="sharePopup" show={this.state.showShare} onHide={this.shareClose}>
+                    <h2>Share by email</h2>
+                    <TextInput id="name" placeholder="Your Name" ref="name"/>
+                    <TextInput id="friendName" placeholder="Friend's Name" ref="friendName"/>
+                    <TextInput id="email" placeholder="Their Email" ref="email"/>
+                    <div id="sendContainer">
+                        <button id="sendEmail" onClick={this.share}>Send</button>
+                        <img className="ajax-status" ref="img"/>
+                    </div>
+                    <div id="sendLinkContainer">
+                        <h2>Or send a link</h2>
+                        <TextInput ref="link" value={window.location.origin + window.location.search} onFocus={this.selectLink}/>
+                    </div>
                 </Modal>
             </div>
         );
@@ -764,14 +797,16 @@ class App extends React.Component {
     preRender(getUsername) {
         if (typeof this.gid === 'undefined' || this.gid == null) {
             var pageURL = decodeURIComponent(window.location.search.substring(1)),
-            gidRegx = /(?:(?:gid=)([a-zA-Z0-9~\-_]*))/,
-            gid = gidRegx.exec(pageURL);
+                gidRegx = /(?:(?:gid=)([a-zA-Z0-9~\-_]*))/,
+                gid = gidRegx.exec(pageURL);
 
             if (gid) {
                 gid = gid[1];
                 var self = this;
 
-                performAjax("GET", "/api/isValidGid", {"gid": gid}, true, function(data, error) {
+                performAjax("GET", "/api/isValidGid", {
+                    "gid": gid
+                }, true, function(data, error) {
                     if (data.valid) {
                         self.gid = gid;
                         self.preRender();
@@ -797,7 +832,7 @@ class App extends React.Component {
             }
 
             this.setState({
-                "page":page
+                "page": page
             });
         }
     }
@@ -810,8 +845,8 @@ class App extends React.Component {
         } else if (this.state.page == "postGame") {
             contents = (
                 <div>
-                    <PostGame path={this.path} time={this.time} gid={this.gid}/>
                     <GameData gid={this.gid} onPlayAgain={this.onPlayAgain} onPlayNewGame={this.gohome}/> 
+                    <PostGame path={this.path} time={this.time} gid={this.gid}/>
                 </div>);
         } else if (this.state.page == "inGame") {
             contents = <InGame gid={this.gid} onPostGame={this.onPostGame}/>;
