@@ -652,7 +652,7 @@ class GameData extends React.Component {
         window.onresize = this.getChartData;
 
         self.getChartData();
-        //setInterval(self.getChartData, 10000);
+        setInterval(self.getChartData, 2000);
     }
 
     getChartData() {
