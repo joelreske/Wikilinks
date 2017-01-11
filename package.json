@@ -7,16 +7,19 @@
   },
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "build": "browserify --extension=.jsx -t [ babelify --presets [ react ] ] src/index.js -o public/build/app.js"
   },
   "dependencies": {
+    "babel-preset-react": "^6.16.0",
+    "babelify": "^7.3.0",
     "body-parser": "latest",
+    "browserfy": "^1.0.0",
     "ejs": "latest",
     "express": "latest",
     "mongodb": "latest",
     "node-wikipedia": "latest",
     "react": "^15.4.1",
-    "react-bootstrap": "^0.30.7",
     "react-button": "^1.2.1",
     "react-dom": "^15.4.1",
     "react-ga": "^2.1.2",
