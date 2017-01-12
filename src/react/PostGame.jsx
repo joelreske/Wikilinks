@@ -3,6 +3,7 @@ var PathDisplay = require('./PathDisplay');
 var TextInput = require('./TextInput');
 var Modal = require('./Modal');
 var Ajax = require('./Ajax');
+var StoredGameData = require('./StoredGameData');
 
 class PostGame extends React.Component {
     constructor(props) {
@@ -14,6 +15,13 @@ class PostGame extends React.Component {
         this.sent = false;
         this.sendScore = this.sendScore.bind(this);
         this.close = this.close.bind(this);
+    }
+
+    componentWillMount() {
+        var data = StoredGameData.getGameData();
+        this.path = data.path;
+        this.gid = data.gid;
+        this.time = data.time;
     }
 
     componentDidMount() {
@@ -39,13 +47,14 @@ class PostGame extends React.Component {
             ajaxStatus.src = "/images/spinner.gif";
             var self = this;
             Ajax.run("POST", "/api/endGame", {
-                'gid': this.props.gid,
+                'gid': this.gid,
                 'username': name,
-                'path': this.props.path,
-                'time': this.props.time
+                'path': this.path,
+                'time': this.time
             }, false, function(data, status) {
                 ajaxStatus.src = "/images/checkmark.png";
-                self.sent = true
+                self.sent = true;
+                StoredGameData.clear();
             });
         } else {
             window.alert("Username field cannot be empty");
@@ -62,8 +71,8 @@ class PostGame extends React.Component {
         return (
             <Modal show={this.state.show} onHide={this.close}>
                 <h1>YOU WON</h1>
-                <h2>And you did it in <b>{this.props.time}</b> seconds.</h2>
-                <PathDisplay path={this.props.path}/>
+                <h2>And you did it in <b>{this.time}</b> seconds.</h2>
+                <PathDisplay path={this.path}/>
                 <div id="sendName">
                     <label>Enter your name to save your score:</label>
                     <TextInput id="name" placeholder="Name" ref="name"/>

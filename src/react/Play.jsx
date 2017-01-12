@@ -4,8 +4,10 @@ var CircularCountdownTimer = require('./CircularCountdownTimer');
 var Timer = require('./Timer');
 var ArticleSelect = require('./ArticleSelect');
 var Ajax = require('./Ajax');
+var StoredGameData = require('./StoredGameData');
+var Pager = require('./Pager');
 
-class InGame extends React.Component {
+class Play extends React.Component {
     constructor(props) {
         super(props);
 
@@ -20,12 +22,12 @@ class InGame extends React.Component {
 
     componentWillMount() {
         Ajax.run("GET", "/api/getGameData", {
-            "gid": this.props.gid
+            "gid": this.props.params.gid
         }, true, this.setEndpoints);
     }
 
     setEndpoints(data, error) {
-        GameStore.storeGame(this.props.gid, data.start, data.end);
+        GameStore.storeGame(this.props.params.gid, data.start, data.end);
 
         this.setState({
             start: data.start,
@@ -34,7 +36,8 @@ class InGame extends React.Component {
     }
 
     onWin(path) {
-        this.props.onPostGame(path, this.timer.val());
+        StoredGameData.storeGameData(this.props.params.gid, path, this.timer.val());
+        Pager.goToPath(Pager.Paths.STAT, this.props.params.gid);
     }
 
     countdownDone() {
@@ -61,4 +64,4 @@ class InGame extends React.Component {
     }
 }
 
-module.exports = InGame;
+module.exports = Play;

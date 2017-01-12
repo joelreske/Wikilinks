@@ -2,6 +2,7 @@ var React = require('react');
 var Modal = require('./Modal');
 var TextInput = require('./TextInput');
 var Ajax = require('./Ajax');
+var Pager = require('./Pager');
 
 function htmlDecode(input) {
   var doc = new DOMParser().parseFromString(input, "text/html");
@@ -109,11 +110,11 @@ class GameData extends React.Component {
     }
 
     playAgain() {
-        this.props.onPlayAgain();
+        Pager.goToPath(Pager.Paths.PLAY, this.props.gid);
     }
 
     playNewGame() {
-        this.props.onPlayNewGame();
+        Pager.goToPath(Pager.Paths.HOME);
     }
 
     shareClose() {
@@ -185,7 +186,7 @@ class GameData extends React.Component {
                     </div>
                     <div id="sendLinkContainer">
                         <h2>Or send a link</h2>
-                        <TextInput ref="link" value={window.location.origin + window.location.search} onFocus={this.selectLink}/>
+                        <TextInput ref="link" value={window.location.href} onFocus={this.selectLink}/>
                     </div>
                 </Modal>
             </div>
