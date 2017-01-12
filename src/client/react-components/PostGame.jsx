@@ -2,8 +2,8 @@ var React = require('react');
 var PathDisplay = require('./PathDisplay');
 var TextInput = require('./TextInput');
 var Modal = require('./Modal');
-var Ajax = require('./Ajax');
-var StoredGameData = require('./StoredGameData');
+var Ajax = require('../helpers/Ajax');
+var StoredGameData = require('../helpers/StoredGameData');
 
 class PostGame extends React.Component {
     constructor(props) {

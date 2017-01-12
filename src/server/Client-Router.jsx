@@ -6,7 +6,7 @@ var ROOT_DIR       = path.resolve(".");
 var React          = require('react');
 var ReactDOM       = require('react-dom/server');
 var reactRouter    = require('react-router');
-var appRouter      = require(ROOT_DIR + '/src/react/Router.jsx');
+var appRouter      = require(ROOT_DIR + '/src/client/Router.jsx');
 var routes         = reactRouter.createRoutes(appRouter.route());
 
 router.get('/*', function(request, response) {

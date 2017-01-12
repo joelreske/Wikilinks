@@ -1,11 +1,11 @@
 var React = require('react');
-var GameStore = require('./GameStore');
+var GameStore = require('../helpers/GameStore');
 var CircularCountdownTimer = require('./CircularCountdownTimer');
 var Timer = require('./Timer');
 var ArticleSelect = require('./ArticleSelect');
-var Ajax = require('./Ajax');
-var StoredGameData = require('./StoredGameData');
-var Pager = require('./Pager');
+var Ajax = require('../helpers/Ajax');
+var StoredGameData = require('../helpers/StoredGameData');
+var Pager = require('../helpers/Pager');
 
 class Play extends React.Component {
     constructor(props) {

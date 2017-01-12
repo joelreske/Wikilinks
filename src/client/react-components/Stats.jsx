@@ -1,5 +1,5 @@
 var React = require('react');
-var StoredGameData = require('./StoredGameData');
+var StoredGameData = require('../helpers/StoredGameData');
 var PostGame = require('./PostGame');
 var GameData = require('./GameData');
 

@@ -1,6 +1,6 @@
 var React = require('react');
 var NewGamePageForm = require('./NewGamePageForm');
-var Ajax = require('./Ajax');
+var Ajax = require('../helpers/Ajax');
 
 class NewGame extends React.Component {
     constructor(props) {

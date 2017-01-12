@@ -1,7 +1,7 @@
 var React = require('react');
 var NewGame = require('./NewGame');
 var GameHistory = require('./GameHistory');
-var Pager = require('./Pager');
+var Pager = require('../helpers/Pager');
 
 class Home extends React.Component {
     constructor(props) {

@@ -1,6 +1,6 @@
 var React = require('react');
 var PathDisplay = require('./PathDisplay');
-var GameStore = require('./GameStore');
+var GameStore = require('../helpers/GameStore');
 
 class GameHistory extends React.Component {
     constructor(props) {

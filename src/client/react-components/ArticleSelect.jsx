@@ -1,6 +1,6 @@
 var React = require('react');
 var TextInput = require('./TextInput');
-var Ajax = require('./Ajax');
+var Ajax = require('../helpers/Ajax');
 
 class ArticleSelect extends React.Component {
     constructor(props) {

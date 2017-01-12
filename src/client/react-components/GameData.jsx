@@ -1,8 +1,8 @@
 var React = require('react');
 var Modal = require('./Modal');
 var TextInput = require('./TextInput');
-var Ajax = require('./Ajax');
-var Pager = require('./Pager');
+var Ajax = require('../helpers/Ajax');
+var Pager = require('../helpers/Pager');
 
 function htmlDecode(input) {
   var doc = new DOMParser().parseFromString(input, "text/html");

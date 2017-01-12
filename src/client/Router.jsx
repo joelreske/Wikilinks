@@ -1,11 +1,11 @@
 var React = require('react');
 var ReactRouter = require('react-router');
-var Pager = require('./Pager');
-var Home = require('./Home');
-var Play = require('./Play');
-var Stats = require('./Stats');
-var Wrapper = require('./Wrapper');
-var PageNotFound = require('./PageNotFound');
+var Pager = require('./helpers/Pager');
+var Home = require('./react-components/Home');
+var Play = require('./react-components/Play');
+var Stats = require('./react-components/Stats');
+var Wrapper = require('./react-components/Wrapper');
+var PageNotFound = require('./react-components/PageNotFound');
 
 var Router = ReactRouter.Router;
 var Route = ReactRouter.Route;

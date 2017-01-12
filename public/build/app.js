@@ -24974,6 +24974,37 @@ module.exports = warning;
 
 }).call(this,require('_process'))
 },{"_process":254}],232:[function(require,module,exports){
+'use strict';
+
+var React = require('react');
+var ReactRouter = require('react-router');
+var Pager = require('./helpers/Pager');
+var Home = require('./react-components/Home');
+var Play = require('./react-components/Play');
+var Stats = require('./react-components/Stats');
+var Wrapper = require('./react-components/Wrapper');
+var PageNotFound = require('./react-components/PageNotFound');
+
+var Router = ReactRouter.Router;
+var Route = ReactRouter.Route;
+var browserHistory = ReactRouter.browserHistory;
+
+module.exports.route = function () {
+  return React.createElement(
+    Router,
+    { history: browserHistory },
+    React.createElement(
+      Route,
+      { component: Wrapper },
+      React.createElement(Route, { path: Pager.Paths.HOME, component: Home }),
+      React.createElement(Route, { path: Pager.Paths.PLAY + "/:gid", component: Play }),
+      React.createElement(Route, { path: Pager.Paths.STAT + "/:gid", component: Stats }),
+      React.createElement(Route, { path: '/*', component: PageNotFound })
+    )
+  );
+};
+
+},{"./helpers/Pager":235,"./react-components/Home":242,"./react-components/PageNotFound":246,"./react-components/Play":248,"./react-components/Stats":250,"./react-components/Wrapper":253,"react":229,"react-router":198}],233:[function(require,module,exports){
 "use strict";
 
 module.exports.run = function (method, url, data, parse, callback) {
@@ -25017,7 +25048,125 @@ module.exports.run = function (method, url, data, parse, callback) {
     }
 };
 
-},{}],233:[function(require,module,exports){
+},{}],234:[function(require,module,exports){
+"use strict";
+
+module.exports.storeGame = function (gid, start, end) {
+	putGidOrder(gid);
+	putInStorage(gid, { "start": start, "end": end });
+};
+
+module.exports.getAllStoredGames = function () {
+	var gidOrder = getGidOrder();
+	var storedGames = [];
+
+	for (var i = gidOrder.length - 1; i >= 0; i--) {
+		var game = getFromStorage(gidOrder[i]);
+		game['gid'] = gidOrder[i];
+		storedGames.push(game);
+	}
+
+	return storedGames;
+};
+
+function getGidOrder() {
+	return getFromStorage("gidOrder");
+}
+
+function putGidOrder(gid) {
+	if (!gid) {
+		putInStorage("gidOrder", []);
+	} else {
+		var gidOrder = getGidOrder(),
+		    prevGidLoc = gidOrder.indexOf(gid);
+
+		if (prevGidLoc > -1) {
+			gidOrder.splice(prevGidLoc, 1);
+		}
+
+		gidOrder.push(gid);
+
+		putInStorage("gidOrder", gidOrder);
+	}
+}
+
+function putInStorage(id, obj) {
+	window.localStorage.setItem(id, JSON.stringify(obj));
+}
+
+function getFromStorage(id) {
+	var item = window.localStorage.getItem(id);
+	if (!item) {
+		putGidOrder();
+		return [];
+	}
+	return JSON.parse(item);
+}
+
+},{}],235:[function(require,module,exports){
+'use strict';
+
+var browserHistory = require('react-router').browserHistory;
+
+var Paths = { 'HOME': "/",
+	'PLAY': "/play",
+	'STAT': "/stat" };
+
+module.exports.Paths = Paths;
+
+// assumes path in Paths
+module.exports.goToPath = function (path, gid) {
+	var fullPath = path;
+
+	if (path == Paths.PLAY || path == PATHS.STAT) {
+		if (!gid) {
+			return;
+		} else {
+			fullPath += "/" + gid;
+		}
+	}
+
+	browserHistory.push(fullPath);
+};
+
+},{"react-router":198}],236:[function(require,module,exports){
+"use strict";
+
+var gameData = { "gid": "",
+	"path": [],
+	"time": 0 };
+
+module.exports.storeGameData = function (gid, path, time) {
+	gameData.gid = gid;
+	gameData.path = path;
+	gameData.time = time;
+};
+
+module.exports.isDataStoredForGame = function (gid) {
+	return gameData.gid == gid;
+};
+
+module.exports.clear = function () {
+	gameData.gid = '';
+	gameData.path = [];
+	gameData.time = 0;
+};
+
+module.exports.getGameData = function () {
+	return gameData;
+};
+
+},{}],237:[function(require,module,exports){
+'use strict';
+
+var ReactDOM = require('react-dom');
+var React = require('react');
+
+var Router = require('./Router.jsx');
+
+ReactDOM.render(Router.route(), document.getElementById('app'));
+
+},{"./Router.jsx":232,"react":229,"react-dom":45}],238:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -25030,7 +25179,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var React = require('react');
 var TextInput = require('./TextInput');
-var Ajax = require('./Ajax');
+var Ajax = require('../helpers/Ajax');
 
 var ArticleSelect = function (_React$Component) {
     _inherits(ArticleSelect, _React$Component);
@@ -25162,7 +25311,7 @@ var ArticleSelect = function (_React$Component) {
 
 module.exports = ArticleSelect;
 
-},{"./Ajax":232,"./TextInput":250,"react":229}],234:[function(require,module,exports){
+},{"../helpers/Ajax":233,"./TextInput":251,"react":229}],239:[function(require,module,exports){
 "use strict";
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -25237,7 +25386,7 @@ var CircularCountdownTimer = function (_React$Component) {
 
 module.exports = CircularCountdownTimer;
 
-},{"react":229}],235:[function(require,module,exports){
+},{"react":229}],240:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -25251,8 +25400,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var React = require('react');
 var Modal = require('./Modal');
 var TextInput = require('./TextInput');
-var Ajax = require('./Ajax');
-var Pager = require('./Pager');
+var Ajax = require('../helpers/Ajax');
+var Pager = require('../helpers/Pager');
 
 function htmlDecode(input) {
     var doc = new DOMParser().parseFromString(input, "text/html");
@@ -25514,7 +25663,7 @@ var GameData = function (_React$Component) {
 
 module.exports = GameData;
 
-},{"./Ajax":232,"./Modal":239,"./Pager":243,"./TextInput":250,"react":229}],236:[function(require,module,exports){
+},{"../helpers/Ajax":233,"../helpers/Pager":235,"./Modal":243,"./TextInput":251,"react":229}],241:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -25527,7 +25676,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var React = require('react');
 var PathDisplay = require('./PathDisplay');
-var GameStore = require('./GameStore');
+var GameStore = require('../helpers/GameStore');
 
 var GameHistory = function (_React$Component) {
     _inherits(GameHistory, _React$Component);
@@ -25619,62 +25768,7 @@ var GameHistory = function (_React$Component) {
 
 module.exports = GameHistory;
 
-},{"./GameStore":237,"./PathDisplay":244,"react":229}],237:[function(require,module,exports){
-"use strict";
-
-module.exports.storeGame = function (gid, start, end) {
-	putGidOrder(gid);
-	putInStorage(gid, { "start": start, "end": end });
-};
-
-module.exports.getAllStoredGames = function () {
-	var gidOrder = getGidOrder();
-	var storedGames = [];
-
-	for (var i = gidOrder.length - 1; i >= 0; i--) {
-		var game = getFromStorage(gidOrder[i]);
-		game['gid'] = gidOrder[i];
-		storedGames.push(game);
-	}
-
-	return storedGames;
-};
-
-function getGidOrder() {
-	return getFromStorage("gidOrder");
-}
-
-function putGidOrder(gid) {
-	if (!gid) {
-		putInStorage("gidOrder", []);
-	} else {
-		var gidOrder = getGidOrder(),
-		    prevGidLoc = gidOrder.indexOf(gid);
-
-		if (prevGidLoc > -1) {
-			gidOrder.splice(prevGidLoc, 1);
-		}
-
-		gidOrder.push(gid);
-
-		putInStorage("gidOrder", gidOrder);
-	}
-}
-
-function putInStorage(id, obj) {
-	window.localStorage.setItem(id, JSON.stringify(obj));
-}
-
-function getFromStorage(id) {
-	var item = window.localStorage.getItem(id);
-	if (!item) {
-		putGidOrder();
-		return [];
-	}
-	return JSON.parse(item);
-}
-
-},{}],238:[function(require,module,exports){
+},{"../helpers/GameStore":234,"./PathDisplay":247,"react":229}],242:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -25688,7 +25782,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var React = require('react');
 var NewGame = require('./NewGame');
 var GameHistory = require('./GameHistory');
-var Pager = require('./Pager');
+var Pager = require('../helpers/Pager');
 
 var Home = function (_React$Component) {
     _inherits(Home, _React$Component);
@@ -25735,7 +25829,7 @@ var Home = function (_React$Component) {
 
 module.exports = Home;
 
-},{"./GameHistory":236,"./NewGame":240,"./Pager":243,"react":229}],239:[function(require,module,exports){
+},{"../helpers/Pager":235,"./GameHistory":241,"./NewGame":244,"react":229}],243:[function(require,module,exports){
 "use strict";
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -25809,7 +25903,7 @@ var Modal = function (_React$Component) {
 
 module.exports = Modal;
 
-},{"react":229}],240:[function(require,module,exports){
+},{"react":229}],244:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -25822,7 +25916,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var React = require('react');
 var NewGamePageForm = require('./NewGamePageForm');
-var Ajax = require('./Ajax');
+var Ajax = require('../helpers/Ajax');
 
 var NewGame = function (_React$Component) {
     _inherits(NewGame, _React$Component);
@@ -25922,7 +26016,7 @@ var NewGame = function (_React$Component) {
 
 module.exports = NewGame;
 
-},{"./Ajax":232,"./NewGamePageForm":241,"react":229}],241:[function(require,module,exports){
+},{"../helpers/Ajax":233,"./NewGamePageForm":245,"react":229}],245:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -25935,7 +26029,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var React = require('react');
 var TextInput = require('./TextInput');
-var Ajax = require('./Ajax');
+var Ajax = require('../helpers/Ajax');
 
 var NewGamePageForm = function (_React$Component) {
     _inherits(NewGamePageForm, _React$Component);
@@ -26011,7 +26105,7 @@ var NewGamePageForm = function (_React$Component) {
 
 module.exports = NewGamePageForm;
 
-},{"./Ajax":232,"./TextInput":250,"react":229}],242:[function(require,module,exports){
+},{"../helpers/Ajax":233,"./TextInput":251,"react":229}],246:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -26058,35 +26152,7 @@ var PageNotFound = function (_React$Component) {
 
 module.exports = PageNotFound;
 
-},{"react":229,"react-router":198}],243:[function(require,module,exports){
-'use strict';
-
-var browserHistory = require('react-router').browserHistory;
-
-var Paths = { 'HOME': "/",
-	'PLAY': "/play",
-	'STAT': "/stat" };
-
-module.exports.Paths = Paths;
-
-// assumes path in Paths
-module.exports.goToPath = function (path, gid) {
-	var fullPath = path;
-
-	if (path == Paths.PLAY) {
-		if (!gid) {
-			return;
-		} else {
-			fullPath += "/" + gid;
-		}
-	} else if (path == Paths.STAT && gid) {
-		fullPath += "/" + gid;
-	}
-
-	browserHistory.push(fullPath);
-};
-
-},{"react-router":198}],244:[function(require,module,exports){
+},{"react":229,"react-router":198}],247:[function(require,module,exports){
 "use strict";
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -26144,7 +26210,7 @@ var PathDisplay = function (_React$Component) {
 
 module.exports = PathDisplay;
 
-},{"react":229}],245:[function(require,module,exports){
+},{"react":229}],248:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -26156,13 +26222,13 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var React = require('react');
-var GameStore = require('./GameStore');
+var GameStore = require('../helpers/GameStore');
 var CircularCountdownTimer = require('./CircularCountdownTimer');
 var Timer = require('./Timer');
 var ArticleSelect = require('./ArticleSelect');
-var Ajax = require('./Ajax');
-var StoredGameData = require('./StoredGameData');
-var Pager = require('./Pager');
+var Ajax = require('../helpers/Ajax');
+var StoredGameData = require('../helpers/StoredGameData');
+var Pager = require('../helpers/Pager');
 
 var Play = function (_React$Component) {
     _inherits(Play, _React$Component);
@@ -26251,7 +26317,7 @@ var Play = function (_React$Component) {
 
 module.exports = Play;
 
-},{"./Ajax":232,"./ArticleSelect":233,"./CircularCountdownTimer":234,"./GameStore":237,"./Pager":243,"./StoredGameData":249,"./Timer":251,"react":229}],246:[function(require,module,exports){
+},{"../helpers/Ajax":233,"../helpers/GameStore":234,"../helpers/Pager":235,"../helpers/StoredGameData":236,"./ArticleSelect":238,"./CircularCountdownTimer":239,"./Timer":252,"react":229}],249:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -26266,8 +26332,8 @@ var React = require('react');
 var PathDisplay = require('./PathDisplay');
 var TextInput = require('./TextInput');
 var Modal = require('./Modal');
-var Ajax = require('./Ajax');
-var StoredGameData = require('./StoredGameData');
+var Ajax = require('../helpers/Ajax');
+var StoredGameData = require('../helpers/StoredGameData');
 
 var PostGame = function (_React$Component) {
     _inherits(PostGame, _React$Component);
@@ -26392,38 +26458,7 @@ var PostGame = function (_React$Component) {
 
 module.exports = PostGame;
 
-},{"./Ajax":232,"./Modal":239,"./PathDisplay":244,"./StoredGameData":249,"./TextInput":250,"react":229}],247:[function(require,module,exports){
-'use strict';
-
-var React = require('react');
-var ReactRouter = require('react-router');
-var Pager = require('./Pager');
-var Home = require('./Home');
-var Play = require('./Play');
-var Stats = require('./Stats');
-var Wrapper = require('./Wrapper');
-var PageNotFound = require('./PageNotFound');
-
-var Router = ReactRouter.Router;
-var Route = ReactRouter.Route;
-var browserHistory = ReactRouter.browserHistory;
-
-module.exports.route = function () {
-  return React.createElement(
-    Router,
-    { history: browserHistory },
-    React.createElement(
-      Route,
-      { component: Wrapper },
-      React.createElement(Route, { path: Pager.Paths.HOME, component: Home }),
-      React.createElement(Route, { path: Pager.Paths.PLAY + "/:gid", component: Play }),
-      React.createElement(Route, { path: Pager.Paths.STAT + "/:gid", component: Stats }),
-      React.createElement(Route, { path: '/*', component: PageNotFound })
-    )
-  );
-};
-
-},{"./Home":238,"./PageNotFound":242,"./Pager":243,"./Play":245,"./Stats":248,"./Wrapper":252,"react":229,"react-router":198}],248:[function(require,module,exports){
+},{"../helpers/Ajax":233,"../helpers/StoredGameData":236,"./Modal":243,"./PathDisplay":247,"./TextInput":251,"react":229}],250:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -26435,7 +26470,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var React = require('react');
-var StoredGameData = require('./StoredGameData');
+var StoredGameData = require('../helpers/StoredGameData');
 var PostGame = require('./PostGame');
 var GameData = require('./GameData');
 
@@ -26484,34 +26519,7 @@ var Stats = function (_React$Component) {
 
 module.exports = Stats;
 
-},{"./GameData":235,"./PostGame":246,"./StoredGameData":249,"react":229}],249:[function(require,module,exports){
-"use strict";
-
-var gameData = { "gid": "",
-	"path": [],
-	"time": 0 };
-
-module.exports.storeGameData = function (gid, path, time) {
-	gameData.gid = gid;
-	gameData.path = path;
-	gameData.time = time;
-};
-
-module.exports.isDataStoredForGame = function (gid) {
-	return gameData.gid == gid;
-};
-
-module.exports.clear = function () {
-	gameData.gid = '';
-	gameData.path = [];
-	gameData.time = 0;
-};
-
-module.exports.getGameData = function () {
-	return gameData;
-};
-
-},{}],250:[function(require,module,exports){
+},{"../helpers/StoredGameData":236,"./GameData":240,"./PostGame":249,"react":229}],251:[function(require,module,exports){
 "use strict";
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -26588,7 +26596,7 @@ var TextInput = function (_React$Component) {
 
 module.exports = TextInput;
 
-},{"react":229}],251:[function(require,module,exports){
+},{"react":229}],252:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -26664,7 +26672,7 @@ var Timer = function (_React$Component) {
 
 module.exports = Timer;
 
-},{"react":229}],252:[function(require,module,exports){
+},{"react":229}],253:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -26775,17 +26783,7 @@ var Wrapper = function (_React$Component) {
 
 module.exports = Wrapper;
 
-},{"react":229,"react-router":198}],253:[function(require,module,exports){
-'use strict';
-
-var ReactDOM = require('react-dom');
-var React = require('react');
-
-var Router = require('./Router.jsx');
-
-ReactDOM.render(Router.route(), document.getElementById('app'));
-
-},{"./Router.jsx":247,"react":229,"react-dom":45}],254:[function(require,module,exports){
+},{"react":229,"react-router":198}],254:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -26967,4 +26965,4 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}]},{},[253]);
+},{}]},{},[237]);
