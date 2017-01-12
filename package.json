@@ -11,9 +11,7 @@
     "babel-core": "^6.21.0",
     "babel-preset-es2015": "^6.18.0",
     "babel-preset-react": "^6.16.0",
-    "babelify": "^7.3.0",
     "body-parser": "latest",
-    "browserfy": "^1.0.0",
     "ejs": "^2.5.5",
     "express": "latest",
     "mongodb": "latest",
@@ -26,5 +24,9 @@
     "sendgrid": "^4.7.1"
   },
   "license": "MIT",
-  "private": true
+  "private": true,
+  "devDependencies": {
+    "babelify": "^7.3.0",
+    "browserify": "^13.3.0"
+  }
 }
