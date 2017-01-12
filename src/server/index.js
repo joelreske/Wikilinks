@@ -1,14 +1,18 @@
-var express = require('express');
-var app = express();
-var bodyParser = require('body-parser');
+var express        = require('express');
+var app            = express();
+var bodyParser     = require('body-parser');
+var path           = require('path');
 
-var db = require("./internal_modules/dbhelper.js");
-var wikilinks = require("./internal_modules/wikilinks.js");
-var emailshare = require("./internal_modules/emailshare.js");
+var db             = require("./internal_modules/dbhelper");
+var wikilinks      = require("./internal_modules/wikilinks");
+var emailshare     = require("./internal_modules/emailshare");
+
+var dir = path.resolve(".");
+console.log(dir);
 
 app.set('port', (process.env.PORT || 5000));
 
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(dir + '/public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
@@ -214,7 +218,7 @@ app.post('/api/share', function(request, response) {
 });
 
 app.get('/*', function(request, response) {
-    response.sendFile(__dirname + '/pages/index.html');
+    response.sendFile(dir + '/pages/index.html');
 });
 
 // app.get('/api/getShortestPath', function(request, response) {
@@ -245,8 +249,6 @@ function createDataForChart(data) {
         	metaString = "<b>"+item.username + "</b></br>" + item.pathLength + " articles</br>" + item.time +" seconds";
         	series[0].push({x: parseFloat(item.time), y: item.pathLength, meta: metaString});
         }
-
-        
     }
 
     return {

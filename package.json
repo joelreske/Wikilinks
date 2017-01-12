@@ -2,12 +2,9 @@
   "name": "WikiLinks",
   "version": "0.0.1",
   "description": "backend for WikiLinks app",
-  "engines": {
-    "node": "5.9.1"
-  },
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node src/server/index.js",
     "build": "browserify --extension=.jsx -t [ babelify --presets [ react ] ] src/index.js -o public/build/app.js"
   },
   "dependencies": {
