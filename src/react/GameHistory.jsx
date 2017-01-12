@@ -7,6 +7,16 @@ class GameHistory extends React.Component {
         super(props);
         this.onReplayButtonClicked = this.onReplayButtonClicked.bind(this);
         this.onViewStatsButtonClicked = this.onViewStatsButtonClicked.bind(this);
+
+        this.state = {
+            gameHistory: []
+        }
+    }
+
+    componentDidMount() {
+        this.setState({
+            gameHistory: GameStore.getAllStoredGames()
+        });
     }
 
     onReplayButtonClicked(gid) {
@@ -19,11 +29,10 @@ class GameHistory extends React.Component {
 
     render() {
         var self = this;
-        var gameHistory = GameStore.getAllStoredGames();
 
-        if (gameHistory.length > 0) {
+        if (this.state.gameHistory.length > 0) {
             var games = [];
-            for (var i = 0; i < gameHistory.length; i++) {
+            for (var i = 0; i < this.state.gameHistory.length; i++) {
                 (function(gid, start, end) {
                     games.push(
                         <div key={i + "historyGame"} className="historyGame">
@@ -34,7 +43,7 @@ class GameHistory extends React.Component {
                             </span>
                         </div>
                     );
-                })(gameHistory[i].gid, gameHistory[i].start, gameHistory[i].end);
+                })(this.state.gameHistory[i].gid, this.state.gameHistory[i].start, this.state.gameHistory[i].end);
             }
 
             return (

@@ -8,11 +8,12 @@
     "build": "browserify --extension=.jsx -t [ babelify --presets [ react es2015 ] ] src/react/index.jsx -o public/build/app.js"
   },
   "dependencies": {
+    "babel-core": "^6.21.0",
     "babel-preset-react": "^6.16.0",
     "babelify": "^7.3.0",
     "body-parser": "latest",
     "browserfy": "^1.0.0",
-    "ejs": "latest",
+    "ejs": "^2.5.5",
     "express": "latest",
     "mongodb": "latest",
     "node-wikipedia": "latest",
