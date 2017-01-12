@@ -44,7 +44,7 @@ function writeContent(userName, friendName, email, startPage, endPage, gameLink)
 					<a href="${gameLink}" style="margin: auto 0;">${gameLink}</a>
 					<p></p>
 					<p>Good Luck!</p>
-					<p style="border-top: 1px solid black">Sent via <a href="http://wikilinks.herokuapp.com" style="color: rgb(0, 0, 179)">wikilinks.herokuapp.com</a></p>
+					<p style="border-top: 1px solid black">Sent via <a href="http://wikilinks.io" style="color: rgb(0, 0, 179)">wikilinks.io</a></p>
 				</div>
 			</body>
 			</html>`;

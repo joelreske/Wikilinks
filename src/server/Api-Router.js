@@ -166,7 +166,7 @@ router.post('/share', function(request, response) {
             if (valid) {
                 db.getGameData(gid, function(data) {
                     if (data) {
-                        emailshare.share(userName, friendName, email, data.start, data.end, request.protocol + "://" + request.hostname + "/?gid=" + gid, function(success) {
+                        emailshare.share(userName, friendName, email, data.start, data.end, request.protocol + "://" + request.hostname + "/play/" + gid, function(success) {
                             if (success) {
                                 response.sendStatus(200);
                             } else {
