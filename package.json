@@ -3,6 +3,9 @@
   "version": "0.0.1",
   "description": "backend for WikiLinks app",
   "main": "index.js",
+  "engines": {
+    "node": "6.9.1"
+  },
   "scripts": {
     "start": "node src/server/index.js",
     "build": "browserify --extension=.jsx -t [ babelify --presets [ react es2015 ] ] src/react/index.jsx -o public/build/app.js"
