@@ -24974,6 +24974,8 @@ module.exports = warning;
 
 }).call(this,require('_process'))
 },{"_process":252}],232:[function(require,module,exports){
+"use strict";
+
 module.exports.run = function (method, url, data, parse, callback) {
     var xhr = new XMLHttpRequest();
 
@@ -25016,173 +25018,236 @@ module.exports.run = function (method, url, data, parse, callback) {
 };
 
 },{}],233:[function(require,module,exports){
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 var React = require('react');
 var TextInput = require('./TextInput');
 var Ajax = require('./Ajax');
 
-class ArticleSelect extends React.Component {
-    constructor(props) {
-        super(props);
+var ArticleSelect = function (_React$Component) {
+    _inherits(ArticleSelect, _React$Component);
 
-        this.state = {
+    function ArticleSelect(props) {
+        _classCallCheck(this, ArticleSelect);
+
+        var _this = _possibleConstructorReturn(this, (ArticleSelect.__proto__ || Object.getPrototypeOf(ArticleSelect)).call(this, props));
+
+        _this.state = {
             history: [],
             searchString: ""
         };
 
-        this.showLinks = this.showLinks.bind(this);
-        this.search = this.search.bind(this);
+        _this.showLinks = _this.showLinks.bind(_this);
+        _this.search = _this.search.bind(_this);
+        return _this;
     }
 
-    componentWillMount() {
-        this.nextPage(this.props.start);
+    _createClass(ArticleSelect, [{
+        key: 'componentWillMount',
+        value: function componentWillMount() {
+            this.nextPage(this.props.start);
 
-        window.addEventListener("keydown", function (e) {
-            if ((e.ctrlKey || e.metaKey) && e.keyCode === 70) {
-                e.preventDefault();
-                document.getElementById("search").focus();
-            }
-        });
-    }
-
-    nextPage(page) {
-        this.state.history.push(page);
-
-        if (page == this.props.end) {
-            this.props.onWin(this.state.history);
-        } else {
-            Ajax.run("GET", "/api/getLinksForPage", {
-                "page": page
-            }, true, this.showLinks);
-        }
-    }
-
-    showLinks(data, error) {
-        this.refs.search.setVal("");
-
-        this.setState({
-            article: data,
-            searchString: ""
-        });
-    }
-
-    search(text) {
-        this.setState({
-            searchString: text
-        });
-    }
-
-    render() {
-        var data = this.state.article;
-        var searchString = this.state.searchString;
-
-        var links = [];
-
-        for (var i in data) {
-            (function (i, obj) {
-                var articleName = data[i];
-                var searchRegex;
-                if (searchString.length < 2) {
-                    searchRegex = new RegExp("^" + searchString + ".*", "i");
-                } else {
-                    searchRegex = new RegExp("" + searchString + "", "i");
+            window.addEventListener("keydown", function (e) {
+                if ((e.ctrlKey || e.metaKey) && e.keyCode === 70) {
+                    e.preventDefault();
+                    document.getElementById("search").focus();
                 }
+            });
+        }
+    }, {
+        key: 'nextPage',
+        value: function nextPage(page) {
+            this.state.history.push(page);
 
-                if (searchRegex.test(articleName) || articleName == obj.props.end) {
-                    if (articleName == obj.props.end) {
-                        var btn = React.createElement(
-                            'button',
-                            { key: i, className: 'winlinkbtn', onClick: () => obj.nextPage(articleName) },
-                            articleName
-                        );
+            if (page == this.props.end) {
+                this.props.onWin(this.state.history);
+            } else {
+                Ajax.run("GET", "/api/getLinksForPage", {
+                    "page": page
+                }, true, this.showLinks);
+            }
+        }
+    }, {
+        key: 'showLinks',
+        value: function showLinks(data, error) {
+            this.refs.search.setVal("");
+
+            this.setState({
+                article: data,
+                searchString: ""
+            });
+        }
+    }, {
+        key: 'search',
+        value: function search(text) {
+            this.setState({
+                searchString: text
+            });
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            var data = this.state.article;
+            var searchString = this.state.searchString;
+
+            var links = [];
+
+            for (var i in data) {
+                (function (i, obj) {
+                    var articleName = data[i];
+                    var searchRegex;
+                    if (searchString.length < 2) {
+                        searchRegex = new RegExp("^" + searchString + ".*", "i");
                     } else {
-                        var btn = React.createElement(
-                            'button',
-                            { key: i, onClick: () => obj.nextPage(articleName) },
-                            articleName
-                        );
+                        searchRegex = new RegExp("" + searchString + "", "i");
                     }
 
-                    links.push(btn);
-                }
-            })(i, this);
-        }
-        // <PathDisplay path={this.state.history}/>
-        return React.createElement(
-            'div',
-            null,
-            React.createElement(
-                'h2',
-                null,
-                'You are on ',
-                React.createElement(
-                    'b',
-                    null,
-                    this.state.history[this.state.history.length - 1]
-                )
-            ),
-            React.createElement(TextInput, { id: 'search', focus: true, placeholder: 'Search', onTextChange: this.search, ref: 'search' }),
-            React.createElement(
+                    if (searchRegex.test(articleName) || articleName == obj.props.end) {
+                        if (articleName == obj.props.end) {
+                            var btn = React.createElement(
+                                'button',
+                                { key: i, className: 'winlinkbtn', onClick: function onClick() {
+                                        return obj.nextPage(articleName);
+                                    } },
+                                articleName
+                            );
+                        } else {
+                            var btn = React.createElement(
+                                'button',
+                                { key: i, onClick: function onClick() {
+                                        return obj.nextPage(articleName);
+                                    } },
+                                articleName
+                            );
+                        }
+
+                        links.push(btn);
+                    }
+                })(i, this);
+            }
+            // <PathDisplay path={this.state.history}/>
+            return React.createElement(
                 'div',
                 null,
-                links
-            )
-        );
-    }
-}
+                React.createElement(
+                    'h2',
+                    null,
+                    'You are on ',
+                    React.createElement(
+                        'b',
+                        null,
+                        this.state.history[this.state.history.length - 1]
+                    )
+                ),
+                React.createElement(TextInput, { id: 'search', focus: true, placeholder: 'Search', onTextChange: this.search, ref: 'search' }),
+                React.createElement(
+                    'div',
+                    null,
+                    links
+                )
+            );
+        }
+    }]);
+
+    return ArticleSelect;
+}(React.Component);
 
 module.exports = ArticleSelect;
 
 },{"./Ajax":232,"./TextInput":248,"react":229}],234:[function(require,module,exports){
+"use strict";
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 var React = require('react');
 
-class CircularCountdownTimer extends React.Component {
-    constructor(props) {
-        super(props);
-        this.initialOffset = 440;
-        this.time = 3;
-        this.i = 0;
+var CircularCountdownTimer = function (_React$Component) {
+    _inherits(CircularCountdownTimer, _React$Component);
 
-        this.tick = this.tick.bind(this);
+    function CircularCountdownTimer(props) {
+        _classCallCheck(this, CircularCountdownTimer);
+
+        var _this = _possibleConstructorReturn(this, (CircularCountdownTimer.__proto__ || Object.getPrototypeOf(CircularCountdownTimer)).call(this, props));
+
+        _this.initialOffset = 440;
+        _this.time = 3;
+        _this.i = 0;
+
+        _this.tick = _this.tick.bind(_this);
+        return _this;
     }
 
-    componentDidMount() {
-        this.circle.style.strokeDashoffset = this.initialOffset;
-        this.timer = setInterval(this.tick, 1000);
-    }
-
-    tick() {
-        if (this.i == this.time) {
-            this.header.innerHTML = "GO";
-            clearInterval(this.timer);
-            this.props.countdownDoneCallback();
-        } else {
-            this.header.innerHTML = this.time - this.i;
-            this.circle.style.strokeDashoffset = this.initialOffset - (this.i + 1) * (this.initialOffset / this.time);
-            this.i++;
+    _createClass(CircularCountdownTimer, [{
+        key: "componentDidMount",
+        value: function componentDidMount() {
+            this.circle.style.strokeDashoffset = this.initialOffset;
+            this.timer = setInterval(this.tick, 1000);
         }
-    }
+    }, {
+        key: "tick",
+        value: function tick() {
+            if (this.i == this.time) {
+                this.header.innerHTML = "GO";
+                clearInterval(this.timer);
+                this.props.countdownDoneCallback();
+            } else {
+                this.header.innerHTML = this.time - this.i;
+                this.circle.style.strokeDashoffset = this.initialOffset - (this.i + 1) * (this.initialOffset / this.time);
+                this.i++;
+            }
+        }
+    }, {
+        key: "render",
+        value: function render() {
+            var _this2 = this;
 
-    render() {
-        return React.createElement(
-            "div",
-            { id: "CircularCountdownTimer" },
-            React.createElement("h2", { ref: elm => {
-                    this.header = elm;
-                } }),
-            React.createElement(
-                "svg",
-                { width: "160", height: "160", xmlns: "http://www.w3.org/2000/svg" },
-                React.createElement("circle", { id: "circle_animation", r: "69.85699", cy: "81", cx: "81", align: "center", ref: elm => {
-                        this.circle = elm;
-                    } })
-            )
-        );
-    }
-}
+            return React.createElement(
+                "div",
+                { id: "CircularCountdownTimer" },
+                React.createElement("h2", { ref: function ref(elm) {
+                        _this2.header = elm;
+                    } }),
+                React.createElement(
+                    "svg",
+                    { width: "160", height: "160", xmlns: "http://www.w3.org/2000/svg" },
+                    React.createElement("circle", { id: "circle_animation", r: "69.85699", cy: "81", cx: "81", align: "center", ref: function ref(elm) {
+                            _this2.circle = elm;
+                        } })
+                )
+            );
+        }
+    }]);
+
+    return CircularCountdownTimer;
+}(React.Component);
 
 module.exports = CircularCountdownTimer;
 
 },{"react":229}],235:[function(require,module,exports){
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 var React = require('react');
 var Modal = require('./Modal');
 var TextInput = require('./TextInput');
@@ -25194,314 +25259,359 @@ function htmlDecode(input) {
     return doc.documentElement.textContent;
 }
 
-class GameData extends React.Component {
-    constructor(props) {
-        super(props);
+var GameData = function (_React$Component) {
+    _inherits(GameData, _React$Component);
 
-        this.state = {
+    function GameData(props) {
+        _classCallCheck(this, GameData);
+
+        var _this = _possibleConstructorReturn(this, (GameData.__proto__ || Object.getPrototypeOf(GameData)).call(this, props));
+
+        _this.state = {
             showShare: false,
             start: "",
             end: ""
         };
 
-        this.playAgain = this.playAgain.bind(this);
-        this.share = this.share.bind(this);
-        this.shareClose = this.shareClose.bind(this);
-        this.getChartData = this.getChartData.bind(this);
-        this.playNewGame = this.playNewGame.bind(this);
-        this.dataDidLoad = this.dataDidLoad.bind(this);
-        this.selectLink = this.selectLink.bind(this);
+        _this.playAgain = _this.playAgain.bind(_this);
+        _this.share = _this.share.bind(_this);
+        _this.shareClose = _this.shareClose.bind(_this);
+        _this.getChartData = _this.getChartData.bind(_this);
+        _this.playNewGame = _this.playNewGame.bind(_this);
+        _this.dataDidLoad = _this.dataDidLoad.bind(_this);
+        _this.selectLink = _this.selectLink.bind(_this);
 
-        var self = this;
+        var self = _this;
         Ajax.run("GET", "/api/getGameData", {
-            "gid": this.props.gid
+            "gid": _this.props.gid
         }, true, function (data, error) {
             self.setState({
                 start: data.start,
                 end: data.end
             });
         });
+        return _this;
     }
 
-    componentDidMount() {
-        var self = this;
-        window.onresize = this.getChartData;
+    _createClass(GameData, [{
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            var self = this;
+            window.onresize = this.getChartData;
 
-        self.getChartData();
-        setInterval(self.getChartData, 2000);
-    }
+            self.getChartData();
+            setInterval(self.getChartData, 2000);
+        }
+    }, {
+        key: 'getChartData',
+        value: function getChartData() {
+            Ajax.run("GET", "/api/getGameResults", {
+                "gid": this.props.gid
+            }, true, this.dataDidLoad);
+        }
+    }, {
+        key: 'dataDidLoad',
+        value: function dataDidLoad(data, error) {
+            console.log(data);
 
-    getChartData() {
-        Ajax.run("GET", "/api/getGameResults", {
-            "gid": this.props.gid
-        }, true, this.dataDidLoad);
-    }
-
-    dataDidLoad(data, error) {
-        console.log(data);
-
-        var options = {
-            showLine: false,
-            axisX: {
-                type: Chartist.AutoScaleAxis,
-                onlyInteger: true
-            },
-            axisY: {
-                type: Chartist.AutoScaleAxis,
-                onlyInteger: true
-            },
-            chartPadding: {
-                top: 50,
-                right: 50,
-                bottom: 70,
-                left: 0
-            },
-            width: "1080px",
-            height: "512px",
-            plugins: [Chartist.plugins.tooltip({
-                tooltipFnc: function (meta, dat) {
-                    var metaDecoded = htmlDecode(meta);
-                    return metaDecoded;
-                }
-            }), Chartist.plugins.ctAxisTitle({
+            var options = {
+                showLine: false,
                 axisX: {
-                    axisTitle: 'Time (seconds)',
-                    axisClass: 'ct-axis-title',
-                    offset: {
-                        x: -5,
-                        y: 50
-                    },
-                    textAnchor: 'middle'
+                    type: Chartist.AutoScaleAxis,
+                    onlyInteger: true
                 },
                 axisY: {
-                    axisTitle: 'Articles Visited',
-                    axisClass: 'ct-axis-title',
-                    offset: {
-                        x: 0,
-                        y: -1
+                    type: Chartist.AutoScaleAxis,
+                    onlyInteger: true
+                },
+                chartPadding: {
+                    top: 50,
+                    right: 50,
+                    bottom: 70,
+                    left: 0
+                },
+                width: "1080px",
+                height: "512px",
+                plugins: [Chartist.plugins.tooltip({
+                    tooltipFnc: function tooltipFnc(meta, dat) {
+                        var metaDecoded = htmlDecode(meta);
+                        return metaDecoded;
+                    }
+                }), Chartist.plugins.ctAxisTitle({
+                    axisX: {
+                        axisTitle: 'Time (seconds)',
+                        axisClass: 'ct-axis-title',
+                        offset: {
+                            x: -5,
+                            y: 50
+                        },
+                        textAnchor: 'middle'
                     },
-                    flipTitle: true
-                }
-            })]
-        };
+                    axisY: {
+                        axisTitle: 'Articles Visited',
+                        axisClass: 'ct-axis-title',
+                        offset: {
+                            x: 0,
+                            y: -1
+                        },
+                        flipTitle: true
+                    }
+                })]
+            };
 
-        // Create a new line chart object where as first parameter we pass in a selector
-        // that is resolving to our chart container element. The Second parameter
-        // is the actual data object.
-        new Chartist.Line('.ct-chart', data, options);
-    }
-
-    playAgain() {
-        Pager.goToPath(Pager.Paths.PLAY, this.props.gid);
-    }
-
-    playNewGame() {
-        Pager.goToPath(Pager.Paths.HOME);
-    }
-
-    shareClose() {
-        this.setState({
-            showShare: false
-        });
-    }
-
-    share() {
-        var emailRegex = /^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i;
-        var email = this.refs.email.val();
-        var name = this.refs.name.val();
-        var friendName = this.refs.friendName.val();
-
-        if (name == "" || email == "" || friendName == "") {
-            window.alert("All fields must be set");
-        } else if (!emailRegex.test(email)) {
-            window.alert("Invalid email");
-        } else {
-            var ajaxStatus = this.refs.img;
-            ajaxStatus.style.height = "30px";
-            ajaxStatus.style.width = "30px";
-            ajaxStatus.src = "/images/spinner.gif";
-
-            var emailInput = this.refs.email;
-            var friendNameInput = this.refs.friendName;
-
-            Ajax.run("POST", "/api/share", {
-                'userName': name,
-                'friendName': friendName,
-                'email': email,
-                'gid': this.props.gid
-            }, false, function (data, status) {
-                ajaxStatus.src = "/images/checkmark.png";
-                emailInput.value = "";
-                friendNameInput.value = "";
+            // Create a new line chart object where as first parameter we pass in a selector
+            // that is resolving to our chart container element. The Second parameter
+            // is the actual data object.
+            new Chartist.Line('.ct-chart', data, options);
+        }
+    }, {
+        key: 'playAgain',
+        value: function playAgain() {
+            Pager.goToPath(Pager.Paths.PLAY, this.props.gid);
+        }
+    }, {
+        key: 'playNewGame',
+        value: function playNewGame() {
+            Pager.goToPath(Pager.Paths.HOME);
+        }
+    }, {
+        key: 'shareClose',
+        value: function shareClose() {
+            this.setState({
+                showShare: false
             });
         }
-    }
+    }, {
+        key: 'share',
+        value: function share() {
+            var emailRegex = /^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i;
+            var email = this.refs.email.val();
+            var name = this.refs.name.val();
+            var friendName = this.refs.friendName.val();
 
-    selectLink() {
-        this.refs.link.select();
-    }
+            if (name == "" || email == "" || friendName == "") {
+                window.alert("All fields must be set");
+            } else if (!emailRegex.test(email)) {
+                window.alert("Invalid email");
+            } else {
+                var ajaxStatus = this.refs.img;
+                ajaxStatus.style.height = "30px";
+                ajaxStatus.style.width = "30px";
+                ajaxStatus.src = "/images/spinner.gif";
 
-    render() {
-        var path = "";
-        if (this.state.start && this.state.end) {
-            path = React.createElement(
-                'h2',
-                { style: { fontFamily: "'Lora', serif" } },
-                React.createElement(
-                    'b',
-                    null,
-                    this.state.start
-                ),
-                ' to ',
-                React.createElement(
-                    'b',
-                    null,
-                    this.state.end
-                )
-            );
+                var emailInput = this.refs.email;
+                var friendNameInput = this.refs.friendName;
+
+                Ajax.run("POST", "/api/share", {
+                    'userName': name,
+                    'friendName': friendName,
+                    'email': email,
+                    'gid': this.props.gid
+                }, false, function (data, status) {
+                    ajaxStatus.src = "/images/checkmark.png";
+                    emailInput.value = "";
+                    friendNameInput.value = "";
+                });
+            }
         }
-        return React.createElement(
-            'div',
-            { id: 'GameData' },
-            React.createElement(
-                'h1',
-                null,
-                'Game Results'
-            ),
-            path,
-            React.createElement('div', { className: 'ct-chart' }),
-            React.createElement(
-                'span',
-                { className: 'buttonContainer' },
-                React.createElement(
-                    'button',
-                    { onClick: () => {
-                            this.setState({ showShare: true });
-                        } },
-                    'Share'
-                ),
-                React.createElement(
-                    'button',
-                    { onClick: this.playNewGame },
-                    'New Game'
-                ),
-                React.createElement(
-                    'button',
-                    { onClick: this.playAgain },
-                    'Replay'
-                )
-            ),
-            React.createElement(
-                Modal,
-                { id: 'sharePopup', show: this.state.showShare, onHide: this.shareClose },
-                React.createElement(
+    }, {
+        key: 'selectLink',
+        value: function selectLink() {
+            this.refs.link.select();
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            var _this2 = this;
+
+            var path = "";
+            if (this.state.start && this.state.end) {
+                path = React.createElement(
                     'h2',
-                    null,
-                    'Share by email'
-                ),
-                React.createElement(TextInput, { id: 'name', placeholder: 'Your Name', ref: 'name' }),
-                React.createElement(TextInput, { id: 'friendName', placeholder: 'Friend\'s Name', ref: 'friendName' }),
-                React.createElement(TextInput, { id: 'email', placeholder: 'Their Email', ref: 'email' }),
+                    { style: { fontFamily: "'Lora', serif" } },
+                    React.createElement(
+                        'b',
+                        null,
+                        this.state.start
+                    ),
+                    ' to ',
+                    React.createElement(
+                        'b',
+                        null,
+                        this.state.end
+                    )
+                );
+            }
+            return React.createElement(
+                'div',
+                { id: 'GameData' },
                 React.createElement(
-                    'div',
-                    { id: 'sendContainer' },
+                    'h1',
+                    null,
+                    'Game Results'
+                ),
+                path,
+                React.createElement('div', { className: 'ct-chart' }),
+                React.createElement(
+                    'span',
+                    { className: 'buttonContainer' },
                     React.createElement(
                         'button',
-                        { id: 'sendEmail', onClick: this.share },
-                        'Send'
+                        { onClick: function onClick() {
+                                _this2.setState({ showShare: true });
+                            } },
+                        'Share'
                     ),
-                    React.createElement('img', { className: 'ajax-status', ref: 'img' })
+                    React.createElement(
+                        'button',
+                        { onClick: this.playNewGame },
+                        'New Game'
+                    ),
+                    React.createElement(
+                        'button',
+                        { onClick: this.playAgain },
+                        'Replay'
+                    )
                 ),
                 React.createElement(
-                    'div',
-                    { id: 'sendLinkContainer' },
+                    Modal,
+                    { id: 'sharePopup', show: this.state.showShare, onHide: this.shareClose },
                     React.createElement(
                         'h2',
                         null,
-                        'Or send a link'
+                        'Share by email'
                     ),
-                    React.createElement(TextInput, { ref: 'link', value: window.location.href, onFocus: this.selectLink })
+                    React.createElement(TextInput, { id: 'name', placeholder: 'Your Name', ref: 'name' }),
+                    React.createElement(TextInput, { id: 'friendName', placeholder: 'Friend\'s Name', ref: 'friendName' }),
+                    React.createElement(TextInput, { id: 'email', placeholder: 'Their Email', ref: 'email' }),
+                    React.createElement(
+                        'div',
+                        { id: 'sendContainer' },
+                        React.createElement(
+                            'button',
+                            { id: 'sendEmail', onClick: this.share },
+                            'Send'
+                        ),
+                        React.createElement('img', { className: 'ajax-status', ref: 'img' })
+                    ),
+                    React.createElement(
+                        'div',
+                        { id: 'sendLinkContainer' },
+                        React.createElement(
+                            'h2',
+                            null,
+                            'Or send a link'
+                        ),
+                        React.createElement(TextInput, { ref: 'link', value: window.location.href, onFocus: this.selectLink })
+                    )
                 )
-            )
-        );
-    }
-}
+            );
+        }
+    }]);
+
+    return GameData;
+}(React.Component);
 
 module.exports = GameData;
 
 },{"./Ajax":232,"./Modal":239,"./Pager":242,"./TextInput":248,"react":229}],236:[function(require,module,exports){
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 var React = require('react');
 var PathDisplay = require('./PathDisplay');
 var GameStore = require('./GameStore');
 
-class GameHistory extends React.Component {
-    constructor(props) {
-        super(props);
-        this.onReplayButtonClicked = this.onReplayButtonClicked.bind(this);
-        this.onViewStatsButtonClicked = this.onViewStatsButtonClicked.bind(this);
+var GameHistory = function (_React$Component) {
+    _inherits(GameHistory, _React$Component);
+
+    function GameHistory(props) {
+        _classCallCheck(this, GameHistory);
+
+        var _this = _possibleConstructorReturn(this, (GameHistory.__proto__ || Object.getPrototypeOf(GameHistory)).call(this, props));
+
+        _this.onReplayButtonClicked = _this.onReplayButtonClicked.bind(_this);
+        _this.onViewStatsButtonClicked = _this.onViewStatsButtonClicked.bind(_this);
+        return _this;
     }
 
-    onReplayButtonClicked(gid) {
-        this.props.onReplay(gid);
-    }
-
-    onViewStatsButtonClicked(gid) {
-        this.props.onViewStats(gid);
-    }
-
-    render() {
-        var self = this;
-        var gameHistory = GameStore.getAllStoredGames();
-
-        if (gameHistory.length > 0) {
-            var games = [];
-            for (var i = 0; i < gameHistory.length; i++) {
-                (function (gid, start, end) {
-                    games.push(React.createElement(
-                        'div',
-                        { key: i + "historyGame", className: 'historyGame' },
-                        React.createElement(PathDisplay, { path: [start, end] }),
-                        React.createElement(
-                            'span',
-                            { className: 'options' },
-                            React.createElement(
-                                'a',
-                                { key: i + "replay", onClick: function () {
-                                        self.onReplayButtonClicked(gid);
-                                    } },
-                                'Replay'
-                            ),
-                            React.createElement(
-                                'a',
-                                { key: i + "stats", onClick: function () {
-                                        self.onViewStatsButtonClicked(gid);
-                                    } },
-                                'View Stats'
-                            )
-                        )
-                    ));
-                })(gameHistory[i].gid, gameHistory[i].start, gameHistory[i].end);
-            }
-
-            return React.createElement(
-                'div',
-                null,
-                React.createElement(
-                    'h3',
-                    null,
-                    'Choose from previous games'
-                ),
-                games
-            );
-        } else {
-            return React.createElement('div', null);
+    _createClass(GameHistory, [{
+        key: 'onReplayButtonClicked',
+        value: function onReplayButtonClicked(gid) {
+            this.props.onReplay(gid);
         }
-    }
-}
+    }, {
+        key: 'onViewStatsButtonClicked',
+        value: function onViewStatsButtonClicked(gid) {
+            this.props.onViewStats(gid);
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            var self = this;
+            var gameHistory = GameStore.getAllStoredGames();
+
+            if (gameHistory.length > 0) {
+                var games = [];
+                for (var i = 0; i < gameHistory.length; i++) {
+                    (function (gid, start, end) {
+                        games.push(React.createElement(
+                            'div',
+                            { key: i + "historyGame", className: 'historyGame' },
+                            React.createElement(PathDisplay, { path: [start, end] }),
+                            React.createElement(
+                                'span',
+                                { className: 'options' },
+                                React.createElement(
+                                    'a',
+                                    { key: i + "replay", onClick: function onClick() {
+                                            self.onReplayButtonClicked(gid);
+                                        } },
+                                    'Replay'
+                                ),
+                                React.createElement(
+                                    'a',
+                                    { key: i + "stats", onClick: function onClick() {
+                                            self.onViewStatsButtonClicked(gid);
+                                        } },
+                                    'View Stats'
+                                )
+                            )
+                        ));
+                    })(gameHistory[i].gid, gameHistory[i].start, gameHistory[i].end);
+                }
+
+                return React.createElement(
+                    'div',
+                    null,
+                    React.createElement(
+                        'h3',
+                        null,
+                        'Choose from previous games'
+                    ),
+                    games
+                );
+            } else {
+                return React.createElement('div', null);
+            }
+        }
+    }]);
+
+    return GameHistory;
+}(React.Component);
 
 module.exports = GameHistory;
 
 },{"./GameStore":237,"./PathDisplay":243,"react":229}],237:[function(require,module,exports){
+"use strict";
+
 module.exports.storeGame = function (gid, start, end) {
 	putGidOrder(gid);
 	putInStorage(gid, { "start": start, "end": end });
@@ -25555,250 +25665,345 @@ function getFromStorage(id) {
 }
 
 },{}],238:[function(require,module,exports){
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 var React = require('react');
 var NewGame = require('./NewGame');
 var GameHistory = require('./GameHistory');
 var Pager = require('./Pager');
 
-class Home extends React.Component {
-    constructor(props) {
-        super(props);
+var Home = function (_React$Component) {
+    _inherits(Home, _React$Component);
 
-        this.startGame = this.startGame.bind(this);
-        this.viewStats = this.viewStats.bind(this);
+    function Home(props) {
+        _classCallCheck(this, Home);
+
+        var _this = _possibleConstructorReturn(this, (Home.__proto__ || Object.getPrototypeOf(Home)).call(this, props));
+
+        _this.startGame = _this.startGame.bind(_this);
+        _this.viewStats = _this.viewStats.bind(_this);
+        return _this;
     }
 
-    startGame(gid) {
-        Pager.goToPath(Pager.Paths.PLAY, gid);
-    }
+    _createClass(Home, [{
+        key: 'startGame',
+        value: function startGame(gid) {
+            Pager.goToPath(Pager.Paths.PLAY, gid);
+        }
+    }, {
+        key: 'viewStats',
+        value: function viewStats(gid) {
+            Pager.goToPath(Pager.Paths.STAT, gid);
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            return React.createElement(
+                'div',
+                null,
+                React.createElement(
+                    'p',
+                    { id: 'welcome' },
+                    'Welcome to WikiLinks, the 6 degrees of Wikipedia game. Get from a start page to an end page by navigating each article\u2019s links. Try "Apple" to "Ray Charles" or "Tufts" to "Banana" to start!'
+                ),
+                React.createElement(NewGame, { onCreateGame: this.startGame }),
+                React.createElement(GameHistory, { onReplay: this.startGame, onViewStats: this.viewStats })
+            );
+        }
+    }]);
 
-    viewStats(gid) {
-        Pager.goToPath(Pager.Paths.STAT, gid);
-    }
-
-    render() {
-        return React.createElement(
-            'div',
-            null,
-            React.createElement(
-                'p',
-                { id: 'welcome' },
-                'Welcome to WikiLinks, the 6 degrees of Wikipedia game. Get from a start page to an end page by navigating each article\u2019s links. Try "Apple" to "Ray Charles" or "Tufts" to "Banana" to start!'
-            ),
-            React.createElement(NewGame, { onCreateGame: this.startGame }),
-            React.createElement(GameHistory, { onReplay: this.startGame, onViewStats: this.viewStats })
-        );
-    }
-}
+    return Home;
+}(React.Component);
 
 module.exports = Home;
 
 },{"./GameHistory":236,"./NewGame":240,"./Pager":242,"react":229}],239:[function(require,module,exports){
+"use strict";
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 var React = require('react');
 
-class Modal extends React.Component {
-    constructor(props) {
-        super(props);
-        if (this.props.id == null) {
-            this.id = "";
+var Modal = function (_React$Component) {
+    _inherits(Modal, _React$Component);
+
+    function Modal(props) {
+        _classCallCheck(this, Modal);
+
+        var _this = _possibleConstructorReturn(this, (Modal.__proto__ || Object.getPrototypeOf(Modal)).call(this, props));
+
+        if (_this.props.id == null) {
+            _this.id = "";
         } else {
-            this.id = this.props.id;
+            _this.id = _this.props.id;
         }
 
-        this.close = this.close.bind(this);
+        _this.close = _this.close.bind(_this);
+        return _this;
     }
 
-    close() {
-        this.props.onHide();
-    }
-
-    render() {
-        if (!this.props.show) {
-            return React.createElement("div", null);
+    _createClass(Modal, [{
+        key: "close",
+        value: function close() {
+            this.props.onHide();
         }
+    }, {
+        key: "render",
+        value: function render() {
+            if (!this.props.show) {
+                return React.createElement("div", null);
+            }
 
-        return React.createElement(
-            "div",
-            { id: this.id },
-            React.createElement("div", { className: "modal-background", onClick: this.close }),
-            React.createElement(
+            return React.createElement(
                 "div",
-                { className: "modal-foreground" },
+                { id: this.id },
+                React.createElement("div", { className: "modal-background", onClick: this.close }),
                 React.createElement(
                     "div",
-                    { className: "modal-content" },
-                    this.props.children
-                ),
-                React.createElement(
-                    "div",
-                    { className: "close" },
+                    { className: "modal-foreground" },
                     React.createElement(
-                        "button",
-                        { onClick: this.close },
-                        "Close"
+                        "div",
+                        { className: "modal-content" },
+                        this.props.children
+                    ),
+                    React.createElement(
+                        "div",
+                        { className: "close" },
+                        React.createElement(
+                            "button",
+                            { onClick: this.close },
+                            "Close"
+                        )
                     )
                 )
-            )
-        );
-    }
-}
+            );
+        }
+    }]);
+
+    return Modal;
+}(React.Component);
 
 module.exports = Modal;
 
 },{"react":229}],240:[function(require,module,exports){
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 var React = require('react');
 var NewGamePageForm = require('./NewGamePageForm');
 var Ajax = require('./Ajax');
 
-class NewGame extends React.Component {
-    constructor(props) {
-        super(props);
-        this.checkPages = this.checkPages.bind(this);
-        this.startGame = this.startGame.bind(this);
+var NewGame = function (_React$Component) {
+    _inherits(NewGame, _React$Component);
+
+    function NewGame(props) {
+        _classCallCheck(this, NewGame);
+
+        var _this = _possibleConstructorReturn(this, (NewGame.__proto__ || Object.getPrototypeOf(NewGame)).call(this, props));
+
+        _this.checkPages = _this.checkPages.bind(_this);
+        _this.startGame = _this.startGame.bind(_this);
+        return _this;
     }
 
-    componentDidMount() {
-        var self = this;
+    _createClass(NewGame, [{
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            var self = this;
 
-        this.refs.newGameContainer.addEventListener('keypress', function (e) {
-            var key = e.which || e.keyCode;
-            if (key === 13) {
-                e.preventDefault();
-                self.startGame();
-                return false;
-            }
-        });
-    }
-
-    render() {
-        return React.createElement(
-            'section',
-            { id: 'newGameContainer', ref: 'newGameContainer' },
-            React.createElement(
-                'div',
-                null,
-                React.createElement(NewGamePageForm, { id: 'startPage', label: 'Start Page', placeholder: 'Enter Start Page', ref: 'startInput' }),
-                React.createElement(NewGamePageForm, { id: 'endPage', label: 'End Page', placeholder: 'Enter End Page', ref: 'endInput' })
-            ),
-            React.createElement(
-                'button',
-                { id: 'startBtn', className: 'winlinkbtn', onClick: this.startGame },
-                'Start Game'
-            )
-        );
-    }
-
-    checkPages(callback) {
-        var startPage = this.refs.startInput.val();
-        var endPage = this.refs.endInput.val();
-
-        if (startPage == "") {
-            window.alert("Start is empty");
-        } else if (endPage == "") {
-            window.alert("End is empty");
-        } else if (startPage == endPage) {
-            window.alert("Start and end cannot be the same");
-        } else {
-            Ajax.run("GET", "/api/isWikipediaPage", {
-                page: startPage
-            }, true, function (data, error) {
-                if (!data.valid) {
-                    window.alert("Start is not a valid Wikipedia Page");
-                } else {
-                    Ajax.run("GET", "/api/isWikipediaPage", {
-                        page: endPage
-                    }, true, function (data, error) {
-                        if (!data.valid) {
-                            window.alert("End is not a valid Wikipedia Page");
-                        } else {
-                            callback(startPage, endPage);
-                        }
-                    });
+            this.refs.newGameContainer.addEventListener('keypress', function (e) {
+                var key = e.which || e.keyCode;
+                if (key === 13) {
+                    e.preventDefault();
+                    self.startGame();
+                    return false;
                 }
             });
         }
-    }
+    }, {
+        key: 'render',
+        value: function render() {
+            return React.createElement(
+                'section',
+                { id: 'newGameContainer', ref: 'newGameContainer' },
+                React.createElement(
+                    'div',
+                    null,
+                    React.createElement(NewGamePageForm, { id: 'startPage', label: 'Start Page', placeholder: 'Enter Start Page', ref: 'startInput' }),
+                    React.createElement(NewGamePageForm, { id: 'endPage', label: 'End Page', placeholder: 'Enter End Page', ref: 'endInput' })
+                ),
+                React.createElement(
+                    'button',
+                    { id: 'startBtn', className: 'winlinkbtn', onClick: this.startGame },
+                    'Start Game'
+                )
+            );
+        }
+    }, {
+        key: 'checkPages',
+        value: function checkPages(callback) {
+            var startPage = this.refs.startInput.val();
+            var endPage = this.refs.endInput.val();
 
-    startGame() {
-        var onCreateGame = this.props.onCreateGame;
-        this.checkPages(function (start, end) {
-            Ajax.run("GET", "/api/startGame", {
-                "start": start,
-                "end": end
-            }, true, function (data, error) {
-                onCreateGame(data.gid);
+            if (startPage == "") {
+                window.alert("Start is empty");
+            } else if (endPage == "") {
+                window.alert("End is empty");
+            } else if (startPage == endPage) {
+                window.alert("Start and end cannot be the same");
+            } else {
+                Ajax.run("GET", "/api/isWikipediaPage", {
+                    page: startPage
+                }, true, function (data, error) {
+                    if (!data.valid) {
+                        window.alert("Start is not a valid Wikipedia Page");
+                    } else {
+                        Ajax.run("GET", "/api/isWikipediaPage", {
+                            page: endPage
+                        }, true, function (data, error) {
+                            if (!data.valid) {
+                                window.alert("End is not a valid Wikipedia Page");
+                            } else {
+                                callback(startPage, endPage);
+                            }
+                        });
+                    }
+                });
+            }
+        }
+    }, {
+        key: 'startGame',
+        value: function startGame() {
+            var onCreateGame = this.props.onCreateGame;
+            this.checkPages(function (start, end) {
+                Ajax.run("GET", "/api/startGame", {
+                    "start": start,
+                    "end": end
+                }, true, function (data, error) {
+                    onCreateGame(data.gid);
+                });
             });
-        });
-    }
-}
+        }
+    }]);
+
+    return NewGame;
+}(React.Component);
 
 module.exports = NewGame;
 
 },{"./Ajax":232,"./NewGamePageForm":241,"react":229}],241:[function(require,module,exports){
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 var React = require('react');
 var TextInput = require('./TextInput');
 var Ajax = require('./Ajax');
 
-class NewGamePageForm extends React.Component {
-    constructor(props) {
-        super(props);
-        this.randomize = this.randomize.bind(this);
-        this.parsePageEntry = this.parsePageEntry.bind(this);
+var NewGamePageForm = function (_React$Component) {
+    _inherits(NewGamePageForm, _React$Component);
+
+    function NewGamePageForm(props) {
+        _classCallCheck(this, NewGamePageForm);
+
+        var _this = _possibleConstructorReturn(this, (NewGamePageForm.__proto__ || Object.getPrototypeOf(NewGamePageForm)).call(this, props));
+
+        _this.randomize = _this.randomize.bind(_this);
+        _this.parsePageEntry = _this.parsePageEntry.bind(_this);
+        return _this;
     }
 
-    render() {
-        return React.createElement(
-            'div',
-            { className: 'newGameOption' },
-            React.createElement(TextInput, { onTextChange: this.parsePageEntry, placeholder: this.props.placeholder, ref: 'input' }),
-            React.createElement(
+    _createClass(NewGamePageForm, [{
+        key: 'render',
+        value: function render() {
+            return React.createElement(
                 'div',
-                null,
+                { className: 'newGameOption' },
+                React.createElement(TextInput, { onTextChange: this.parsePageEntry, placeholder: this.props.placeholder, ref: 'input' }),
                 React.createElement(
-                    'label',
+                    'div',
                     null,
-                    this.props.label
-                ),
-                React.createElement(
-                    'a',
-                    { onClick: this.randomize },
-                    'Randomize'
+                    React.createElement(
+                        'label',
+                        null,
+                        this.props.label
+                    ),
+                    React.createElement(
+                        'a',
+                        { onClick: this.randomize },
+                        'Randomize'
+                    )
                 )
-            )
-        );
-    }
-
-    componentDidMount() {
-        this.randomize();
-    }
-
-    randomize() {
-        var input = this.refs.input;
-
-        Ajax.run("GET", "/api/getRandomPage", null, true, function (data, err) {
-            console.log(data);
-            input.setVal(data.pageTitle);
-        });
-    }
-
-    parsePageEntry() {
-        var urlRegx = /(?:http:\/\/|https:\/\/)en.wikipedia.org\/wiki\/([^#<>[\]|{}]*)/i;
-        var match = urlRegx.exec(this.refs.input.val());
-
-        if (match) {
-            var pagetitle = match[1].replace(/_/g, " ");
-            this.refs.input.setVal(pagetitle);
+            );
         }
-    }
+    }, {
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            this.randomize();
+        }
+    }, {
+        key: 'randomize',
+        value: function randomize() {
+            var input = this.refs.input;
 
-    val() {
-        return this.refs.input.val();
-    }
-}
+            Ajax.run("GET", "/api/getRandomPage", null, true, function (data, err) {
+                console.log(data);
+                input.setVal(data.pageTitle);
+            });
+        }
+    }, {
+        key: 'parsePageEntry',
+        value: function parsePageEntry() {
+            var urlRegx = /(?:http:\/\/|https:\/\/)en.wikipedia.org\/wiki\/([^#<>[\]|{}]*)/i;
+            var match = urlRegx.exec(this.refs.input.val());
+
+            if (match) {
+                var pagetitle = match[1].replace(/_/g, " ");
+                this.refs.input.setVal(pagetitle);
+            }
+        }
+    }, {
+        key: 'val',
+        value: function val() {
+            return this.refs.input.val();
+        }
+    }]);
+
+    return NewGamePageForm;
+}(React.Component);
 
 module.exports = NewGamePageForm;
 
 },{"./Ajax":232,"./TextInput":248,"react":229}],242:[function(require,module,exports){
+'use strict';
+
 var browserHistory = require('react-router').browserHistory;
 
 var Paths = { 'HOME': "/",
@@ -25825,45 +26030,74 @@ module.exports.goToPath = function (path, gid) {
 };
 
 },{"react-router":198}],243:[function(require,module,exports){
+"use strict";
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 var React = require('react');
 
-class PathDisplay extends React.Component {
-    constructor(props) {
-        super(props);
+var PathDisplay = function (_React$Component) {
+    _inherits(PathDisplay, _React$Component);
+
+    function PathDisplay(props) {
+        _classCallCheck(this, PathDisplay);
+
+        return _possibleConstructorReturn(this, (PathDisplay.__proto__ || Object.getPrototypeOf(PathDisplay)).call(this, props));
     }
 
-    render() {
-        var history = this.props.path;
-        var histpath = [];
+    _createClass(PathDisplay, [{
+        key: "render",
+        value: function render() {
+            var history = this.props.path;
+            var histpath = [];
 
-        for (var i in history) {
-            (function (i, obj) {
-                if (i != 0) {
+            for (var i in history) {
+                (function (i, obj) {
+                    if (i != 0) {
+                        histpath.push(React.createElement(
+                            "span",
+                            { key: i + "arrow", className: "arrow" },
+                            "\u2192"
+                        ));
+                    }
                     histpath.push(React.createElement(
                         "span",
-                        { key: i + "arrow", className: "arrow" },
-                        "\u2192"
+                        { key: i + "historyItem", className: "historyItem" },
+                        history[i]
                     ));
-                }
-                histpath.push(React.createElement(
-                    "span",
-                    { key: i + "historyItem", className: "historyItem" },
-                    history[i]
-                ));
-            })(i, this);
-        }
+                })(i, this);
+            }
 
-        return React.createElement(
-            "div",
-            { className: "historyContainer" },
-            histpath
-        );
-    }
-}
+            return React.createElement(
+                "div",
+                { className: "historyContainer" },
+                histpath
+            );
+        }
+    }]);
+
+    return PathDisplay;
+}(React.Component);
 
 module.exports = PathDisplay;
 
 },{"react":229}],244:[function(require,module,exports){
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 var React = require('react');
 var GameStore = require('./GameStore');
 var CircularCountdownTimer = require('./CircularCountdownTimer');
@@ -25873,78 +26107,104 @@ var Ajax = require('./Ajax');
 var StoredGameData = require('./StoredGameData');
 var Pager = require('./Pager');
 
-class Play extends React.Component {
-    constructor(props) {
-        super(props);
+var Play = function (_React$Component) {
+    _inherits(Play, _React$Component);
 
-        this.state = {
+    function Play(props) {
+        _classCallCheck(this, Play);
+
+        var _this = _possibleConstructorReturn(this, (Play.__proto__ || Object.getPrototypeOf(Play)).call(this, props));
+
+        _this.state = {
             showCountDownTimer: true
         };
 
-        this.countdownDone = this.countdownDone.bind(this);
-        this.onWin = this.onWin.bind(this);
-        this.setEndpoints = this.setEndpoints.bind(this);
+        _this.countdownDone = _this.countdownDone.bind(_this);
+        _this.onWin = _this.onWin.bind(_this);
+        _this.setEndpoints = _this.setEndpoints.bind(_this);
+        return _this;
     }
 
-    componentWillMount() {
-        Ajax.run("GET", "/api/getGameData", {
-            "gid": this.props.params.gid
-        }, true, this.setEndpoints);
-    }
-
-    setEndpoints(data, error) {
-        GameStore.storeGame(this.props.params.gid, data.start, data.end);
-
-        this.setState({
-            start: data.start,
-            end: data.end
-        });
-    }
-
-    onWin(path) {
-        StoredGameData.storeGameData(this.props.params.gid, path, this.timer.val());
-        Pager.goToPath(Pager.Paths.STAT, this.props.params.gid);
-    }
-
-    countdownDone() {
-        this.startTime = new Date();
-        this.setState({
-            showCountDownTimer: false
-        });
-    }
-
-    render() {
-        if (this.state.showCountDownTimer) {
-            return React.createElement(CircularCountdownTimer, { countdownDoneCallback: this.countdownDone });
-        } else if (this.state.start && this.state.end) {
-            return React.createElement(
-                'div',
-                { className: 'inGame' },
-                React.createElement(
-                    'h2',
-                    null,
-                    this.state.start,
-                    ' to ',
-                    this.state.end
-                ),
-                React.createElement(Timer, { start: this.startTime, ref: timer => {
-                        this.timer = timer;
-                    } }),
-                React.createElement(ArticleSelect, { onWin: this.onWin, start: this.state.start, end: this.state.end })
-            );
-        } else {
-            return React.createElement(
-                'h1',
-                null,
-                'Loading...'
-            );
+    _createClass(Play, [{
+        key: 'componentWillMount',
+        value: function componentWillMount() {
+            Ajax.run("GET", "/api/getGameData", {
+                "gid": this.props.params.gid
+            }, true, this.setEndpoints);
         }
-    }
-}
+    }, {
+        key: 'setEndpoints',
+        value: function setEndpoints(data, error) {
+            GameStore.storeGame(this.props.params.gid, data.start, data.end);
+
+            this.setState({
+                start: data.start,
+                end: data.end
+            });
+        }
+    }, {
+        key: 'onWin',
+        value: function onWin(path) {
+            StoredGameData.storeGameData(this.props.params.gid, path, this.timer.val());
+            Pager.goToPath(Pager.Paths.STAT, this.props.params.gid);
+        }
+    }, {
+        key: 'countdownDone',
+        value: function countdownDone() {
+            this.startTime = new Date();
+            this.setState({
+                showCountDownTimer: false
+            });
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            var _this2 = this;
+
+            if (this.state.showCountDownTimer) {
+                return React.createElement(CircularCountdownTimer, { countdownDoneCallback: this.countdownDone });
+            } else if (this.state.start && this.state.end) {
+                return React.createElement(
+                    'div',
+                    { className: 'inGame' },
+                    React.createElement(
+                        'h2',
+                        null,
+                        this.state.start,
+                        ' to ',
+                        this.state.end
+                    ),
+                    React.createElement(Timer, { start: this.startTime, ref: function ref(timer) {
+                            _this2.timer = timer;
+                        } }),
+                    React.createElement(ArticleSelect, { onWin: this.onWin, start: this.state.start, end: this.state.end })
+                );
+            } else {
+                return React.createElement(
+                    'h1',
+                    null,
+                    'Loading...'
+                );
+            }
+        }
+    }]);
+
+    return Play;
+}(React.Component);
 
 module.exports = Play;
 
 },{"./Ajax":232,"./ArticleSelect":233,"./CircularCountdownTimer":234,"./GameStore":237,"./Pager":242,"./StoredGameData":247,"./Timer":249,"react":229}],245:[function(require,module,exports){
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 var React = require('react');
 var PathDisplay = require('./PathDisplay');
 var TextInput = require('./TextInput');
@@ -25952,155 +26212,193 @@ var Modal = require('./Modal');
 var Ajax = require('./Ajax');
 var StoredGameData = require('./StoredGameData');
 
-class PostGame extends React.Component {
-    constructor(props) {
-        super(props);
+var PostGame = function (_React$Component) {
+    _inherits(PostGame, _React$Component);
 
-        this.state = {
+    function PostGame(props) {
+        _classCallCheck(this, PostGame);
+
+        var _this = _possibleConstructorReturn(this, (PostGame.__proto__ || Object.getPrototypeOf(PostGame)).call(this, props));
+
+        _this.state = {
             show: true
         };
-        this.sent = false;
-        this.sendScore = this.sendScore.bind(this);
-        this.close = this.close.bind(this);
+        _this.sent = false;
+        _this.sendScore = _this.sendScore.bind(_this);
+        _this.close = _this.close.bind(_this);
+        return _this;
     }
 
-    componentWillMount() {
-        var data = StoredGameData.getGameData();
-        this.path = data.path;
-        this.gid = data.gid;
-        this.time = data.time;
-    }
-
-    componentDidMount() {
-        var self = this;
-
-        document.getElementById('name').addEventListener('keypress', function (e) {
-            var key = e.which || e.keyCode;
-            if (key === 13) {
-                e.preventDefault();
-                self.sendScore();
-                return false;
-            }
-        });
-    }
-
-    sendScore() {
-        var name = this.refs.name.val();
-        if (name != "" && !this.sent) {
-            var ajaxStatus = this.refs.img;
-            ajaxStatus.style.padding = 0;
-            ajaxStatus.style.height = "30px";
-            ajaxStatus.style.width = "30px";
-            ajaxStatus.src = "/images/spinner.gif";
-            var self = this;
-            Ajax.run("POST", "/api/endGame", {
-                'gid': this.gid,
-                'username': name,
-                'path': this.path,
-                'time': this.time
-            }, false, function (data, status) {
-                ajaxStatus.src = "/images/checkmark.png";
-                self.sent = true;
-            });
-        } else {
-            window.alert("Username field cannot be empty");
+    _createClass(PostGame, [{
+        key: 'componentWillMount',
+        value: function componentWillMount() {
+            var data = StoredGameData.getGameData();
+            this.path = data.path;
+            this.gid = data.gid;
+            this.time = data.time;
         }
-    }
+    }, {
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            var self = this;
 
-    close() {
-        this.setState({
-            show: false
-        });
-    }
-
-    render() {
-        return React.createElement(
-            Modal,
-            { show: this.state.show, onHide: this.close },
-            React.createElement(
-                'h1',
-                null,
-                'YOU WON'
-            ),
-            React.createElement(
-                'h2',
-                null,
-                'And you did it in ',
+            document.getElementById('name').addEventListener('keypress', function (e) {
+                var key = e.which || e.keyCode;
+                if (key === 13) {
+                    e.preventDefault();
+                    self.sendScore();
+                    return false;
+                }
+            });
+        }
+    }, {
+        key: 'sendScore',
+        value: function sendScore() {
+            var name = this.refs.name.val();
+            if (name != "" && !this.sent) {
+                var ajaxStatus = this.refs.img;
+                ajaxStatus.style.padding = 0;
+                ajaxStatus.style.height = "30px";
+                ajaxStatus.style.width = "30px";
+                ajaxStatus.src = "/images/spinner.gif";
+                var self = this;
+                Ajax.run("POST", "/api/endGame", {
+                    'gid': this.gid,
+                    'username': name,
+                    'path': this.path,
+                    'time': this.time
+                }, false, function (data, status) {
+                    ajaxStatus.src = "/images/checkmark.png";
+                    self.sent = true;
+                    StoredGameData.clear();
+                });
+            } else {
+                window.alert("Username field cannot be empty");
+            }
+        }
+    }, {
+        key: 'close',
+        value: function close() {
+            this.setState({
+                show: false
+            });
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            return React.createElement(
+                Modal,
+                { show: this.state.show, onHide: this.close },
                 React.createElement(
-                    'b',
+                    'h1',
                     null,
-                    this.time
+                    'YOU WON'
                 ),
-                ' seconds.'
-            ),
-            React.createElement(PathDisplay, { path: this.path }),
-            React.createElement(
-                'div',
-                { id: 'sendName' },
                 React.createElement(
-                    'label',
+                    'h2',
                     null,
-                    'Enter your name to save your score:'
+                    'And you did it in ',
+                    React.createElement(
+                        'b',
+                        null,
+                        this.time
+                    ),
+                    ' seconds.'
                 ),
-                React.createElement(TextInput, { id: 'name', placeholder: 'Name', ref: 'name' }),
+                React.createElement(PathDisplay, { path: this.path }),
                 React.createElement(
                     'div',
-                    { id: 'sendContainer' },
+                    { id: 'sendName' },
                     React.createElement(
-                        'button',
-                        { onClick: this.sendScore },
-                        'Send Score'
+                        'label',
+                        null,
+                        'Enter your name to save your score:'
                     ),
-                    React.createElement('img', { className: 'ajax-status', ref: 'img' })
+                    React.createElement(TextInput, { id: 'name', placeholder: 'Name', ref: 'name' }),
+                    React.createElement(
+                        'div',
+                        { id: 'sendContainer' },
+                        React.createElement(
+                            'button',
+                            { onClick: this.sendScore },
+                            'Send Score'
+                        ),
+                        React.createElement('img', { className: 'ajax-status', ref: 'img' })
+                    )
                 )
-            )
-        );
-    }
-}
+            );
+        }
+    }]);
+
+    return PostGame;
+}(React.Component);
 
 module.exports = PostGame;
 
 },{"./Ajax":232,"./Modal":239,"./PathDisplay":243,"./StoredGameData":247,"./TextInput":248,"react":229}],246:[function(require,module,exports){
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 var React = require('react');
 var StoredGameData = require('./StoredGameData');
 var PostGame = require('./PostGame');
 var GameData = require('./GameData');
 
-class Stats extends React.Component {
-    constructor(props) {
-        super(props);
+var Stats = function (_React$Component) {
+    _inherits(Stats, _React$Component);
 
-        this.state = {
+    function Stats(props) {
+        _classCallCheck(this, Stats);
+
+        var _this = _possibleConstructorReturn(this, (Stats.__proto__ || Object.getPrototypeOf(Stats)).call(this, props));
+
+        _this.state = {
             showSave: false
         };
+        return _this;
     }
 
-    componentWillMount() {
-        if (StoredGameData.isDataStoredForGame(this.props.params.gid)) {
-            this.setState({
-                showSave: true
-            });
+    _createClass(Stats, [{
+        key: 'componentWillMount',
+        value: function componentWillMount() {
+            if (StoredGameData.isDataStoredForGame(this.props.params.gid)) {
+                this.setState({
+                    showSave: true
+                });
+            }
         }
-    }
+    }, {
+        key: 'render',
+        value: function render() {
+            var savePrompt = null;
+            if (this.state.showSave) {
+                savePrompt = React.createElement(PostGame, { gid: this.props.params.gid });
+            }
 
-    render() {
-        var savePrompt = null;
-        if (this.state.showSave) {
-            savePrompt = React.createElement(PostGame, { gid: this.props.params.gid });
+            return React.createElement(
+                'div',
+                null,
+                savePrompt,
+                React.createElement(GameData, { gid: this.props.params.gid })
+            );
         }
+    }]);
 
-        return React.createElement(
-            'div',
-            null,
-            savePrompt,
-            React.createElement(GameData, { gid: this.props.params.gid })
-        );
-    }
-}
+    return Stats;
+}(React.Component);
 
 module.exports = Stats;
 
 },{"./GameData":235,"./PostGame":245,"./StoredGameData":247,"react":229}],247:[function(require,module,exports){
+"use strict";
+
 var gameData = { "gid": "",
 	"path": [],
 	"time": 0 };
@@ -26126,200 +26424,272 @@ module.exports.getGameData = function () {
 };
 
 },{}],248:[function(require,module,exports){
+"use strict";
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 var React = require('react');
 
-class TextInput extends React.Component {
-    constructor(props) {
-        super(props);
+var TextInput = function (_React$Component) {
+    _inherits(TextInput, _React$Component);
 
-        this.textDidChange = this.textDidChange.bind(this);
-        this.onFocus = this.onFocus.bind(this);
+    function TextInput(props) {
+        _classCallCheck(this, TextInput);
+
+        var _this = _possibleConstructorReturn(this, (TextInput.__proto__ || Object.getPrototypeOf(TextInput)).call(this, props));
+
+        _this.textDidChange = _this.textDidChange.bind(_this);
+        _this.onFocus = _this.onFocus.bind(_this);
+        return _this;
     }
 
-    textDidChange() {
-        if (this.props.onTextChange) {
-            this.props.onTextChange(this.refs.input.value);
+    _createClass(TextInput, [{
+        key: "textDidChange",
+        value: function textDidChange() {
+            if (this.props.onTextChange) {
+                this.props.onTextChange(this.refs.input.value);
+            }
         }
-    }
-
-    onFocus() {
-        if (this.props.onFocus) {
-            this.props.onFocus();
+    }, {
+        key: "onFocus",
+        value: function onFocus() {
+            if (this.props.onFocus) {
+                this.props.onFocus();
+            }
         }
-    }
-
-    select() {
-        this.refs.input.select();
-    }
-
-    val() {
-        return this.refs.input.value;
-    }
-
-    setVal(text) {
-        this.refs.input.value = text;
-    }
-
-    componentDidMount() {
-        if (this.props.focus) {
-            this.refs.input.focus();
+    }, {
+        key: "select",
+        value: function select() {
+            this.refs.input.select();
         }
-        if (this.props.value) {
-            this.setVal(this.props.value);
+    }, {
+        key: "val",
+        value: function val() {
+            return this.refs.input.value;
         }
-    }
+    }, {
+        key: "setVal",
+        value: function setVal(text) {
+            this.refs.input.value = text;
+        }
+    }, {
+        key: "componentDidMount",
+        value: function componentDidMount() {
+            if (this.props.focus) {
+                this.refs.input.focus();
+            }
+            if (this.props.value) {
+                this.setVal(this.props.value);
+            }
+        }
+    }, {
+        key: "render",
+        value: function render() {
+            return React.createElement("input", { id: this.props.id, type: "text", autoComplete: "off", onChange: this.textDidChange, ref: "input", placeholder: this.props.placeholder, onFocus: this.onFocus });
+        }
+    }]);
 
-    render() {
-        return React.createElement("input", { id: this.props.id, type: "text", autoComplete: "off", onChange: this.textDidChange, ref: "input", placeholder: this.props.placeholder, onFocus: this.onFocus });
-    }
-}
+    return TextInput;
+}(React.Component);
 
 module.exports = TextInput;
 
 },{"react":229}],249:[function(require,module,exports){
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 var React = require('react');
 
-class Timer extends React.Component {
-    constructor(props) {
-        super(props);
+var Timer = function (_React$Component) {
+    _inherits(Timer, _React$Component);
 
-        this.tick = this.tick.bind(this);
-        this.state = {
+    function Timer(props) {
+        _classCallCheck(this, Timer);
+
+        var _this = _possibleConstructorReturn(this, (Timer.__proto__ || Object.getPrototypeOf(Timer)).call(this, props));
+
+        _this.tick = _this.tick.bind(_this);
+        _this.state = {
             elapsed: 0
         };
+        return _this;
     }
 
-    componentDidMount() {
-        this.timer = setInterval(this.tick, 100);
-    }
-
-    componentWillUnmount() {
-        clearInterval(this.timer);
-    }
-
-    tick() {
-        this.setState({
-            elapsed: this.diff()
-        });
-    }
-
-    val() {
-        return this.diff();
-    }
-
-    diff() {
-        return (Math.round((new Date() - this.props.start) / 100) / 10).toFixed(1);
-    }
-
-    render() {
-        return React.createElement(
-            'h2',
-            null,
-            React.createElement(
-                'b',
+    _createClass(Timer, [{
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            this.timer = setInterval(this.tick, 100);
+        }
+    }, {
+        key: 'componentWillUnmount',
+        value: function componentWillUnmount() {
+            clearInterval(this.timer);
+        }
+    }, {
+        key: 'tick',
+        value: function tick() {
+            this.setState({
+                elapsed: this.diff()
+            });
+        }
+    }, {
+        key: 'val',
+        value: function val() {
+            return this.diff();
+        }
+    }, {
+        key: 'diff',
+        value: function diff() {
+            return (Math.round((new Date() - this.props.start) / 100) / 10).toFixed(1);
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            return React.createElement(
+                'h2',
                 null,
-                this.state.elapsed,
-                ' seconds'
-            )
-        );
-    }
-}
+                React.createElement(
+                    'b',
+                    null,
+                    this.state.elapsed,
+                    ' seconds'
+                )
+            );
+        }
+    }]);
+
+    return Timer;
+}(React.Component);
 
 module.exports = Timer;
 
 },{"react":229}],250:[function(require,module,exports){
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 var React = require('react');
 var Link = require('react-router').Link;
 
-class Wrapper extends React.Component {
-    constructor(props) {
-        super(props);
+var Wrapper = function (_React$Component) {
+    _inherits(Wrapper, _React$Component);
+
+    function Wrapper(props) {
+        _classCallCheck(this, Wrapper);
+
+        return _possibleConstructorReturn(this, (Wrapper.__proto__ || Object.getPrototypeOf(Wrapper)).call(this, props));
     }
 
-    render() {
-        return React.createElement(
-            'div',
-            { id: 'mainContainer' },
-            React.createElement(
-                'header',
-                null,
+    _createClass(Wrapper, [{
+        key: 'render',
+        value: function render() {
+            return React.createElement(
+                'div',
+                { id: 'mainContainer' },
                 React.createElement(
-                    Link,
-                    { to: '/' },
-                    React.createElement(
-                        'h1',
-                        null,
-                        'WikiLinks'
-                    )
-                )
-            ),
-            React.createElement(
-                'main',
-                null,
-                React.createElement(
-                    'section',
-                    { id: 'main-content' },
-                    this.props.children
-                )
-            ),
-            React.createElement(
-                'footer',
-                null,
-                React.createElement(
-                    'p',
+                    'header',
                     null,
-                    'Copyright \xA9 ',
-                    new Date().getFullYear(),
-                    ' All Right Reserved '
+                    React.createElement(
+                        Link,
+                        { to: '/' },
+                        React.createElement(
+                            'h1',
+                            null,
+                            'WikiLinks'
+                        )
+                    )
                 ),
                 React.createElement(
-                    'p',
+                    'main',
                     null,
                     React.createElement(
-                        'a',
-                        { href: 'http://tobyglover.com', target: '_blank' },
-                        'Toby Glover'
-                    ),
-                    ' and ',
+                        'section',
+                        { id: 'main-content' },
+                        this.props.children
+                    )
+                ),
+                React.createElement(
+                    'footer',
+                    null,
                     React.createElement(
-                        'a',
-                        { href: 'https://github.com/joelreske', target: '_blank' },
-                        'Joel Reske'
+                        'p',
+                        null,
+                        'Copyright \xA9 ',
+                        new Date().getFullYear(),
+                        ' All Right Reserved '
                     ),
-                    ' (',
                     React.createElement(
-                        'a',
-                        { href: 'https://github.com/joelreske/Wikilinks', target: '_blank' },
-                        'Source'
-                    ),
-                    ' and ',
-                    React.createElement(
-                        'a',
-                        { href: 'http://comp20.wikilinks.io', target: '_blank' },
-                        'Original Version'
-                    ),
-                    ', with help from ',
-                    React.createElement(
-                        'a',
-                        { href: 'https://github.com/rgalbiati', target: '_blank' },
-                        'Raina Galbiati'
-                    ),
-                    ' and ',
-                    React.createElement(
-                        'a',
-                        { href: 'https://github.com/asmith1', target: '_blank' },
-                        'Ashley Smith'
-                    ),
-                    ')'
+                        'p',
+                        null,
+                        React.createElement(
+                            'a',
+                            { href: 'http://tobyglover.com', target: '_blank' },
+                            'Toby Glover'
+                        ),
+                        ' and ',
+                        React.createElement(
+                            'a',
+                            { href: 'https://github.com/joelreske', target: '_blank' },
+                            'Joel Reske'
+                        ),
+                        ' (',
+                        React.createElement(
+                            'a',
+                            { href: 'https://github.com/joelreske/Wikilinks', target: '_blank' },
+                            'Source'
+                        ),
+                        ' and ',
+                        React.createElement(
+                            'a',
+                            { href: 'http://comp20.wikilinks.io', target: '_blank' },
+                            'Original Version'
+                        ),
+                        ', with help from ',
+                        React.createElement(
+                            'a',
+                            { href: 'https://github.com/rgalbiati', target: '_blank' },
+                            'Raina Galbiati'
+                        ),
+                        ' and ',
+                        React.createElement(
+                            'a',
+                            { href: 'https://github.com/asmith1', target: '_blank' },
+                            'Ashley Smith'
+                        ),
+                        ')'
+                    )
                 )
-            )
-        );
-    }
-}
+            );
+        }
+    }]);
+
+    return Wrapper;
+}(React.Component);
 
 module.exports = Wrapper;
 
 },{"react":229,"react-router":198}],251:[function(require,module,exports){
+'use strict';
+
 var ReactDOM = require('react-dom');
 var React = require('react');
 var ReactRouter = require('react-router');
