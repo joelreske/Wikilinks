@@ -25118,7 +25118,7 @@ module.exports.Paths = Paths;
 module.exports.goToPath = function (path, gid) {
 	var fullPath = path;
 
-	if (path == Paths.PLAY || path == PATHS.STAT) {
+	if (path == Paths.PLAY || path == Paths.STAT) {
 		if (!gid) {
 			return;
 		} else {
