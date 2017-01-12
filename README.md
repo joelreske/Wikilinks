@@ -4,7 +4,7 @@
 
 The "Wiki Game," where two or more players attempt to get from one Wikipedia page to another by following the links embedded in the article. This currently requires each player to manually look through each Wikipedia page.
 
-## Orgin Story
+## Origin Story
 
 This project was originally concieved as Team 19's final project for [COMP20, Web Programming](https://tuftsdev.github.io/WebProgramming/) at Tufts University. This original team had 4 members: Joel Reske, Toby Glover, Raina Galbiati, and Ashley Smith - making a demo of the working game as our final project. Afterwards, as the major collaborators on the project, Joel and Toby decided to continue work together. After rebuilding much of the codebase and doing a total redesign, Wilikinks was relaunched on [wikilinks.io](http://wikilinks.io). The original version can still be seen at [comp20.wikilinks.io](http://comp20.wikilinks.io).
 
