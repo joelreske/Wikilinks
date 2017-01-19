@@ -6,6 +6,7 @@ var ArticleSelect = require('./ArticleSelect');
 var Ajax = require('../helpers/Ajax');
 var StoredGameData = require('../helpers/StoredGameData');
 var Pager = require('../helpers/Pager');
+var Analytics = require('../helpers/Analytics');
 
 class Play extends React.Component {
     constructor(props) {
@@ -24,6 +25,10 @@ class Play extends React.Component {
         Ajax.run("GET", "/api/getGameData", {
             "gid": this.props.params.gid
         }, true, this.setEndpoints);
+    }
+
+    componentDidMount() {
+        Analytics.sendPageView(Pager.Paths.PLAY);
     }
 
     setEndpoints(data, error) {

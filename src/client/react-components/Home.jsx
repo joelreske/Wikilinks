@@ -2,6 +2,7 @@ var React = require('react');
 var NewGame = require('./NewGame');
 var GameHistory = require('./GameHistory');
 var Pager = require('../helpers/Pager');
+var Analytics = require('../helpers/Analytics');
 
 class Home extends React.Component {
     constructor(props) {
@@ -9,6 +10,10 @@ class Home extends React.Component {
 
         this.startGame = this.startGame.bind(this);
         this.viewStats = this.viewStats.bind(this);
+    }
+
+    componentDidMount() {
+        Analytics.sendPageView(Pager.Paths.HOME);
     }
 
     startGame(gid) {

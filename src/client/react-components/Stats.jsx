@@ -2,6 +2,7 @@ var React = require('react');
 var StoredGameData = require('../helpers/StoredGameData');
 var PostGame = require('./PostGame');
 var GameData = require('./GameData');
+var Analytics = require('../helpers/Analytics');
 
 class Stats extends React.Component {
     constructor(props) {
@@ -18,6 +19,10 @@ class Stats extends React.Component {
                 showSave: true
             });
         }
+    }
+
+    componentDidMount() {
+        Analytics.sendPageView(Pager.Paths.STAT);
     }
 
     render() {
