@@ -4,7 +4,8 @@
   "description": "backend for WikiLinks app",
   "main": "index.js",
   "engines": {
-    "node": "6.9.1"
+    "node": "6.9.1",
+    "npm": "3.10.8"
   },
   "scripts": {
     "start": "node src/server/index.js",
