@@ -43,7 +43,11 @@ class GameData extends React.Component {
         window.onresize = this.getChartData;
 
         self.getChartData();
-        setInterval(self.getChartData, 2000);
+        this.chartRefreshInterval = setInterval(self.getChartData, 2000);
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.chartRefreshInterval);
     }
 
     getChartData() {
@@ -53,8 +57,6 @@ class GameData extends React.Component {
     }
 
     dataDidLoad(data, error) {
-        console.log(data);
-
         var options = {
             showLine: false,
             axisX: {

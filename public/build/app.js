@@ -25458,7 +25458,12 @@ var GameData = function (_React$Component) {
             window.onresize = this.getChartData;
 
             self.getChartData();
-            setInterval(self.getChartData, 2000);
+            this.chartRefreshInterval = setInterval(self.getChartData, 2000);
+        }
+    }, {
+        key: 'componentWillUnmount',
+        value: function componentWillUnmount() {
+            clearInterval(this.chartRefreshInterval);
         }
     }, {
         key: 'getChartData',
@@ -25470,8 +25475,6 @@ var GameData = function (_React$Component) {
     }, {
         key: 'dataDidLoad',
         value: function dataDidLoad(data, error) {
-            console.log(data);
-
             var options = {
                 showLine: false,
                 axisX: {
@@ -26495,6 +26498,7 @@ var StoredGameData = require('../helpers/StoredGameData');
 var PostGame = require('./PostGame');
 var GameData = require('./GameData');
 var Analytics = require('../helpers/Analytics');
+var Pager = require('../helpers/Pager');
 
 var Stats = function (_React$Component) {
     _inherits(Stats, _React$Component);
@@ -26546,7 +26550,7 @@ var Stats = function (_React$Component) {
 
 module.exports = Stats;
 
-},{"../helpers/Analytics":234,"../helpers/StoredGameData":237,"./GameData":241,"./PostGame":250,"react":229}],252:[function(require,module,exports){
+},{"../helpers/Analytics":234,"../helpers/Pager":236,"../helpers/StoredGameData":237,"./GameData":241,"./PostGame":250,"react":229}],252:[function(require,module,exports){
 "use strict";
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();

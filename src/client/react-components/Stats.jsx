@@ -3,6 +3,7 @@ var StoredGameData = require('../helpers/StoredGameData');
 var PostGame = require('./PostGame');
 var GameData = require('./GameData');
 var Analytics = require('../helpers/Analytics');
+var Pager = require('../helpers/Pager');
 
 class Stats extends React.Component {
     constructor(props) {
