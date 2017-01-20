@@ -16,7 +16,7 @@ router.get('/*', function(request, response) {
         } else if (redirectLocation) {
             response.redirect(302, redirectLocation.pathname + redirectLocation.search);
         } else if (renderProps) {
-            const content = ReactDOM.renderToString(<reactRouter.RouterContext {...renderProps}/>);
+            var content = ReactDOM.renderToString(<reactRouter.RouterContext {...renderProps}/>);
             response.render('index', {'content': content});
         } else {
             res.sendStatus(404);
