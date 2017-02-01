@@ -21,13 +21,10 @@ class Play extends React.Component {
         this.setEndpoints = this.setEndpoints.bind(this);
     }
 
-    componentWillMount() {
+    componentDidMount() {
         Ajax.run("GET", "/api/getGameData", {
             "gid": this.props.params.gid
         }, true, this.setEndpoints);
-    }
-
-    componentDidMount() {
         Analytics.sendPageView(Pager.Paths.PLAY);
     }
 

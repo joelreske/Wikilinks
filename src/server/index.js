@@ -41,7 +41,7 @@ app.get('/*', function(request, response, next) {
 });
 
 app.use('/api', api_router);
-app.use('/*', client_router);
+app.use('*', client_router);
 
 app.listen(app.get('port'), function() {
     console.log('Node app is running on port', app.get('port'));

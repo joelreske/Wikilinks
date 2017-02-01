@@ -32,7 +32,7 @@ class CircularCountdownTimer extends React.Component {
             <div id="CircularCountdownTimer">
                 <h2 ref={(elm) => {this.header = elm;}}></h2>
                 <svg width="160" height="160" xmlns="http://www.w3.org/2000/svg">
-                    <circle id="circle_animation" r="69.85699" cy="81" cx="81" align="center" ref={(elm) => {this.circle = elm;}}/>
+                    <circle id="circle_animation" r="69.85699" cy="81" cx="81" ref={(elm) => {this.circle = elm;}}/>
                 </svg>
             </div>
         );

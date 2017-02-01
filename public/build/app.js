@@ -25298,10 +25298,10 @@ var ArticleSelect = function (_React$Component) {
                 React.createElement(
                     'h2',
                     null,
-                    'You are on ',
                     React.createElement(
                         'b',
                         null,
+                        'You are on ',
                         this.state.history[this.state.history.length - 1]
                     )
                 ),
@@ -25382,7 +25382,7 @@ var CircularCountdownTimer = function (_React$Component) {
                 React.createElement(
                     "svg",
                     { width: "160", height: "160", xmlns: "http://www.w3.org/2000/svg" },
-                    React.createElement("circle", { id: "circle_animation", r: "69.85699", cy: "81", cx: "81", align: "center", ref: function ref(elm) {
+                    React.createElement("circle", { id: "circle_animation", r: "69.85699", cy: "81", cx: "81", ref: function ref(elm) {
                             _this2.circle = elm;
                         } })
                 )
@@ -25428,7 +25428,8 @@ var GameData = function (_React$Component) {
         _this.state = {
             showShare: false,
             start: "",
-            end: ""
+            end: "",
+            urlLink: ""
         };
 
         _this.playAgain = _this.playAgain.bind(_this);
@@ -25438,16 +25439,6 @@ var GameData = function (_React$Component) {
         _this.playNewGame = _this.playNewGame.bind(_this);
         _this.dataDidLoad = _this.dataDidLoad.bind(_this);
         _this.selectLink = _this.selectLink.bind(_this);
-
-        var self = _this;
-        Ajax.run("GET", "/api/getGameData", {
-            "gid": _this.props.gid
-        }, true, function (data, error) {
-            self.setState({
-                start: data.start,
-                end: data.end
-            });
-        });
         return _this;
     }
 
@@ -25455,10 +25446,19 @@ var GameData = function (_React$Component) {
         key: 'componentDidMount',
         value: function componentDidMount() {
             var self = this;
+            Ajax.run("GET", "/api/getGameData", {
+                "gid": this.props.gid
+            }, true, function (data, error) {
+                self.setState({
+                    start: data.start,
+                    end: data.end
+                });
+            });
             window.onresize = this.getChartData;
 
-            self.getChartData();
+            this.getChartData();
             this.chartRefreshInterval = setInterval(self.getChartData, 2000);
+            this.setState({ urlLink: window.location.href });
         }
     }, {
         key: 'componentWillUnmount',
@@ -25663,7 +25663,7 @@ var GameData = function (_React$Component) {
                             null,
                             'Or send a link'
                         ),
-                        React.createElement(TextInput, { ref: 'link', value: window.location.href, onFocus: this.selectLink })
+                        React.createElement(TextInput, { ref: 'link', value: this.state.urlLink, onFocus: this.selectLink })
                     )
                 )
             );
@@ -26268,15 +26268,11 @@ var Play = function (_React$Component) {
     }
 
     _createClass(Play, [{
-        key: 'componentWillMount',
-        value: function componentWillMount() {
+        key: 'componentDidMount',
+        value: function componentDidMount() {
             Ajax.run("GET", "/api/getGameData", {
                 "gid": this.props.params.gid
             }, true, this.setEndpoints);
-        }
-    }, {
-        key: 'componentDidMount',
-        value: function componentDidMount() {
             Analytics.sendPageView(Pager.Paths.PLAY);
         }
     }, {

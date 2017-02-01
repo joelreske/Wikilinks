@@ -9,8 +9,8 @@ var reactRouter    = require('react-router');
 var appRouter      = require(ROOT_DIR + '/src/client/Router.jsx');
 var routes         = reactRouter.createRoutes(appRouter.route());
 
-router.get('/*', function(request, response) {
-    reactRouter.match({routes, location: request.url}, (error, redirectLocation, renderProps) => {
+router.get('*', function(request, response) {
+    reactRouter.match({routes, location: request.originalUrl}, (error, redirectLocation, renderProps) => {
         if (error) {
             response.status(500).send(error.message);
         } else if (redirectLocation) {

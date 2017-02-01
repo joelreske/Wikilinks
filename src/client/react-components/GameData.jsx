@@ -17,6 +17,7 @@ class GameData extends React.Component {
             showShare: false,
             start: "",
             end: "",
+            urlLink: ""
         };
 
         this.playAgain = this.playAgain.bind(this);
@@ -26,7 +27,9 @@ class GameData extends React.Component {
         this.playNewGame = this.playNewGame.bind(this);
         this.dataDidLoad = this.dataDidLoad.bind(this);
         this.selectLink = this.selectLink.bind(this);
+    }
 
+    componentDidMount() {
         var self = this;
         Ajax.run("GET", "/api/getGameData", {
             "gid": this.props.gid
@@ -36,14 +39,11 @@ class GameData extends React.Component {
                 end: data.end
             });
         });
-    }
-
-    componentDidMount() {
-        var self = this;
         window.onresize = this.getChartData;
 
-        self.getChartData();
+        this.getChartData();
         this.chartRefreshInterval = setInterval(self.getChartData, 2000);
+        this.setState({urlLink: window.location.href});
     }
 
     componentWillUnmount() {
@@ -188,7 +188,7 @@ class GameData extends React.Component {
                     </div>
                     <div id="sendLinkContainer">
                         <h2>Or send a link</h2>
-                        <TextInput ref="link" value={window.location.href} onFocus={this.selectLink}/>
+                        <TextInput ref="link" value={this.state.urlLink} onFocus={this.selectLink}/>
                     </div>
                 </Modal>
             </div>

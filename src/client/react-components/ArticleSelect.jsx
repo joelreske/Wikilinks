@@ -83,7 +83,7 @@ class ArticleSelect extends React.Component {
         // <PathDisplay path={this.state.history}/>
         return (
             <div>
-                <h2>You are on <b>{this.state.history[this.state.history.length - 1]}</b></h2>
+                <h2><b>You are on {this.state.history[this.state.history.length - 1]}</b></h2>
                 <TextInput id="search" focus={true} placeholder="Search" onTextChange={this.search} ref="search"/>
                 <div>{links}</div>
             </div>
